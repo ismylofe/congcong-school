@@ -16,7 +16,7 @@ export function SchoolWarmup({ selected, onSelect, onStart, onHelp, onExit }: {
       <Mascot mood={complete ? 'cheer' : 'wave'} size={90} />
       <h1 className="text-2xl font-extrabold text-ink mt-3">和聰聰在學校裡找一找</h1>
       <p className="text-ink text-lg mt-3">從下面數，點亮第2層的教室。</p>
-      <div role="group" aria-label="4層教學樓，從下往上數" className="w-full max-w-xs mt-5 rounded-t-3xl border-4 border-secondary/40 bg-bg p-3 space-y-2">
+      <div role="group" aria-label="4 層樓的學校大樓，從下往上數" className="w-full max-w-xs mt-5 rounded-t-3xl border-4 border-secondary/40 bg-bg p-3 space-y-2">
         {[4, 3, 2, 1].map(floor => <button key={floor} type="button" aria-label={`第${floor}層的教室`} aria-pressed={selected === floor}
           onClick={() => { onSelect(floor); playSfx('tap'); }}
           className={`w-full min-h-14 rounded-xl border-2 flex items-center justify-between gap-3 px-4 text-ink ${selected === floor ? 'border-secondary bg-secondary/10' : 'border-bg-softer bg-bg-soft'}`}>

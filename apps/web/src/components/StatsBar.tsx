@@ -183,7 +183,7 @@ export function StatsBar({ compact = false, placement = "page" }: StatsBarProps 
                     toast.success("❤️ 紅心已補滿！");
                   } else {
                     playSfx("wrong");
-                    toast.error("寶石不夠，先去學習攢寶石吧");
+                    toast.error("寶石不夠，先去學習存寶石吧");
                   }
                 }}
                 disabled={gems < HEART_REFILL_COST}
@@ -309,7 +309,7 @@ function StreakModal({
     } else if (freezes >= MAX_FREEZES) {
       toast.error("護盾已經滿啦（最多 2 個）");
     } else {
-      toast.error("寶石不夠，先去學習攢寶石吧");
+      toast.error("寶石不夠，先去學習存寶石吧");
     }
   }
 
@@ -322,7 +322,7 @@ function StreakModal({
       haptic("success");
       toast.success("🔥 補回昨天成功，去學一課點亮連勝吧！", 3600);
     } else {
-      toast.error("補卡沒有成功，再試試吧");
+      toast.error("補簽沒有成功，再試試看");
     }
   }
 
@@ -424,7 +424,7 @@ function StreakModal({
               連勝斷啦！花 {STREAK_MAKEUP_COST} 寶石補回昨天
             </div>
             <div className="mt-1 text-[11px] text-ink-light">
-              補卡後今天學一課，{rawStreak} 天連勝就能接上
+              補簽後今天學一課，{rawStreak} 天連勝就能接上
             </div>
             <button
               type="button"

@@ -31,7 +31,7 @@ export default async function BookPage({ params }: { params: Promise<{ book: str
   const { book: bookId } = await params;
   const index = await getIndex();
   const book = index.books.find(b => b.id === bookId);
-  if (!book) return <div>未找到教材</div>;
+  if (!book) return <div>找不到這本教材</div>;
 
   const outline = await getBookOutline(bookId);
   const gradeBooks = index.books.filter(b => b.grade === book.grade);
@@ -62,10 +62,10 @@ export default async function BookPage({ params }: { params: Promise<{ book: str
 
       {/* 聽讀與故事入口統一由路徑頂欄承載。 */}
       {book.schoolSystem === "5-4" && <p className="px-4 py-3 text-sm text-ink-light">
-        五四制（小學五年） · {book.publisherLabel} · {book.sourceEdition}
+        五四制（國小五年） · {book.publisherLabel} · {book.sourceEdition}
       </p>}
       {book.supersededBy && <p className="p-4 text-sm text-ink-light">
-        當前為舊版教材，原學習記錄保留。
+        這是舊版教材，原本的學習記錄都還在。
         <SoundLink href={`/book/${book.supersededBy}/`} className="ml-2 font-bold text-primary">進入新版教材 →</SoundLink>
       </p>}
       <BookPathSection bookId={bookId} outline={outline} book={book} />

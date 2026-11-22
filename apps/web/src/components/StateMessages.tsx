@@ -72,7 +72,7 @@ interface ErrorStateProps {
 
 export function ErrorState({
   title = "出錯了",
-  desc = "好像網路斷開了，稍後再試試看",
+  desc = "好像沒有連上網路，等一下再試試看",
   onRetry,
   compact = false,
 }: ErrorStateProps) {

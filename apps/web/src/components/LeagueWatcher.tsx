@@ -58,15 +58,15 @@ export function LeagueWatcher() {
   const changed = result.promoted || result.demoted;
 
   return (
-    <Modal open onClose={handleClose} ariaLabel="上週聯賽戰報">
+    <Modal open onClose={handleClose} ariaLabel="上週聯賽戰績">
       <div className="flex flex-col items-center text-center">
         <Mascot mood={result.demoted ? "embarrassed" : "cheer"} size={96} />
         <h2 className="text-2xl font-extrabold text-ink mt-3">
           {result.promoted
             ? "恭喜晉級！"
             : result.demoted
-              ? "上週戰報"
-              : "上週戰報"}
+              ? "上週戰績"
+              : "上週戰績"}
         </h2>
 
         {/* 名次大字 */}
@@ -111,7 +111,7 @@ export function LeagueWatcher() {
         )}
         {result.demoted && (
           <p className="text-xs text-ink-light mt-2">
-            沒關係，這週加油學，把段位贏回來！
+            沒關係，這週加油學，把等級贏回來！
           </p>
         )}
         {!changed && (

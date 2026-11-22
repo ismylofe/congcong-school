@@ -19,7 +19,7 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: "聰聰學堂",
-  description: "全科免費，人人可學的小學AI學習平臺",
+  description: "全科免費、人人都能學的國小 AI 學習平台",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

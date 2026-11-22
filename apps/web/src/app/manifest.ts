@@ -11,9 +11,9 @@ export const dynamic = "force-static";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "聰聰學堂 · 小學全科免費學習",
+    name: "聰聰學堂 · 國小全科免費學習",
     short_name: "聰聰學堂",
-    description: "全科免費，人人可學的小學AI學習平臺，和熊貓聰聰一起天天進步",
+    description: "全科免費、人人都能學的國小 AI 學習平台，和貓熊聰聰一起天天進步",
     id: "/",
     start_url: "/",
     scope: "/",

@@ -69,7 +69,7 @@ describe("dailyQuests 結構約束", () => {
 describe("questTitle 中文文案", () => {
   const cases: Array<[QuestKind, number, string]> = [
     ["earnXP", 30, "獲得 30 點經驗"],
-    ["finishLessons", 2, "完成 2 節小課"],
+    ["finishLessons", 2, "完成 2 個小節"],
     ["reviewMistakes", 3, "複習 3 道錯題"],
     ["readTexts", 1, "讀完 1 篇課文或故事"],
   ];

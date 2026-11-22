@@ -147,8 +147,8 @@ export function FeedbackPanel({
                   ? "border-primary/40 bg-primary/10 text-primary cursor-default"
                   : "border-bg-softer bg-white text-ink-softer hover:text-ink hover:border-ink-softer"
               }`}
-              aria-label={reported ? "已報告本題問題" : "報告本題問題"}
-              title={reported ? "已收到你的反饋" : "這道題有問題？"}
+              aria-label={reported ? "已回報這題的問題" : "回報這題的問題"}
+              title={reported ? "已收到你的回報" : "這道題有問題？"}
             >
               {reported ? <CheckCircle className="w-5 h-5" /> : <FlagIcon className="w-4 h-4" />}
             </button>
@@ -184,14 +184,14 @@ export function FeedbackPanel({
       {/* 🚩 報錯對話框：三選一（portal 到 body，避開面板自身的 transform） */}
       {portalReady &&
         createPortal(
-      <Modal open={sheetOpen} onClose={() => setSheetOpen(false)} ariaLabel="報告題目問題">
+      <Modal open={sheetOpen} onClose={() => setSheetOpen(false)} ariaLabel="回報題目問題">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <FlagIcon className="w-5 h-5 text-danger" />
                   <h3 className="text-lg font-extrabold text-ink">這道題怎麼了？</h3>
                 </div>
                 <p className="text-xs text-ink-light mb-4">
-                  你的反饋只儲存在本機，可以在「我的」頁面查看和匯出
+                  你的回報只存在這台裝置，可以在「我的」頁面查看和匯出
                 </p>
                 <div className="flex flex-col gap-2.5">
                   {REPORT_OPTIONS.map(opt => (

@@ -82,13 +82,13 @@ export function decideMascotReaction(ctx: MascotTriggerContext): MascotReaction 
  */
 export const BUBBLES_BY_MOOD: Record<MascotMood, readonly string[]> = {
   happy: ["太棒!", "答對啦!", "繼續!", "漂亮!", "對的!"],
-  cheer: ["完美!", "好厲害!", "太牛了!", "無敵!", "棒棒噠!"],
-  proud: ["你太棒了!", "實力派!", "學霸預定!", "我為你驕傲!"],
+  cheer: ["完美!", "好厲害!", "超厲害!", "無敵!", "棒棒的!"],
+  proud: ["你太棒了!", "實力派!", "學習高手!", "我為你驕傲!"],
   sad: ["別灰心!", "再來一次!", "差一點點!", "下次一定!"],
   think: ["想想看?", "再仔細一點!", "別急!", "慢慢來!"],
   embarrassed: ["小心呀!", "保住心心!", "穩住!", "深呼吸!"],
   wave: ["加油!", "我們一起!"],
-  surprise: ["哇!", "誒?", "厲害厲害!"],
+  surprise: ["哇!", "咦?", "厲害厲害!"],
 };
 
 export function pickBubble(mood: MascotMood): string {

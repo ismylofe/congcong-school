@@ -87,7 +87,7 @@ function LeaderboardTeaserCard() {
         haptic("light");
       }}
       className="block"
-      aria-label={unlocked ? `排行榜：當前第 ${rank ?? "-"} 名` : "解鎖排行榜"}
+      aria-label={unlocked ? `排行榜：目前第 ${rank ?? "-"} 名` : "解鎖排行榜"}
     >
       <CardShell>
         <div className="flex items-center gap-3">

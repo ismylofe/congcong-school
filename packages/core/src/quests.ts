@@ -34,7 +34,7 @@ function makeQuest(kind: QuestKind, target: number, reward: number): Quest {
 export function questTitle(kind: QuestKind, target: number): string {
   switch (kind) {
     case "earnXP":         return `獲得 ${target} 點經驗`;
-    case "finishLessons":  return `完成 ${target} 節小課`;
+    case "finishLessons":  return `完成 ${target} 個小節`;
     case "reviewMistakes": return `複習 ${target} 道錯題`;
     case "readTexts":      return `讀完 ${target} 篇課文或故事`;
   }

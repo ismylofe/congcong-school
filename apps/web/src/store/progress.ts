@@ -1479,7 +1479,7 @@ export const useProgressStore = create<ProgressState>()(
 
       purchaseCosmetic: id => {
         const item = getCosmeticById(id);
-        if (!item) return { ok: false, reason: "未找到道具" };
+        if (!item) return { ok: false, reason: "找不到這個道具" };
         const { ownedCosmetics, gems } = get();
         if (ownedCosmetics[id]) return { ok: false, reason: "已經擁有了" };
         if (gems < item.cost) return { ok: false, reason: "寶石不夠" };
@@ -1605,7 +1605,7 @@ export const useProgressStore = create<ProgressState>()(
       // 🗓️ 每日任務
       // --------------------------------------------------------
 
-      todayQuests: () => dailyQuests(todayStr()).map(q => q.kind === "reviewMistakes" ? { ...q, title: `鞏固 ${q.target} 次練習或錯題` } : q),
+      todayQuests: () => dailyQuests(todayStr()).map(q => q.kind === "reviewMistakes" ? { ...q, title: `完成 ${q.target} 次練習或錯題複習` } : q),
 
       questProgress: kind => {
         const state = get();

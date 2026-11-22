@@ -184,7 +184,7 @@ export function CurrentBookBadge({
           setOpen(true);
         }}
         aria-haspopup="dialog"
-        aria-label={`當前教材：${book.subjectName ?? ""}${book.textbookName}，點選切換`}
+        aria-label={`目前教材：${book.subjectName ?? ""}${book.textbookName}，點一下切換`}
         className="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl bg-white border-2 border-bg-softer hover:border-primary/50 transition-colors select-none min-w-0"
         style={{ boxShadow: "0 2px 0 0 var(--shadow-card-color)" }}
       >
@@ -234,7 +234,7 @@ export function CurrentBookBadge({
                     {b.textbookName}
                   </span>
                   <span className="block text-[11px] text-ink-light mt-0.5">
-                    {b.unitsCount} 單元 · {b.lessonsCount} 節小課
+                    {b.unitsCount} 單元 · {b.lessonsCount} 個小節
                   </span>
                 </span>
                 {isCurrent && (
@@ -258,7 +258,7 @@ export function CurrentBookBadge({
             onClick={() => setOpen(false)}
             className="min-h-11 px-2 text-sm font-extrabold text-ink-light hover:text-ink"
           >
-            看年級主頁 →
+            看年級首頁 →
           </SoundLink>
         </div>
       </Modal>

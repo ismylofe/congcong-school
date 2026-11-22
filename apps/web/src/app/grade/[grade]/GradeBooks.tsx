@@ -9,8 +9,8 @@ import type { Book, SubjectId } from "@/types";
 
 const ORDER: SubjectId[] = ["math", "chinese", "english", "science"];
 const TAGLINES: Record<SubjectId, string> = {
-  math: "加減乘除 · 邏輯推理", chinese: "識字認詞 · 閱讀寫作",
-  english: "聽說讀寫 · 啟蒙英語", science: "探索自然 · 動手實驗",
+  math: "加減乘除 · 邏輯推理", chinese: "生字語詞 · 閱讀寫作",
+  english: "聽說讀寫 · 英語入門", science: "探索自然 · 動手實驗",
 };
 
 export default function GradeBooks({ books }: { books: Book[] }) {
@@ -28,7 +28,7 @@ export default function GradeBooks({ books }: { books: Book[] }) {
       {(["6-3", "5-4"] as const).map(value => <button
         key={value} type="button" aria-pressed={system === value} onClick={() => setSystem(value)}
         className={`min-h-11 rounded-xl border-2 px-4 py-2 font-bold ${system === value ? "border-primary bg-primary/10 text-primary-dark" : "border-bg-softer bg-white text-ink"}`}
-      >{value === "6-3" ? "六三制（小學六年）" : "五四制（小學五年）"}</button>)}
+      >{value === "6-3" ? "六三制（國小六年）" : "五四制（國小五年）"}</button>)}
     </div>}
     {ORDER.map(subjectId => {
       const subjectBooks = visible.filter(b => (b.subject ?? "math") === subjectId)
@@ -43,7 +43,7 @@ export default function GradeBooks({ books }: { books: Book[] }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-5">
           {subjectBooks.map(book => <SoundLink
             key={book.id} href={`/book/${book.id}/`}
-            aria-label={`${subject.label} ${book.textbookName}，${book.unitsCount} 單元${book.activitiesCount ? `，${book.activitiesCount} 個拓展板塊` : ""}，${book.lessonsCount} 節小課`}
+            aria-label={`${subject.label} ${book.textbookName}，${book.unitsCount} 單元${book.activitiesCount ? `，${book.activitiesCount} 個延伸單元` : ""}，${book.lessonsCount} 個小節`}
             hapticIntensity="medium"
             className="duo-chunky-card ui-book-card group relative block rounded-2xl border-2 border-bg-softer select-none overflow-hidden"
           >
@@ -56,7 +56,7 @@ export default function GradeBooks({ books }: { books: Book[] }) {
                 </div>
                 {book.publisherLabel && <div className="text-sm font-bold text-ink-light mt-1">{book.publisherLabel}</div>}
                 <div className="text-sm text-ink-light mt-1">
-                  {book.unitsCount} 單元{book.activitiesCount ? ` · ${book.activitiesCount} 個拓展板塊` : ""} · {book.lessonsCount} 節小課
+                  {book.unitsCount} 單元{book.activitiesCount ? ` · ${book.activitiesCount} 個延伸單元` : ""} · {book.lessonsCount} 個小節
                 </div>
                 {book.sourceEdition && <div className="text-sm text-ink-light mt-1">{book.sourceEdition}</div>}
               </div>

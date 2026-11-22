@@ -27,8 +27,8 @@ export function StoryEvidencePanel({
         {checked
           ? reference.length
             ? "標出的句子是參考依據。看看它們怎樣支持答案。"
-            : "這道題沒有標註參考句子，可以結合全文和解析再想一想。"
-          : "可以點選一句或幾句有幫助的話，再回到題目作答。"}
+            : "這道題沒有標註參考句子，可以對照全文和解析再想一想。"
+          : "可以點一句或幾句有幫助的話，再回到題目作答。"}
       </p>
       <ol className="space-y-3">
         {story.sentences.map((sentence, i) => {

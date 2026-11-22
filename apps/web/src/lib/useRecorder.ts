@@ -43,7 +43,7 @@ export function useRecorder() {
     const generation = ++generationRef.current;
     if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       setState("error");
-      setError("當前瀏覽器不支援錄音");
+      setError("這個瀏覽器不支援錄音");
       return false;
     }
     setState("requesting");

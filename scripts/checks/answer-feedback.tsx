@@ -9,12 +9,12 @@ import type { Question } from '../../apps/web/src/types';
 // including English story answers, independently of the student's last selection.
 for (const correct of ['True', 'TRUE', 'true', 'T', 'yes', '对', '正确', 'False', 'FALSE', 'F', 'no', '错']) {
   const question = { id: 1, type: 'true_false', question: 'Example', answer: correct, options: [], score: 1, difficulty: 1, knowledge_point: '', explanation: '' } as Question;
-  for (const answer of ['对', '错']) {
+  for (const answer of ['對', '錯']) {
     const html = renderToStaticMarkup(<TrueFalseQuestion question={question} answer={answer} phase="checked" isCorrect={gradeAnswer(question, answer)} onChange={() => {}} />);
     const buttons = html.match(/<button\b[\s\S]*?<\/button>/g) ?? [];
     const highlighted = buttons.filter(button => button.includes('option-card-correct'));
     assert.equal(highlighted.length, 1);
-    const label = gradeAnswer(question, '对') ? '对' : '错';
+    const label = gradeAnswer(question, '對') ? '對' : '錯';
     assert.match(highlighted[0], new RegExp(`>${label}<`), `Answer ${correct} must highlight ${label}`);
   }
 }

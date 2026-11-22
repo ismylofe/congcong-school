@@ -77,7 +77,7 @@ export function ThemeModeToggle({ compact = false }: { compact?: boolean }) {
                   : "text-ink-softer hover:text-ink-light",
                 forcedDark && "opacity-50 cursor-not-allowed",
               )}
-              title={forcedDark ? "當前裝備了暗色主題，介面保持暗色" : opt.label}
+              title={forcedDark ? "目前裝備了暗色主題，介面保持暗色" : opt.label}
             >
               <Icon className="w-4 h-4" />
               {!compact && <span>{opt.label}</span>}

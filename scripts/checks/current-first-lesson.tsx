@@ -34,10 +34,10 @@ async function main() {
       selected={selected} onSelect={() => {}} onStart={() => {}}
       onHelp={() => {}} onExit={() => {}}
     />);
-    assert(markup.includes('4层教学楼'));
-    assert.equal((markup.match(/aria-label="第[1-4]层的教室"/g) ?? []).length, 4);
-    assert.equal(/<button[^>]*disabled=""[^>]*>开始练习/.test(markup), selected !== 2);
-    assert(!markup.includes('朗读讲解'));
+    assert(markup.includes('4 層樓的學校大樓'));
+    assert.equal((markup.match(/aria-label="第[1-4]層的教室"/g) ?? []).length, 4);
+    assert.equal(/<button[^>]*disabled=""[^>]*>開始練習/.test(markup), selected !== 2);
+    assert(!markup.includes('朗讀講解'));
   }
   console.log('PASS: safe source guard, previous lecture-page migration and fresh/wrong/correct warmup rendering.');
 }

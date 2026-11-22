@@ -57,7 +57,7 @@ export function WeeklyReportView({ data }: { data: ReturnType<typeof weeklyStudy
       {/* Stats 三連 */}
       <div className="grid grid-cols-3 gap-2 mb-4">
         <MiniStat label="本週 XP" value={data.totalXp} />
-        <MiniStat label="完成課時" value={data.totalLessons} />
+        <MiniStat label="完成課程" value={data.totalLessons} />
         <MiniStat label="學習天數" value={`${data.activeDays}/7`} />
       </div>
 

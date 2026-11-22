@@ -92,7 +92,7 @@ export function WordOrderQuestion({
               exit={{ opacity: 0 }}
               className="text-ink-softer text-base self-center"
             >
-              點選下方詞語按順序排列
+              依照順序點下方的詞語
             </motion.span>
           )}
           {picked.map(i => (

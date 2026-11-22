@@ -389,15 +389,15 @@ export function ReviewRunnerClient() {
             retiredCount
               ? "這些舊題已經更新啦"
               : fromHearts
-                ? "先選一節小課來鞏固"
+                ? "先選一個小節來加強"
                 : "今天沒有要複習的錯題！"
           }
           desc={
             fromHearts
               ? "這裡暫時沒有可用題目。可以先聽讀課文，紅心會慢慢恢復。"
               : retiredCount
-                ? "已移除題目已從錯題本更新，可以回課程練習新題。"
-                : "錯題都安排好了，明天再來看看吧～"
+                ? "已移除的題目已從錯題本更新，可以回課程練習新題。"
+                : "錯題都安排好了，明天再來看看吧！"
           }
           action={
             <SoundLink
@@ -405,7 +405,7 @@ export function ReviewRunnerClient() {
               hapticIntensity="medium"
               className="btn-chunky-primary px-8"
             >
-              {fromHearts ? "返回學習選課" : "回錯題本"}
+              {fromHearts ? "回去選課" : "回錯題本"}
             </SoundLink>
           }
         />
@@ -458,7 +458,7 @@ export function ReviewRunnerClient() {
       <div className="max-w-md lg:max-w-2xl mx-auto w-full px-5 pt-4">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-danger/10 text-danger text-[11px] font-extrabold">
           <Bookmark className="w-3 h-3" />
-          {fromHearts ? "鞏固練習" : "錯題複習"} · {current.lessonTitle}
+          {fromHearts ? "加強練習" : "錯題複習"} · {current.lessonTitle}
         </span>
       </div>
 
@@ -653,7 +653,7 @@ function ReviewCompletionScreen({
       >
         <Mascot mood="cheer" size={140} reactTo="levelup" reactKey={1} />
         <h1 className="text-4xl font-extrabold text-primary mt-4">複習完成!</h1>
-        <p className="text-ink-light mt-2">今天又鞏固了一步，繼續加油～</p>
+        <p className="text-ink-light mt-2">今天又進步了一點，繼續加油！</p>
 
         {/* 🎓 畢業慶祝 */}
         <AnimatePresence>
@@ -721,8 +721,8 @@ function ReviewCompletionScreen({
             <Heart className="w-4 h-4" />
             <span>
               {action === "retry"
-                ? `已經把題改對啦。再練一輪，首答正確 ${Math.min(REVIEW_HEART_MIN_CORRECT, stats.total)} 題可迴心。`
-                : "今天的複習迴心已經領取，先讓眼睛休息一下。"}
+                ? `已經把題改對啦。再練一輪，首答正確 ${Math.min(REVIEW_HEART_MIN_CORRECT, stats.total)} 題就能補回紅心。`
+                : "今天複習補紅心的機會已經用過了，先讓眼睛休息一下。"}
               {nextHeartAt
                 ? `下一顆紅心還需 ${formatMsCountdown(Math.max(0, nextHeartAt - now))}。`
                 : "紅心會慢慢恢復。"}
@@ -733,7 +733,7 @@ function ReviewCompletionScreen({
         <div className="flex flex-col gap-3 mt-8">
           {fromHearts && action === "retry" ? (
             <button onClick={onRestart} className="btn-chunky-primary w-full">
-              再練一輪迴紅心
+              再練一輪補回紅心
             </button>
           ) : (
             <SoundLink

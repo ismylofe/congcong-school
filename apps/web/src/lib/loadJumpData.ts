@@ -13,7 +13,7 @@ export async function loadJumpData(bookId: string, unitNumber: number, fetcher: 
     throw new Error('跳級連結不完整，回到學習頁面再試一次吧');
   }
   const outlineRes = await fetcher(`/data/books/${bookId}/outline.json`);
-  if (!outlineRes.ok) throw new Error('教材沒有載入出來，請返回學習頁面重試');
+  if (!outlineRes.ok) throw new Error('教材沒有載入成功，請回到學習頁面再試一次');
   const outline: JumpOutline = await outlineRes.json();
   const target = outline.units?.find(unit => unit.unit_number === unitNumber);
   const targetLesson = outline.lessons.find(lesson => lesson.unitNumber === unitNumber);
@@ -24,10 +24,10 @@ export async function loadJumpData(bookId: string, unitNumber: number, fetcher: 
   if (!prior.length) throw new Error('前面還沒有課程，不需要跳級哦');
   const sources: JumpQuestionSource[] = await Promise.all(prior.map(async meta => {
     const response = await fetcher(`/data/books/${bookId}/lessons/${meta.id}.json`);
-    if (!response.ok) throw new Error('部分題目沒有載入出來，請返回後重試');
+    if (!response.ok) throw new Error('部分題目沒有載入成功，請返回後再試一次');
     const lesson: Lesson = await response.json();
     if (!Array.isArray(lesson.questions) || !lesson.questions.length) {
-      throw new Error('部分題目沒有載入出來，請返回後重試');
+      throw new Error('部分題目沒有載入成功，請返回後再試一次');
     }
     return { lessonId: meta.id, questions: lesson.questions };
   }));

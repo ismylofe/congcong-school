@@ -56,7 +56,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
   if (!current) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-center">
-        <h1 className="text-base font-extrabold text-ink mb-2">本單元暫無知識手冊</h1>
+        <h1 className="text-base font-extrabold text-ink mb-2">這個單元還沒有知識手冊</h1>
         <div className="text-sm text-ink-light mb-6">
           {book.textbookName} · {unit.label ?? `第 ${unit.unit_number} 單元`} · {unit.title}
         </div>
@@ -169,7 +169,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-bold text-ink mb-1">
-                      小貼士
+                      小提醒
                     </div>
                     <div className="text-base text-ink leading-relaxed">
                       <MathText text={current.tips} />
@@ -183,7 +183,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
             {current.common_mistakes && current.common_mistakes.length > 0 && (
               <div className="mt-5 border-t-2 border-bg-softer pt-5 max-w-lg w-full">
                 <div className="text-sm font-bold text-danger mb-2">
-                  容易搞錯
+                  容易弄錯
                 </div>
                 <ul className="space-y-1.5">
                   {current.common_mistakes.map((m, i) => (

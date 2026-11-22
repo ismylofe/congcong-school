@@ -100,7 +100,7 @@ export function DailyQuestsPanel() {
         <div className="text-lg font-bold text-ink">每日任務</div>
         {hydrated && (
           <div className="text-xs font-medium text-ink-light">
-            {formatUntilMidnight(now)}後重新整理
+            {formatUntilMidnight(now)}後更新
           </div>
         )}
       </div>

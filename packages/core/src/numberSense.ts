@@ -109,12 +109,12 @@ const count = (
     id,
     "count",
     stage,
-    `一共有幾${label === "蘋果" ? "個" : label === "小鳥" ? "只" : "個"}${label}？`,
+    `一共有幾${label === "蘋果" ? "個" : label === "小鳥" ? "隻" : "個"}${label}？`,
     [String(n - 1), String(n), String(n === 10 ? 8 : n + 1)].sort(
       (a, b) => ((Number(a) + id) % 3) - ((Number(b) + id) % 3),
     ),
     String(n),
-    `每個只數一次，最後數到${n}，一共有${n}${label === "小鳥" ? "只" : "個"}${label}。`,
+    `每個只數一次，最後數到${n}，一共有${n}${label === "小鳥" ? "隻" : "個"}${label}。`,
     { kind: "count", count: n, emoji, label, layout },
   );
 const compare = (
@@ -169,7 +169,7 @@ const share = (
       : resources === learners
         ? "剛好夠"
         : "夠，還有剩下",
-    `${learners}只${learnerLabel}，每隻分一個，需要${learners}個${resourceLabel}。有${resources}個，所以${resources < learners ? "不夠" : resources === learners ? "剛好夠" : "夠，還有剩下"}。`,
+    `${learners}隻${learnerLabel}，每隻分一個，需要${learners}個${resourceLabel}。有${resources}個，所以${resources < learners ? "不夠" : resources === learners ? "剛好夠" : "夠，還有剩下"}。`,
     {
       kind: "share",
       learners,
@@ -224,7 +224,7 @@ export function curateNumberSenseLesson(lesson: Lesson): Lesson {
         skill === "count"
           ? "點一個，數一個；最後數到幾，就是幾個。"
           : "一個配一個，看看有沒有剩下。",
-      tips: "可以自己試，也可以點“給我一點提示”。學會以後換一種情境再練。",
+      tips: "可以自己試，也可以點「給我一點提示」。學會以後換一種情境再練。",
       common_mistakes: [
         skill === "count"
           ? "物體擺得疏或密，數量不會變。"
@@ -349,14 +349,14 @@ export function numberSkillLabel(
     entry.reviewedOn > entry.practicedOn &&
     (entry.reviewCorrect ?? 0) < (entry.reviewTotal ?? 0)
   )
-    return "隔天檢驗還需鞏固";
+    return "隔天檢查還要再練習";
   const e = entry.evidence;
   return e.independentTotal >= 2 &&
     e.independentCorrect === e.independentTotal &&
     e.transferTotal >= 2 &&
     e.transferCorrect === e.transferTotal
     ? "能獨立做"
-    : "已經練習，繼續鞏固";
+    : "已經練過，繼續加油";
 }
 /** Defensive local-storage/backup reader; only the three known skills and valid dates. */
 export function normalizeNumberProgress(raw: unknown): NumberProgress {

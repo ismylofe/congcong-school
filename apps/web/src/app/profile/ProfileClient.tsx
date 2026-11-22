@@ -224,11 +224,11 @@ export function ProfileClient() {
           <div className="flex items-center justify-between mb-1">
             <div className="text-base font-extrabold text-ink">家長設定 · 每日時間上限</div>
             <span className="text-xs text-ink-light">
-              防沉迷
+              休息提醒
             </span>
           </div>
           <div className="text-xs text-ink-light mb-3">
-            達到上限後會暫停新課程，鼓勵休息眼睛 · 不影響已開始的課程
+            時間到了就先不開新課程，讓眼睛休息一下 · 已經開始的課程不受影響
           </div>
           <div className="flex flex-wrap gap-2">
             {([
@@ -368,7 +368,7 @@ function BackupSection() {
         </span>
       </div>
       <div className="text-xs text-ink-light mb-3">
-        匯出一個存檔檔案儲存好；換裝置或換到 iPhone 上，匯入就能接著學
+        匯出一個存檔檔案保存好；換裝置或換到 iPhone 時，匯入就能繼續學
       </div>
       <div className="flex flex-wrap gap-2">
         <button
@@ -411,7 +411,7 @@ function BackupSection() {
           <Mascot mood="surprise" size={96} />
           <h2 className="text-2xl font-extrabold text-ink mt-3">確認匯入這個存檔？</h2>
           <p className="text-ink-light mt-2 text-sm">
-            匯入會<span className="font-extrabold text-danger">覆蓋當前全部進度</span>
+            匯入會<span className="font-extrabold text-danger">覆蓋目前全部進度</span>
             ，建議先點「匯出存檔」備份一份再匯入。
           </p>
           {pending && (
@@ -473,7 +473,7 @@ function ReportsSection() {
     playSfx("tap");
     haptic("medium");
     downloadJson(reports, `cstf-reports-${todayFileStamp()}.json`);
-    toast.success("反饋記錄已匯出", 2800);
+    toast.success("回報記錄已匯出", 2800);
   }
 
   return (
@@ -496,12 +496,12 @@ function ReportsSection() {
         )}
       </div>
       <div className="text-xs text-ink-light mb-3">
-        答題時報告的題目問題會記錄在這裡 · 只儲存在本機，不會上傳
+        答題時回報的題目問題會記在這裡 · 只存在這台裝置，不會上傳
       </div>
 
       {reports.length === 0 ? (
         <div className="text-sm text-ink-softer py-4 text-center">
-          還沒有報告過問題
+          還沒有回報過問題
         </div>
       ) : (
         <ul className="space-y-2">
@@ -519,7 +519,7 @@ function ReportsSection() {
                 </span>
               </div>
               <div className="text-xs text-ink mt-1.5 line-clamp-2 leading-snug">
-                {r.questionText || "（無題幹快照）"}
+                {r.questionText || "（沒有題目內容）"}
               </div>
               <div className="text-[10px] text-ink-softer mt-1">
                 課程 {r.lessonId} · 題目 #{r.questionId}

@@ -70,8 +70,8 @@ export default function NumberSenseReview() {
       setSaved(true);
       setSaveMessage(
         applied
-          ? "今天的檢驗已儲存。"
-          : "這次結果已保留；如果今天已經檢驗過，同一輪不會再次領取獎勵。",
+          ? "今天的檢查已儲存。"
+          : "這次結果已保存；如果今天已經檢查過，同一輪不會再拿到獎勵。",
       );
     }
   }, [session, ready]);
@@ -113,7 +113,7 @@ export default function NumberSenseReview() {
         <p className="text-ink-light max-w-md">
           {limited
             ? "今天的學習時間到了，明天再來。"
-            : "練習後的下一天才做隔天檢驗。同一天重練不會標成“隔天仍會”。"}
+            : "練習後的隔天才做隔天檢查。同一天重練不會標成「隔天仍會」。"}
         </p>
         <Link className="btn-chunky-primary px-5" href="/number-sense/">
           回到示範單元
@@ -129,7 +129,7 @@ export default function NumberSenseReview() {
     return (
       <main className="min-h-screen px-5 py-8 max-w-lg mx-auto text-center">
         <Mascot mood="cheer" size={100} />
-        <h1 className="text-2xl font-extrabold text-ink mt-4">隔天檢驗完成</h1>
+        <h1 className="text-2xl font-extrabold text-ink mt-4">隔天檢查完成</h1>
         {numberCheckResults(session).map((r) => (
           <div
             key={r.skill}
@@ -141,8 +141,8 @@ export default function NumberSenseReview() {
             </p>
             <p className="text-sm text-ink-light">
               {r.correct === r.total
-                ? "隔天仍會，一週後再鞏固。"
-                : "還需要鞏固，明天再試。可以先回去練一練。"}
+                ? "隔天仍會，一週後再複習。"
+                : "還要再練習，明天再試。可以先回去練一練。"}
             </p>
           </div>
         ))}
@@ -171,7 +171,7 @@ export default function NumberSenseReview() {
       <div ref={questionScrollRef} className="lesson-content px-3 sm:px-4">
       <h1 className="text-lg font-extrabold">隔天用新題試一試</h1>
       <p className="text-sm text-ink-light mb-5 mt-2">
-        可以點物體做記號。需要幫助也沒關係，我們會把它記成“還需要鞏固”。
+        可以點物體做記號。需要幫助也沒關係，我們會把它記成「還要再練習」。
       </p>
       <div className="rounded-2xl bg-white border-2 border-bg-softer p-2 sm:p-4">
         <QuestionRenderer
@@ -194,7 +194,7 @@ export default function NumberSenseReview() {
             className="btn-chunky-primary w-full mt-4"
             onClick={() => update({ type: "next" })}
           >
-            {session.index + 1 === questions.length ? "完成檢驗" : "下一題"}
+            {session.index + 1 === questions.length ? "完成檢查" : "下一題"}
           </button>
         </div>
       ) : (

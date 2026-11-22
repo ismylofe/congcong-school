@@ -162,11 +162,11 @@ function StarDistanceHint({
   let starsToShow = 0;
   let highlight = false;
   if (missingFor3 <= remaining) {
-    label = `還差 ${missingFor3} 題就 三星`;
+    label = `還差 ${missingFor3} 題就三顆星`;
     starsToShow = 3;
     if (missingFor3 <= 1) highlight = true;
   } else if (missingFor2 <= remaining) {
-    label = `還差 ${missingFor2} 題就 二星`;
+    label = `還差 ${missingFor2} 題就兩顆星`;
     starsToShow = 2;
     if (missingFor2 <= 1) highlight = true;
   }
@@ -1135,11 +1135,11 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
           <Mascot mood="sad" size={96} />
           <h2 className="text-2xl font-extrabold text-ink mt-3">紅心用完了！</h2>
           <p className="text-ink-light mt-2">
-            {reviewHeartClaimed ? "今天的複習迴心已經領取，紅心會慢慢恢復。也可以先鞏固練習。" : "補滿紅心繼續闖關，或者免費鞏固練習迴心。"}
+            {reviewHeartClaimed ? "今天複習補紅心的機會已經用過了，紅心會慢慢恢復。也可以先做加強練習。" : "補滿紅心繼續闖關，或做免費的加強練習補回紅心。"}
           </p>
           <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-secondary-dark">
             <Gem className="w-4 h-4" />
-            <span className="tabular-nums">當前寶石 {gems}</span>
+            <span className="tabular-nums">目前寶石 {gems}</span>
           </div>
           <div className="flex flex-col gap-3 w-full mt-5">
             <button
@@ -1157,10 +1157,10 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
               </span>
             </button>
             {gems < HEART_REFILL_COST && (
-              <p className="text-xs text-ink-softer -mt-1">{reviewHeartClaimed ? "寶石不足，可以先休息或鞏固練習。" : "寶石不足，也可以免費鞏固練習迴心。"}</p>
+              <p className="text-xs text-ink-softer -mt-1">{reviewHeartClaimed ? "寶石不夠，可以先休息或做加強練習。" : "寶石不夠，也可以做免費的加強練習補回紅心。"}</p>
             )}
             <button onClick={handleGateReview} className="btn-chunky-secondary w-full">
-              {reviewHeartClaimed ? "去鞏固練習（今日迴心已領取）" : "去鞏固練習迴心"}
+              {reviewHeartClaimed ? "去加強練習（今天已補過紅心）" : "去加強練習補紅心"}
             </button>
             <p className="text-xs text-ink-softer -mt-1">做完複習回來，這節課會接著上次繼續</p>
             <button onClick={handleGateExit} className="btn-chunky-ghost w-full">
@@ -1336,7 +1336,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
         </div>
       </div>
 
-      {total < 3 && <p className="max-w-md mx-auto px-5 pt-3 text-sm text-ink-light">微練習 · 先試一試，再透過更多情境鞏固</p>}
+      {total < 3 && <p className="max-w-md mx-auto px-5 pt-3 text-sm text-ink-light">微練習 · 先試一試，再用更多情境多練習</p>}
 
       {/* Question area */}
       <div className="lesson-body flex flex-col items-center justify-start">
@@ -1472,9 +1472,9 @@ function CompletionScreen({ lesson, stats, onBack, onNext }: { lesson: Lesson; s
       <p className="text-ink-light mt-2">{lesson.title}</p>
       {skill && stats.numberSenseEvidence && <div className="mt-4 p-4 rounded-2xl bg-secondary/10 text-left text-ink space-y-2">
         <p className="font-extrabold">今天練習了：{NUMBER_LESSONS[skill].goal}</p>
-        <p>無提示首答：{stats.numberSenseEvidence.independentCorrect}/{stats.numberSenseEvidence.independentTotal} · 換情境：{stats.numberSenseEvidence.transferCorrect}/{stats.numberSenseEvidence.transferTotal}</p>
+        <p>沒看提示的第一次作答：{stats.numberSenseEvidence.independentCorrect}/{stats.numberSenseEvidence.independentTotal} · 換情境：{stats.numberSenseEvidence.transferCorrect}/{stats.numberSenseEvidence.transferTotal}</p>
         <p>{stats.numberSenseEvidence.hintsUsed > 0 ? `有 ${stats.numberSenseEvidence.hintsUsed} 題看過提示。會求助、會改錯也在進步。` : "這次沒有查看提示。"}</p>
-        <p>明天用新題看看還會不會，今天先不標成“隔天仍會”。</p>
+        <p>明天用新題看看還會不會，今天先不標成「隔天仍會」。</p>
         <Link href="/number-sense/" className="min-h-11 inline-flex items-center text-secondary-dark font-bold underline">查看單元學習記錄</Link>
       </div>}
       {skill ? null : stats.practiceOnly ? <p className="mt-3 text-sm text-ink-light">一次作答是一個開始。再練不同情境，才能更瞭解這個知識點。</p> :
@@ -1487,18 +1487,18 @@ function CompletionScreen({ lesson, stats, onBack, onNext }: { lesson: Lesson; s
         <StatCard label="經驗" value={`+${outcome.xpGained}`} color="text-secondary-dark" />
         <StatCard label="寶石" value={`+${outcome.gemsGained + outcome.milestoneGems + (stats.chestReward?.gems ?? 0)}`} color="text-secondary-dark" icon="gem" />
       </div>
-      {stats.correctedCount > 0 && <p className="mt-4 text-sm text-ink">認真改對了 {stats.correctedCount} 道題。首答成績幫你找到要鞏固的地方，改錯也是進步。</p>}
+      {stats.correctedCount > 0 && <p className="mt-4 text-sm text-ink">認真改對了 {stats.correctedCount} 道題。第一次作答的結果能幫你找到要加強的地方，改錯也是進步。</p>}
       <div className="mt-4 rounded-2xl border-2 border-bg-softer bg-white p-4 text-left text-sm text-ink space-y-2">
-        <p>🔥 連續學習 {outcome.streakAfter} 天 · 前臺學習用時 {formatTime(stats.durationSec)}</p>
-        {outcome.dailyGoalReachedNow && <p>🎯 今日目標達成，獎勵已到賬</p>}
-        {outcome.milestoneGems > 0 && <p>🎉 連勝里程碑！+{outcome.milestoneGems} 寶石已到賬</p>}
+        <p>🔥 連續學習 {outcome.streakAfter} 天 · 實際學習時間 {formatTime(stats.durationSec)}</p>
+        {outcome.dailyGoalReachedNow && <p>🎯 今日目標達成，獎勵已入帳</p>}
+        {outcome.milestoneGems > 0 && <p>🎉 連勝里程碑！+{outcome.milestoneGems} 寶石已入帳</p>}
         {stats.conquered && <p>⚔️ 單元挑戰達標</p>}
         {stats.quests.map(({ quest, after }) => <p key={quest.id}>{after >= quest.target ? "✓" : "○"} {quest.title} · {Math.min(after, quest.target)}/{quest.target}</p>)}
       </div>
-      {stats.chestReward && <button type="button" className="min-h-11 mt-3 text-secondary-dark font-bold" onClick={() => setChestOpen(true)}>看看寶箱獎勵（已到賬）</button>}
+      {stats.chestReward && <button type="button" className="min-h-11 mt-3 text-secondary-dark font-bold" onClick={() => setChestOpen(true)}>看看寶箱獎勵（已入帳）</button>}
       <button autoFocus type="button" className="btn-chunky-primary w-full mt-5" onClick={onNext ?? onBack}>{skill === "apply" ? "回到單元，看看進步" : onNext ? "下一課" : "回到學習路徑"}</button>
       {onNext && <button type="button" className="min-h-11 mt-2 text-ink-light font-bold" onClick={onBack}>先休息一下</button>}
-      <p className="text-xs text-ink-light mt-3">學習成果已儲存 · 每日任務獎勵可在“我的”領取</p>
+      <p className="text-xs text-ink-light mt-3">學習成果已儲存 · 每日任務獎勵可以在「我的」領取</p>
       {stats.chestReward && <ChestModal open={chestOpen} gems={stats.chestReward.gems} tier={stats.chestReward.tier} onClose={() => setChestOpen(false)} />}
     </div>
   </main>;
@@ -1916,7 +1916,7 @@ function IntroCard({
       <div className="bg-white border-t-2 border-bg-softer" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
         {narration.locked && (narration.muted || narration.status === "error") && <div className="max-w-md lg:max-w-2xl mx-auto px-5 pt-3 text-center text-sm text-ink-light" role="status">
           {narration.locked && narration.muted ? (
-            <><span>當前已靜音，可以閱讀後繼續。</span><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">閱讀後繼續</button></>
+            <><span>目前是靜音，可以自己讀完再繼續。</span><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">閱讀後繼續</button></>
           ) : narration.locked && narration.status === "error" ? (
             <><span>語音暫時無法播放。</span><button type="button" onClick={narration.start} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">重新播放</button><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-ink-light underline">閱讀後繼續</button></>
           ) : null}
@@ -1987,7 +1987,7 @@ function FailScreen({
         )}
 
         <div className="flex flex-col gap-3 w-64">
-          {!canRetry && <SoundLink href={`/review/runner/?from=hearts&lesson=${encodeURIComponent(lesson.id)}`} className="btn-chunky-secondary">{reviewHeartClaimed ? "鞏固練習（今日迴心已領取）" : "免費鞏固練習迴心"}</SoundLink>}
+          {!canRetry && <SoundLink href={`/review/runner/?from=hearts&lesson=${encodeURIComponent(lesson.id)}`} className="btn-chunky-secondary">{reviewHeartClaimed ? "加強練習（今天已補過紅心）" : "免費加強練習補紅心"}</SoundLink>}
           <button
             onClick={() => {
               if (!canRetry) return;

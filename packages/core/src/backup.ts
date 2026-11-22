@@ -436,7 +436,7 @@ export function validateBackup(input: unknown): BackupValidationResult {
     return { ok: false, errors: ["備份內容不是 JSON 物件"] };
   }
   if (input["schema"] !== BACKUP_SCHEMA) {
-    fatal.push(`schema 不是 "${BACKUP_SCHEMA}"，這不是本應用的備份檔案`);
+    fatal.push(`schema 不是 "${BACKUP_SCHEMA}"，這不是聰聰學堂的備份檔案`);
   }
   const version = input["version"];
   if (!isFiniteNumber(version) || !Number.isInteger(version) || version < 1) {

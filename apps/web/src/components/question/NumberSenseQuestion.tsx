@@ -251,7 +251,7 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
       <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} action={!question.audio?.question ? <button type="button" disabled={muted || locked} aria-label="朗讀題目" onClick={() => readText(question.question)} className="ui-icon-button border-2 border-bg-softer text-secondary-dark"><Volume className="w-5 h-5"/></button> : undefined}/>
       {audioError && (
         <p role="status" className="text-sm text-ink-light mb-3">
-          這臺裝置暫時不能朗讀，可以先看圖和題目。
+          這台裝置暫時不能朗讀，可以先看圖和題目。
         </p>
       )}
       <NumberSenseVisual

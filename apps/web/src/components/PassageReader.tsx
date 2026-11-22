@@ -183,8 +183,8 @@ export function PassageReader({ passage, backHref }: Props) {
   }, [mode, passage, rec]);
 
   function showPlaybackError(result: ReadingResult) {
-    if (result === "audio-unavailable") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。本次未記錄完成。");
-    if (result === "recording-unavailable") setPlaybackError("錄音未完成，請檢查麥克風許可權後重試。本次未記錄完成。");
+    if (result === "audio-unavailable") setPlaybackError("聲音沒有完整播放，請確認聲音已開啟後再試一次。這次不會記錄完成。");
+    if (result === "recording-unavailable") setPlaybackError("錄音沒有完成，請檢查麥克風權限後再試一次。這次不會記錄完成。");
   }
 
   const playMyRecording = useCallback(async (idx: number) => {
@@ -289,7 +289,7 @@ export function PassageReader({ passage, backHref }: Props) {
       <div className="px-4 pt-5 lg:pt-5">
         {!hasAnyAudio && (
           <div className="mb-4 rounded-xl bg-warning/10 text-ink-light text-xs px-3 py-2">
-            本課文的朗讀音訊還在生成中，暫時只能看文字
+            這篇課文的朗讀語音還在製作中，暫時只能看文字
           </div>
         )}
 

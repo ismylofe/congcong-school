@@ -47,7 +47,7 @@ async function main() {
       );
       assert(!markup.includes("NaN"));
       assert(markup.includes('role="group"'));
-      assert(markup.includes("图"));
+      assert(markup.includes("圖"));
     }
   }
   const today = dateKey(),

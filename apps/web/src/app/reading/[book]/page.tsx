@@ -119,7 +119,7 @@ export default async function ReadingListPage({
                     {p.curriculumRole ? `${ROLE_LABEL[p.curriculumRole]} · ` : ""}
                     {kindLabel ? `${kindLabel} · ` : ""}
                     {p.sentences.length} 句
-                    {!audioReady && " · 音訊生成中"}
+                    {!audioReady && " · 語音製作中"}
                   </div>
                 </div>
                 {audioReady && (

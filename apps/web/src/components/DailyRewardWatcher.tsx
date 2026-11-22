@@ -154,7 +154,7 @@ export function DailyRewardWatcher() {
       haptic("success");
       toast.success("🔥 補回昨天成功，連勝保住了！", 3600);
     } else {
-      toast.error("補卡沒有成功，再試試吧");
+      toast.error("補簽沒有成功，再試試看");
     }
     // 補卡決定之後再發今日登入獎勵
     window.setTimeout(claimDailyAndHint, 400);
@@ -176,7 +176,7 @@ export function DailyRewardWatcher() {
   }
 
   return (
-    <Modal ariaLabel="連勝補籤" open={makeupStreak !== null} onClose={handleMakeupDecline}>
+    <Modal ariaLabel="連勝補簽" open={makeupStreak !== null} onClose={handleMakeupDecline}>
       <div className="flex flex-col items-center text-center">
         <Mascot mood="sad" size={96} />
         <h2 className="text-2xl font-extrabold text-ink mt-3">連勝要斷啦！</h2>

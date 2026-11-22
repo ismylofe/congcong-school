@@ -63,7 +63,7 @@ export function StoryCard({ story, bookId }: Props) {
             ) : (
               <span>
                 {story.sentences.length} 句 · {story.questions.length} 道題
-                {!audioReady && " · 音訊生成中"}
+                {!audioReady && " · 語音製作中"}
               </span>
             )}
           </div>

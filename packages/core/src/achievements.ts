@@ -132,7 +132,7 @@ const A: Achievement[] = [
   {
     id: "xp-5000",
     category: "milestone",
-    name: "學霸認證",
+    name: "學習達人",
     description: "累計 5000 經驗",
     iconKey: "lightning",
     color: "#FFC800",
@@ -167,7 +167,7 @@ const A: Achievement[] = [
   {
     id: "streak-30",
     category: "streak",
-    name: "月度堅持",
+    name: "整月堅持",
     description: "連續學習 30 天",
     iconKey: "flame",
     color: "#FF4B4B",
@@ -213,7 +213,7 @@ const A: Achievement[] = [
   {
     id: "perfect-50",
     category: "perfection",
-    name: "無暇修行",
+    name: "無瑕修行",
     description: "三星通關 50 節課",
     iconKey: "crown",
     color: "#A855F7",

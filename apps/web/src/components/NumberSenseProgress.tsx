@@ -27,7 +27,7 @@ export function NumberSenseProgress({
     : 0;
   if (!expanded) return <section aria-label="數數與比多少示範單元" className="number-unit-entry ui-card border-2 border-secondary/25 bg-white p-4 mb-4 text-ink">
     <div><h2 className="font-extrabold">數數與比多少</h2><p className="text-ink-light">三節動手課 · 不扣紅心{practiced > 0 ? ` · 已練 ${practiced}/3` : ''}</p></div>
-    <Link href={due.length ? "/number-sense/review/" : "/number-sense/"} className="ui-text-button text-secondary-dark">{due.length ? "用新題檢驗一下" : "進入示範單元"} <span aria-hidden="true" className="ml-2">→</span></Link>
+    <Link href={due.length ? "/number-sense/review/" : "/number-sense/"} className="ui-text-button text-secondary-dark">{due.length ? "用新題檢查一下" : "進入示範單元"} <span aria-hidden="true" className="ml-2">→</span></Link>
   </section>;
   return (
     <section
@@ -41,8 +41,8 @@ export function NumberSenseProgress({
       <p className="text-sm text-ink mt-2">
         已練習 {practiced}/3 個技能。
         {due.length > 0
-          ? `今天可以檢驗 ${due.length} 個技能。`
-          : "練習後，下一天用新題看看還會不會。"}
+          ? `今天可以檢查 ${due.length} 個技能。`
+          : "練習後，隔天用新題看看還會不會。"}
       </p>
       {expanded && (
         <div className="space-y-4 mt-5">
@@ -64,12 +64,12 @@ export function NumberSenseProgress({
                 </p>
                 {entry && (
                   <p className="text-sm mt-2 text-ink-light">
-                    無提示首答 {entry.evidence.independentCorrect}/
+                    沒看提示的第一次作答 {entry.evidence.independentCorrect}/
                     {entry.evidence.independentTotal} · 換情境{" "}
                     {entry.evidence.transferCorrect}/
                     {entry.evidence.transferTotal}
                     <br />
-                    下次隔天檢驗：{entry.nextReviewOn}
+                    下次隔天檢查：{entry.nextReviewOn}
                     {entry.verifiedOn ? ` · 已驗證於 ${entry.verifiedOn}` : ""}
                   </p>
                 )}
@@ -98,7 +98,7 @@ export function NumberSenseProgress({
             href="/number-sense/review/"
             className="btn-chunky-primary px-4"
           >
-            用新題檢驗一下
+            用新題檢查一下
           </Link>
         )}
       </div>

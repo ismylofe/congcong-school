@@ -115,7 +115,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
     <Modal ariaLabel="學習寶箱" open={open} onClose={onClose}>
       <div className="flex flex-col items-center text-center">
         <h2 className="text-2xl font-extrabold text-ink mb-1">寶箱來啦！</h2>
-        <p className="text-ink-light text-sm mb-4">點選開啟，領取獎勵</p>
+        <p className="text-ink-light text-sm mb-4">點一下打開，領取獎勵</p>
 
         <div className="relative w-36 h-36 flex items-center justify-center">
           {/* 脈衝光圈（未開時；rare/epic 顏色更亮） */}

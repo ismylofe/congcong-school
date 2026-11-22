@@ -79,7 +79,7 @@ export function JumpClient() {
         const data = await loadJumpData(bookId, unitNumber);
         if (!cancelled) setLoad({ kind: "ready", ...data });
       } catch (error) {
-        if (!cancelled) setLoad({ kind: "error", message: error instanceof Error ? error.message : "題目沒有載入出來，請返回後重試" });
+        if (!cancelled) setLoad({ kind: "error", message: error instanceof Error ? error.message : "題目沒有載入成功，請返回後再試一次" });
       }
     }
     void fetchAll();
@@ -251,7 +251,7 @@ export function JumpClient() {
           <Mascot mood="cheer" size={150} reactTo="levelup" reactKey={1} />
           <h1 className="text-4xl font-extrabold text-primary mt-4">跳級成功！</h1>
           <p className="text-ink-light mt-2">
-            你透過了前面知識的檢測，可以從{load.unitLabel}
+            你通過了前面內容的測驗，可以從{load.unitLabel}
             {load.unitTitle ? `「${load.unitTitle}」` : ""}繼續吧！
           </p>
           <motion.div
@@ -268,7 +268,7 @@ export function JumpClient() {
             <span>前面 {passedCount} 節課已點亮</span>
           </motion.div>
           <p className="text-[11px] text-ink-softer mt-3">
-            跳級點亮的課程按一星計，隨時可以回去重玩拿三星
+            跳級點亮的課程算一顆星，隨時可以回去重玩拿三顆星
           </p>
           <button
             autoFocus
@@ -310,7 +310,7 @@ export function JumpClient() {
               {hearts > 0 ? "再試一次（換一套題）" : "補滿紅心再試"}
             </button>
             <button onClick={exitToPath} className="btn-chunky-ghost w-full">
-              先回去把前面學紮實
+              先回去把前面學好
             </button>
           </div>
         </motion.div>
@@ -336,7 +336,7 @@ export function JumpClient() {
             type="button"
             onClick={exitToPath}
             className="h-11 w-11 -ml-1 inline-flex items-center justify-center rounded-full text-ink-light hover:text-ink hover:bg-bg-softer transition-colors shrink-0"
-            aria-label="退出跳級測試"
+            aria-label="離開跳級測驗"
           >
             <Close className="w-5 h-5" />
           </button>
@@ -365,7 +365,7 @@ export function JumpClient() {
           }}
         >
           <Lightning className="w-3 h-3" />
-          跳級測試 · 衝向{load.kind === "ready" ? load.unitLabel : `第 ${unitNumber} 單元`}
+          跳級測驗 · 衝向{load.kind === "ready" ? load.unitLabel : `第 ${unitNumber} 單元`}
         </span>
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-bg-softer text-ink-light text-[11px] font-extrabold">
           答對 {Math.ceil(total * JUMP_PASS_ACCURACY)} 題過關
@@ -462,10 +462,10 @@ function HeartGateModal({
       <div className="flex flex-col items-center text-center">
         <Mascot mood="sad" size={96} />
         <h2 className="text-2xl font-extrabold text-ink mt-3">紅心用完了！</h2>
-        <p className="text-ink-light mt-2">跳級測試要用紅心，補滿再來挑戰吧～</p>
+        <p className="text-ink-light mt-2">跳級測驗要用紅心，補滿再來挑戰吧！</p>
         <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-secondary-dark">
           <Gem className="w-4 h-4" />
-          <span className="tabular-nums">當前寶石 {gems}</span>
+          <span className="tabular-nums">目前寶石 {gems}</span>
         </div>
         <div className="flex flex-col gap-3 w-full mt-5">
           <button
@@ -484,7 +484,7 @@ function HeartGateModal({
           </button>
           {gems < HEART_REFILL_COST && (
             <p className="text-xs text-ink-softer -mt-1">
-              寶石不夠，先回去學習攢一攢，紅心也會慢慢恢復
+              寶石不夠，先回去學習存一點，紅心也會慢慢恢復
             </p>
           )}
           <button onClick={onExit} className="btn-chunky-ghost w-full">

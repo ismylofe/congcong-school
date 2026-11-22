@@ -159,7 +159,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
         <div className="text-center">
           <Target className="w-12 h-12 text-primary mx-auto" />
           <h2 className="text-2xl font-extrabold text-ink mt-2">每日目標</h2>
-          <p className="text-ink-light mt-1 mb-5">選擇你每天想掙的 XP</p>
+          <p className="text-ink-light mt-1 mb-5">選擇你每天想拿到的 XP</p>
           <div className="grid grid-cols-2 gap-3">
             {DAILY_GOAL_OPTIONS.map(opt => (
               <button

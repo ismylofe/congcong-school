@@ -205,7 +205,7 @@ function SrsSummary({
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="text-base font-extrabold text-ink">今日複習計劃</div>
+        <div className="text-base font-extrabold text-ink">今日複習計畫</div>
         <div className="text-xs font-extrabold text-ink-light tabular-nums">
           <span className="text-danger">{todayCount}</span>
           <span className="text-ink-softer"> / {total} 待辦</span>

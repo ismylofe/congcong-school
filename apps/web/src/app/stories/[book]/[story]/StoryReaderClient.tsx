@@ -85,7 +85,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
     setCurrentIndex(idx);
     const result = await playTTSResult(s.audio);
     if (generation !== playbackGenerationRef.current) return;
-    if (result !== "ended") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。");
+    if (result !== "ended") setPlaybackError("聲音沒有完整播放，請確認聲音已開啟後再試一次。");
     setCurrentIndex(null);
     setMode("idle");
   }, [story]);
@@ -108,7 +108,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
       onSentence: setCurrentIndex, wait: () => Promise.resolve(),
     });
     if (generation !== playbackGenerationRef.current) return;
-    if (result === "audio-unavailable") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。");
+    if (result === "audio-unavailable") setPlaybackError("聲音沒有完整播放，請確認聲音已開啟後再試一次。");
     setCurrentIndex(null);
     setMode("idle");
   }, [mode, story]);

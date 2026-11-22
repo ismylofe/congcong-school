@@ -135,7 +135,7 @@ export function FillBlankTextQuestion({
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", damping: 18, stiffness: 260 }}
       >
-        {answer ? <span className="min-w-0 break-all">{answer}</span> : <span className="text-ink-light text-xl font-bold">{/[a-zA-Z]/.test(question.answer) ? "點下方字母作答" : "點下方漢字作答"}</span>}
+        {answer ? <span className="min-w-0 break-all">{answer}</span> : <span className="text-ink-light text-xl font-bold">{/[a-zA-Z]/.test(question.answer) ? "點下方字母作答" : "點下方國字作答"}</span>}
       </motion.div>
 
       {phase === "checked" && !isCorrect && (

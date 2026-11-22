@@ -33,18 +33,18 @@ async function main() {
   assert.match(render(), /1\/7/, "a completed zero-XP lesson is a study day");
   assert.doesNotMatch(
     render(),
-    /本周还没有学习记录/,
+    /本週還沒有學習記錄/,
     "do not deny a completed learning activity",
   );
   const { dateKey } = await import("../../packages/core/src/week");
   assert.match(
     render(),
-    /0 XP.*已学习/,
+    /0 XP.*已學習/,
     "the zero-XP activity must also be visible in the chart description",
   );
   const completedBackup = useProgressStore.getState().exportBackup();
   useProgressStore.getState().importBackup(completedBackup);
-  assert.match(render(), /完成课时/);
+  assert.match(render(), /完成課程/);
   assert.equal(
     weeklyStudyReport(useProgressStore.getState()).totalLessons,
     1,

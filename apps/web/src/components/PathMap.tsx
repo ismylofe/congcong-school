@@ -284,7 +284,7 @@ export function PathMap({
             {activeUnitFullyLocked && (
               <SoundLink href={`/jump/?book=${bookId}&unit=${activeUnitNum}`} hapticIntensity="medium"
                 className="shrink-0 inline-flex items-center gap-1.5 px-2 min-h-11 rounded-xl path-banner-action hover:bg-white/15 transition-colors text-xs font-bold"
-                aria-label={`跳級測試：直接跳到${activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 單元`}`}>
+                aria-label={`跳級測驗：直接跳到${activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 單元`}`}>
                 <Lightning className="w-4 h-4" aria-hidden /><span>跳級</span>
               </SoundLink>
             )}

@@ -103,7 +103,7 @@ export function LessonStartModal({
       toast.success("❤️ 紅心已補滿，馬上開始吧！");
     } else {
       playSfx("wrong");
-      toast.error("寶石不夠，先去學習攢寶石吧");
+      toast.error("寶石不夠，先去學習存寶石吧");
     }
   }
 
@@ -136,7 +136,7 @@ export function LessonStartModal({
         </div>
         <h2 className="text-2xl font-extrabold text-ink mt-2 leading-tight">{title}</h2>
 
-        {questionCount < 3 && !isExam && <p className="mt-3 text-sm text-ink-light">微練習 · 先試一試，之後再用更多情境鞏固。這次不評掌握星級。</p>}
+        {questionCount < 3 && !isExam && <p className="mt-3 text-sm text-ink-light">微練習 · 先試一試，之後再用更多情境多練習。這次不評星級。</p>}
         {isExam && (
           <div
             className="mt-3 inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-white text-xs font-extrabold"
@@ -198,7 +198,7 @@ export function LessonStartModal({
               今天學習時間到啦，休息一下眼睛 🌙
             </div>
             <div className="mt-1 text-xs text-ink-light">
-              明天再來繼續闖關吧～已開始的課程不受影響
+              明天再來繼續闖關吧！已經開始的課程不受影響
             </div>
           </div>
         )}
@@ -208,7 +208,7 @@ export function LessonStartModal({
           <div className="mt-4 w-full rounded-2xl border-2 border-danger/30 bg-danger/10 px-4 py-3">
             <div className="flex items-center justify-center gap-2 text-danger font-extrabold">
               <Heart className="w-5 h-5" />
-              <span>紅心不足</span>
+              <span>紅心不夠</span>
             </div>
             {nextHeartAt && (
               <div className="mt-1 text-xs text-ink-light">

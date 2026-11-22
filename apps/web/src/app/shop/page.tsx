@@ -236,7 +236,7 @@ function PowerUpsSection() {
       toast.success("🛡️ 連勝護盾 +1！漏學一天也不怕啦");
     } else {
       playSfx("wrong");
-      toast.error("寶石不夠，先去學習攢寶石吧");
+      toast.error("寶石不夠，先去學習存寶石吧");
     }
   }
 
@@ -250,7 +250,7 @@ function PowerUpsSection() {
       toast.success("❤️ 紅心已補滿！");
     } else {
       playSfx("wrong");
-      toast.error("寶石不夠，先去學習攢寶石吧");
+      toast.error("寶石不夠，先去學習存寶石吧");
     }
   }
 
@@ -263,7 +263,7 @@ function PowerUpsSection() {
           icon={<Snowflake className="w-8 h-8" />}
           iconColor="#1CB0F6"
           title="連勝護盾"
-          desc={`漏學一天時保住連勝。當前持有 ${Math.min(freezes, MAX_FREEZES)}/${MAX_FREEZES} 個，每週一學習可補充 1 個。`}
+          desc={`漏學一天時保住連勝。目前有 ${Math.min(freezes, MAX_FREEZES)}/${MAX_FREEZES} 個，每週一學習可補充 1 個。`}
           cost={FREEZE_COST}
           disabled={freezesFull}
           disabledLabel="已滿 2/2"
@@ -516,7 +516,7 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
             示意
           </div>
           <div className="text-sm font-bold text-ink leading-relaxed">
-            這就是答題時背後看到的氛圍
+            答題時的背景就會像這樣
           </div>
         </div>
       </div>

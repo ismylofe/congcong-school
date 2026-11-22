@@ -108,9 +108,9 @@
     "weekKey": "2026-08-24",
     "tier": "gold",
     "salt": "golden-salt",
-    "names": ["考拉抱抱", "兔子朵朵", "雪人白白", "月亮彎彎", "星星閃閃", "倉鼠豆豆", "企鵝冰冰", "青蛙呱呱", "鸚鵡花花", "蝸牛慢慢", "浣熊樂樂", "小貓咪咪", "小老虎威威", "彩虹七七", "狐狸悠悠"],
+    "names": ["無尾熊抱抱", "兔子朵朵", "雪人白白", "月亮彎彎", "星星閃閃", "倉鼠豆豆", "企鵝冰冰", "青蛙呱呱", "鸚鵡花花", "蝸牛慢慢", "浣熊樂樂", "小貓咪咪", "小老虎威威", "彩虹七七", "狐狸悠悠"],
     "bots": [
-      { "botIndex": 0, "expName": "考拉抱抱", "expGoal": 556, "expXpWednesdayNoon": 153, "expXpSundayNight": 556 },
+      { "botIndex": 0, "expName": "無尾熊抱抱", "expGoal": 556, "expXpWednesdayNoon": 153, "expXpSundayNight": 556 },
       { "botIndex": 1, "expName": "兔子朵朵", "expGoal": 223, "expXpWednesdayNoon": 95, "expXpSundayNight": 223 },
       { "botIndex": 2, "expName": "雪人白白", "expGoal": 351, "expXpWednesdayNoon": 51, "expXpSundayNight": 351 }
     ]

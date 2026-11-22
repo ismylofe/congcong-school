@@ -26,12 +26,12 @@ interface Option {
 }
 
 const OPTIONS: Option[] = [
-  { grade: 1, label: "我剛上一年級", hint: "剛開始識字 / 學加減", Icon: Apple },
-  { grade: 2, label: "我讀二年級", hint: "已會簡單加減 / 拼音", Icon: Sprout },
-  { grade: 3, label: "我讀三年級", hint: "認識更多漢字 / 學乘除", Icon: Tree },
-  { grade: 4, label: "我讀四年級", hint: "能寫小作文 / 學小數", Icon: Butterfly },
+  { grade: 1, label: "我剛上一年級", hint: "剛開始認字 / 學加減", Icon: Apple },
+  { grade: 2, label: "我讀二年級", hint: "會簡單加減 / 注音", Icon: Sprout },
+  { grade: 3, label: "我讀三年級", hint: "認識更多國字 / 學乘除", Icon: Tree },
+  { grade: 4, label: "我讀四年級", hint: "能寫短文 / 學小數", Icon: Butterfly },
   { grade: 5, label: "我讀五年級", hint: "閱讀理解 / 學分數", Icon: Rocket },
-  { grade: 6, label: "我讀六年級", hint: "面對小升初", Icon: Trophy },
+  { grade: 6, label: "我讀六年級", hint: "準備升國中", Icon: Trophy },
 ];
 
 export function GradePicker() {
