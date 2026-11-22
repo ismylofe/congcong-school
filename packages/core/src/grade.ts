@@ -6,8 +6,8 @@
 
 import type { Question } from "./types";
 
-const TRUE_VALUES = new Set(["对", "正确", "true", "T", "✓", "√", "Y", "yes"]);
-const FALSE_VALUES = new Set(["错", "错误", "false", "F", "✗", "×", "N", "no"]);
+const TRUE_VALUES = new Set(["对", "對", "正确", "正確", "true", "T", "✓", "√", "Y", "yes"]);
+const FALSE_VALUES = new Set(["错", "錯", "错误", "錯誤", "false", "F", "✗", "×", "N", "no"]);
 
 function normalize(s: string): string {
   return s

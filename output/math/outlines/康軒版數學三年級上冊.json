@@ -1,0 +1,67 @@
+{
+  "textbook": "康軒版 數學三年級上冊",
+  "edition": "kangxuan",
+  "editionLabel": "康軒版",
+  "units": [
+    {
+      "unit_number": 1,
+      "title": "10000以內的數",
+      "knowledge_points": [
+        {
+          "name": "數到10000",
+          "description": "認識千位，建立10000以內的數詞序列，並能說、讀、聽、寫、做各數。",
+          "difficulty": 1,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "使用錢幣",
+          "description": "用1元到1000元的錢幣進行買賣，並做位值單位換算。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "比大小",
+          "description": "比較10000以內數的大小，會用＞和＜表示。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "整數數線",
+          "description": "認識數線，在數線上報讀、標示、比較整數。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 2,
+      "title": "四位數的加減",
+      "knowledge_points": [
+        {
+          "name": "三、四位數的加法",
+          "description": "用直式計算三、四位數的加法，包含連續進位。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "三位數的減法",
+          "description": "用直式計算三位數的減法，包含退位。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "四位數的減法",
+          "description": "用直式計算四位數的減法，包含多重退位與被減數有0的情形。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "加減估算",
+          "description": "把數估成整百或整千，估算加減的結果並解決問題。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    }
+  ]
+}

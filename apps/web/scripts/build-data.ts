@@ -506,20 +506,13 @@ const SUBJECTS: SubjectMeta[] = [
 // 文件名解析
 // ============================================================
 
-const FILENAME_PATTERNS: { regex: RegExp; grade: number; semester: "up" | "down" }[] = [
-  { regex: /一年级上册/, grade: 1, semester: "up" },
-  { regex: /二年级上册/, grade: 2, semester: "up" },
-  { regex: /三年级上册/, grade: 3, semester: "up" },
-  { regex: /四年级上册/, grade: 4, semester: "up" },
-  { regex: /五年级上册/, grade: 5, semester: "up" },
-  { regex: /六年级上册/, grade: 6, semester: "up" },
-  { regex: /一年级下册/, grade: 1, semester: "down" },
-  { regex: /二年级下册/, grade: 2, semester: "down" },
-  { regex: /三年级下册/, grade: 3, semester: "down" },
-  { regex: /四年级下册/, grade: 4, semester: "down" },
-  { regex: /五年级下册/, grade: 5, semester: "down" },
-  { regex: /六年级下册/, grade: 6, semester: "down" },
-];
+const GRADE_CHARS = ["一", "二", "三", "四", "五", "六"];
+// 同时识别简体（级、册）与繁体（級、冊）文件名
+const FILENAME_PATTERNS: { regex: RegExp; grade: number; semester: "up" | "down" }[] =
+  GRADE_CHARS.flatMap((ch, i) => [
+    { regex: new RegExp(`${ch}年[级級]上[册冊]`), grade: i + 1, semester: "up" as const },
+    { regex: new RegExp(`${ch}年[级級]下[册冊]`), grade: i + 1, semester: "down" as const },
+  ]);
 
 const GRADE_NAMES = ["", "一", "二", "三", "四", "五", "六"];
 
@@ -831,7 +824,13 @@ async function main() {
     console.log(`\n📘 处理学科: ${subject.name} (${subject.id}) — ${outlineFiles.length} 本教材`);
 
     for (const outlineFile of outlineFiles) {
-      const result = await processTextbook(subject, outlineFile, outlineDir, quizDir);
+      let result;
+      try {
+        result = await processTextbook(subject, outlineFile, outlineDir, quizDir);
+      } catch (err) {
+        console.warn(`  ⚠️ 略過 ${outlineFile}：${(err as Error).message}`);
+        continue;
+      }
       if (!result) continue;
       if (booksWithPassages.has(result.book.id)) {
         result.book.hasPassages = true;
