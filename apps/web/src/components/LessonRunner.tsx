@@ -71,28 +71,28 @@ import { LessonTime } from "@/lib/lessonTime";
 import { answerReady } from "@/lib/questionDraft";
 import type { QuestionType } from "@cstf/core";
 
-/** 仿 Duolingo 题型胶囊文案（紫色 NEW WORD tag） */
+/** 仿 Duolingo 題型膠囊文案（紫色 NEW WORD tag） */
 function questionTagLabel(type: QuestionType): string {
   switch (type) {
     case "choice":
-      return "选择题";
+      return "選擇題";
     case "true_false":
-      return "判断题";
+      return "判斷題";
     case "fill_blank":
     case "calculation":
-      return "计算填空";
+      return "計算填空";
     case "fill_blank_text":
       return "文字填空";
     case "word_order":
       return "排序";
     case "matching":
-      return "连线配对";
+      return "連線配對";
     default:
-      return "新题";
+      return "新題";
   }
 }
 
-// 重型/条件渲染的子组件：按需加载以减小 LessonRunner 初始 chunk
+// 重型/條件渲染的子元件：按需載入以減小 LessonRunner 初始 chunk
 const FeedbackPanel = dynamic(
   () => import("./FeedbackPanel").then(m => ({ default: m.FeedbackPanel })),
   { ssr: false },
@@ -110,7 +110,7 @@ const ComboOverlay = dynamic(
   { ssr: false },
 );
 
-/** 齿轮小图标（仅课程顶栏移动端设置入口用，避免动 icons.tsx） */
+/** 齒輪小圖示（僅課程頂欄移動端設定入口用，避免動 icons.tsx） */
 function GearIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -130,12 +130,12 @@ function GearIcon({ className }: { className?: string }) {
 }
 
 /**
- * 顶栏下方一条小提示：「再答对 N 题就能拿到 三/二 星」
+ * 頂欄下方一條小提示：「再答對 N 題就能拿到 三/二 星」
  *
- * 计算逻辑：假设剩余题全对，最终准确率是 (correctCount + remaining) / total。
- * 反推"还差几道连续答对就能跨过 0.95 / 0.75 阈值"。
+ * 計算邏輯：假設剩餘題全對，最終準確率是 (correctCount + remaining) / total。
+ * 反推"還差幾道連續答對就能跨過 0.95 / 0.75 閾值"。
  *
- * 首答口径：answered = 已首答过的题数（错题重排的复答不影响）。
+ * 首答口徑：answered = 已首答過的題數（錯題重排的復答不影響）。
  */
 function StarDistanceHint({
   correctCount,
@@ -149,24 +149,24 @@ function StarDistanceHint({
   const remaining = total - answered;
   if (remaining <= 0 || total === 0) return null;
 
-  // 当前所需答对数（达到三星 / 二星 的阈值 —— @cstf/core 单一事实源）
+  // 當前所需答對數（達到三星 / 二星 的閾值 —— @cstf/core 單一事實源）
   const need3 = Math.ceil(THREE_STAR_ACCURACY * total);
   const need2 = Math.ceil(TWO_STAR_ACCURACY * total);
 
-  // 还差多少道才能拿到对应星
+  // 還差多少道才能拿到對應星
   const missingFor3 = Math.max(0, need3 - correctCount);
   const missingFor2 = Math.max(0, need2 - correctCount);
 
-  // 选优先级最高的提示：三星仍然可达？否则二星？否则不显示
+  // 選優先順序最高的提示：三星仍然可達？否則二星？否則不顯示
   let label: string | null = null;
   let starsToShow = 0;
   let highlight = false;
   if (missingFor3 <= remaining) {
-    label = `还差 ${missingFor3} 题就 三星`;
+    label = `還差 ${missingFor3} 題就 三星`;
     starsToShow = 3;
     if (missingFor3 <= 1) highlight = true;
   } else if (missingFor2 <= remaining) {
-    label = `还差 ${missingFor2} 题就 二星`;
+    label = `還差 ${missingFor2} 題就 二星`;
     starsToShow = 2;
     if (missingFor2 <= 1) highlight = true;
   }
@@ -207,12 +207,12 @@ function StarDistanceHint({
 
 interface LessonRunnerProps {
   lesson: Lesson;
-  /** 本节课紧跟的宝箱 slot（由 page.tsx 预计算） */
+  /** 本節課緊跟的寶箱 slot（由 page.tsx 預計算） */
   chestSlot?: ChestSlot | null;
   nextLessonId?: string;
 }
 
-/** 结算页的任务进度快照：before = 通关记账前，after = 记账后 */
+/** 結算頁的任務進度快照：before = 通關記賬前，after = 記賬後 */
 interface QuestSnapshot {
   quest: Quest;
   before: number;
@@ -220,11 +220,11 @@ interface QuestSnapshot {
 }
 
 /**
- * 一次性通关成果快照。传给 CompletionScreen 展示，
- * 避免 CompletionScreen 直接访问中间态。
+ * 一次性通關成果快照。傳給 CompletionScreen 展示，
+ * 避免 CompletionScreen 直接訪問中間態。
  */
 interface SessionStats {
-  /** 通关记账原子结算单（recordLessonComplete 返回值） */
+  /** 通關記賬原子結算單（recordLessonComplete 返回值） */
   outcome: LessonOutcome;
   accuracy: number;
   firstCorrect: number;
@@ -233,22 +233,22 @@ interface SessionStats {
   numberSenseEvidence?: NumberPracticeEvidence;
   practiceOnly: boolean;
   perfect: boolean;
-  /** 本节是否享受周末双倍 XP */
+  /** 本節是否享受週末雙倍 XP */
   weekend: boolean;
-  /** ⚔️ 是否单元挑战课（XP ×2，宝石 drip 不翻倍） */
+  /** ⚔️ 是否單元挑戰課（XP ×2，寶石 drip 不翻倍） */
   isExam: boolean;
-  /** 单元征服：挑战课 accuracy ≥ 0.8 */
+  /** 單元征服：挑戰課 accuracy ≥ 0.8 */
   conquered: boolean;
   maxCombo: number;
   durationSec: number;
   chestReward: { slot: ChestSlot; gems: number; tier: ChestRewardTier } | null;
-  /** 今天三条任务的 before/after 进度（任务进度幕用） */
+  /** 今天三條任務的 before/after 進度（任務進度幕用） */
   quests: QuestSnapshot[];
 }
 
 export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonRunnerProps) {
   useSyncMute();
-  useProgressTicker(); // 红心实时恢复
+  useProgressTicker(); // 紅心實時恢復
   const router = useRouter();
   const recordComplete = useProgressStore(s => s.recordLessonComplete);
   const addMistake = useProgressStore(s => s.addMistake);
@@ -279,9 +279,9 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   }, [backdropId]);
   const prefersReduced = useReducedMotion();
 
-  // 周末双倍 XP（本地时间周六/周日）—— 所见即所得：预览/飘字/结算全部按 ×2 显示
+  // 週末雙倍 XP（本地時間週六/週日）—— 所見即所得：預覽/飄字/結算全部按 ×2 顯示
   const [weekend] = useState(() => isWeekendXpActive());
-  // ⚔️ 单元挑战课：XP 总额 ×2（与周末可叠加 = ×4），宝石 drip 不翻倍
+  // ⚔️ 單元挑戰課：XP 總額 ×2（與週末可疊加 = ×4），寶石 drip 不翻倍
   const isExam = isExamLessonId(lesson.id);
   const numberSkill = numberSkillForLesson(lesson.id);
   const warmupKind = lessonWarmupKind(lesson);
@@ -298,19 +298,19 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     [questions],
   );
 
-  // 等待从 zustand persist 恢复已保存的会话后再渲染，避免闪烁
+  // 等待從 zustand persist 恢復已儲存的會話後再渲染，避免閃爍
   const [ready, setReady] = useState(false);
-  // === 错题重排队列（REQUEUE，parity-14）===
-  // currentId = 正在作答的题；queue = 之后待答的题（答错的会被 push 回队尾）
+  // === 錯題重排佇列（REQUEUE，parity-14）===
+  // currentId = 正在作答的題；queue = 之後待答的題（答錯的會被 push 回隊尾）
   const [currentId, setCurrentId] = useState<number | null>(
     () => questions[0]?.id ?? null,
   );
   const [queue, setQueue] = useState<number[]>(() => questions.slice(1).map(q => q.id));
-  /** 已答对（离场）的题目 id，进度条口径 */
+  /** 已答對（離場）的題目 id，進度條口徑 */
   const [solved, setSolved] = useState<number[]>([]);
-  /** 已首答过的题目 id 集合（accuracy 首答口径；复答不重复计） */
+  /** 已首答過的題目 id 集合（accuracy 首答口徑；復答不重複計） */
   const attemptedRef = useRef<Set<number>>(new Set());
-  /** 每次换题 +1，驱动题卡进出场动画（同一题重排回来也要重新入场） */
+  /** 每次換題 +1，驅動題卡進出場動畫（同一題重排回來也要重新入場） */
   const [serveKey, setServeKey] = useState(0);
   const checkedServe = useRef(-1);
   const continuedServe = useRef(-1);
@@ -323,19 +323,19 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   const [timeLimited, setTimeLimited] = useState(false);
   const [phase, setPhase] = useState<QuestionPhase>("answering");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  /** 首答答对数（星级/XP 口径） */
+  /** 首答答對數（星級/XP 口徑） */
   const [correctCount, setCorrectCount] = useState(0);
-  /** 首答答错数（= missed 集合大小） */
+  /** 首答答錯數（= missed 集合大小） */
   const [mistakeCount, setMistakeCount] = useState(0);
   const [done, setDone] = useState(false);
   const [sessionStats, setSessionStats] = useState<SessionStats | null>(null);
-  // 失败页仅在「用户主动退出且 0 心」时出现；0 心进入时在恢复逻辑里决定弹 Gate 还是失败页
+  // 失敗頁僅在「使用者主動退出且 0 心」時出現；0 心進入時在恢復邏輯裡決定彈 Gate 還是失敗頁
   const [failed, setFailed] = useState(false);
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
-  /** session 内累计 XP（首答口径，展示 + 持久化） */
+  /** session 內累計 XP（首答口徑，展示 + 持久化） */
   const [sessionXp, setSessionXp] = useState(0);
-  // +XP 飘字动画队列
+  // +XP 飄字動畫佇列
   const [xpFloats, setXpFloats] = useState<
     { id: number; startX: number; startY: number; endX: number; endY: number }[]
   >([]);
@@ -343,20 +343,20 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   const xpTargetRef = useRef<HTMLDivElement>(null);
   const [mascotReact, setMascotReact] = useState<MascotReaction>(null);
   const [mascotReactKey, setMascotReactKey] = useState(0);
-  /** Mascot 当前的"持续表情"，由 mascotTriggers 上下文决定 */
+  /** Mascot 當前的"持續表情"，由 mascotTriggers 上下文決定 */
   const [mascotMood, setMascotMood] = useState<MascotMood>("happy");
   const [bubbleText, setBubbleText] = useState<string | null>(null);
   const [bubbleTone, setBubbleTone] = useState<"neutral" | "primary" | "danger">("neutral");
   const [bubbleKey, setBubbleKey] = useState(0);
   const [comboOverlay, setComboOverlay] = useState<{ combo: number; key: number } | null>(null);
-  // 标记是否曾经出现过连击/弹层 —— 仅在首次需要时才 mount，触发 dynamic chunk 按需加载
+  // 標記是否曾經出現過連擊/彈層 —— 僅在首次需要時才 mount，觸發 dynamic chunk 按需載入
   const [comboMounted, setComboMounted] = useState(false);
   const [exitConfirmMounted, setExitConfirmMounted] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  // 断心遮罩（web-lesson-5）：0 心时点「继续」才弹，期间不清除会话
+  // 斷心遮罩（web-lesson-5）：0 心時點「繼續」才彈，期間不清除會話
   const [gateMounted, setGateMounted] = useState(false);
   const [gateOpen, setGateOpen] = useState(false);
-  // 移动端设置小弹层（web-lesson-9）
+  // 移動端設定小彈層（web-lesson-9）
   const [settingsMounted, setSettingsMounted] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showIntro, setShowIntro] = useState((lesson.knowledge !== null && !numberSkill) || warmupKind !== null);
@@ -369,8 +369,8 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   const [warmupCounted, setWarmupCounted] = useState<number[]>([]);
   const [showHandbook, setShowHandbook] = useState(false);
   /**
-   * 🔒 交互闸门（webrunner-5）：任何遮罩打开时，题目区的键盘快捷键 / 点击 /
-   * 配对题自动提交都必须停摆 —— 否则用户在断心遮罩前敲数字键就能把题判掉。
+   * 🔒 互動閘門（webrunner-5）：任何遮罩開啟時，題目區的鍵盤快捷鍵 / 點選 /
+   * 配對題自動提交都必須停擺 —— 否則使用者在斷心遮罩前敲數字鍵就能把題判掉。
    */
   const locked = showExitConfirm || gateOpen || showSettings || showIntro || contentUpdated || timeLimited;
 
@@ -381,13 +381,13 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   const bubbleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const comboTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 会话恢复：挂载时若存在同课程的持久化进度，恢复队列/连击/XP（web-lesson-12）
+  // 會話恢復：掛載時若存在同課程的持久化進度，恢復佇列/連擊/XP（web-lesson-12）
   useEffect(() => {
-    // 先结算离线期间的自然回心，再判断 0 心入口
+    // 先結算離線期間的自然迴心，再判斷 0 心入口
     useProgressStore.getState().refreshHearts();
     const stored = useProgressStore.getState().activeLesson;
     let sessionRestored = false;
-    // 学习阶段、草稿和反馈都可恢复；旧版已经结束的空队列重新开课。
+    // 學習階段、草稿和反饋都可恢復；舊版已經結束的空佇列重新開課。
     const restored = stored && stored.lessonId === lesson.id && hasLessonProgress(stored)
       ? restoreQuestionSession(stored, questions.map(q => q.id), contentKey) : null;
     if (stored && restored?.currentId != null) {
@@ -415,11 +415,11 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       sessionRestored = true;
     } else if (stored) {
       if (stored.lessonId === lesson.id && hasLessonProgress(stored) && stored.contentKey !== contentKey) setContentUpdated(true);
-      // 切换到了新课程 / 旧版本留下的空会话 → 丢弃
+      // 切換到了新課程 / 舊版本留下的空會話 → 丟棄
       useProgressStore.getState().clearLessonSession();
     }
-    // 0 心进入：有可续会话 → 弹断心遮罩（可补心续课 / 去复习回心）；
-    // 全新开课 → 失败页（附回心倒计时）
+    // 0 心進入：有可續會話 → 彈斷心遮罩（可補心續課 / 去複習迴心）；
+    // 全新開課 → 失敗頁（附迴心倒計時）
     if (!sessionRestored && useProgressStore.getState().dailyTimeLimitReached()) setTimeLimited(true);
     if (!numberSkill && useProgressStore.getState().hearts <= 0) {
       if (sessionRestored) {
@@ -433,7 +433,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson.id]);
 
-  // 持久化会话：只要还在答题，就把核心进度写回 store
+  // 持久化會話：只要還在答題，就把核心進度寫回 store
   useEffect(() => {
     if (!ready || done || failed || timeLimited) return;
     const persistedQueue = phase === "answering" && currentId != null ? [currentId, ...queue] : queue;
@@ -473,21 +473,21 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     upsertLessonSession, answer, isCorrect, introPage, introCompletedPages, warmupCounted, total, showHandbook, contentKey, hintLevels, visualDraft, timeLimited,
   ]);
 
-  // 通关时清除持久化会话。
-  // ⚠️ failed 不清档（webrunner-1）：失败页也提供「再来一次」，而断心遮罩的
-  // 「退出」承诺过「回来接着上次继续」—— 清档会直接毁掉整节课进度。
+  // 通關時清除持久化會話。
+  // ⚠️ failed 不清檔（webrunner-1）：失敗頁也提供「再來一次」，而斷心遮罩的
+  // 「退出」承諾過「回來接著上次繼續」—— 清檔會直接毀掉整節課進度。
   useEffect(() => {
     if (done) {
       clearLessonSession();
     }
   }, [done, clearLessonSession]);
 
-  // 💗 红心自然恢复后自动收起断心遮罩（webrunner-2）：
-  // 遮罩是 dismissible={false} 的，没有这条 effect 用户会被锁死在弹层里。
+  // 💗 紅心自然恢復後自動收起斷心遮罩（webrunner-2）：
+  // 遮罩是 dismissible={false} 的，沒有這條 effect 使用者會被鎖死在彈層裡。
   useEffect(() => {
     if (!gateOpen || hearts <= 0) return;
     setGateOpen(false);
-    // 与「补心续课」同一分支：反馈看完了就端上下一题，答题中则原地接着答
+    // 與「補心續課」同一分支：反饋看完了就端上下一題，答題中則原地接著答
     if (phase === "checked") serveNext();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gateOpen, hearts, phase]);
@@ -532,7 +532,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   const progress =
     total > 0 ? (Math.min(solved.length, total) / total) * 100 : 0;
 
-  // 进度条宽度动画（只在答对时前进：solved 才计入）
+  // 進度條寬度動畫（只在答對時前進：solved 才計入）
   useEffect(() => {
     progressControls.start({
       width: `${progress}%`,
@@ -558,12 +558,12 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     setComboOverlay({ combo: c, key: Date.now() });
     if (comboTimerRef.current) clearTimeout(comboTimerRef.current);
     comboTimerRef.current = setTimeout(() => setComboOverlay(null), 1400);
-    // 播放连击里程碑语音
-    const comboLabel = c === 3 ? "连击 三连!" : c === 5 ? "连击 五连!" : c === 10 ? "连击 十连!" : null;
+    // 播放連擊里程碑語音
+    const comboLabel = c === 3 ? "連擊 三連!" : c === 5 ? "連擊 五連!" : c === 10 ? "連擊 十連!" : null;
     if (comboLabel) void playTTS(uiAudio(comboLabel));
   }
 
-  // 卸载时清计时器
+  // 卸載時清計時器
   useEffect(() => {
     return () => {
       if (bubbleTimerRef.current) clearTimeout(bubbleTimerRef.current);
@@ -572,19 +572,19 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   }, []);
 
   /**
-   * 答错 / 跳过共用的"判错"流程：
-   * 进入 checked 相位 → 错题 push 回队尾 → 清连击、（首答）记错题、扣心
-   * → 触感音效 + 抖动 + 气泡 + 心碎音。0 心不立即失败：点继续时弹 Gate。
+   * 答錯 / 跳過共用的"判錯"流程：
+   * 進入 checked 相位 → 錯題 push 回隊尾 → 清連擊、（首答）記錯題、扣心
+   * → 觸感音效 + 抖動 + 氣泡 + 心碎音。0 心不立即失敗：點繼續時彈 Gate。
    */
   function applyWrongAnswer(firstAttempt: boolean) {
     if (!current) return;
     setIsCorrect(false);
     setPhase("checked");
 
-    // ♻️ 错题重排：答错的题回到队尾，全部做对才能结算（parity-14）
+    // ♻️ 錯題重排：答錯的題回到隊尾，全部做對才能結算（parity-14）
     setQueue(q => [...q, current.id]);
 
-    // === 上下文感知的 mascot mood/reaction 决策 ===
+    // === 上下文感知的 mascot mood/reaction 決策 ===
     const triggerCtx: MascotTriggerContext = {
       isCorrect: false,
       isPerfectSession: false,
@@ -606,14 +606,14 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       addMistake(lesson.id, lesson.title, current);
     }
 
-    // ★ T+0ms ★ 重触觉 + 错音
+    // ★ T+0ms ★ 重觸覺 + 錯音
     haptic("heavy");
     playSfx("wrong");
 
-    // ★ T+35ms ★ Mascot 反应（错峰）
+    // ★ T+35ms ★ Mascot 反應（錯峰）
     setTimeout(() => triggerReact(nextReaction), 35);
 
-    // ★ T+50ms ★ 题区抖动
+    // ★ T+50ms ★ 題區抖動
     if (!prefersReduced) {
       setTimeout(() => {
         shakeControls.start({
@@ -623,26 +623,26 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       }, 50);
     }
 
-    // ★ T+50ms ★ 气泡按 mood
+    // ★ T+50ms ★ 氣泡按 mood
     setTimeout(
       () => showBubble(pickBubble(nextMood), moodToTone(nextMood), 1800),
       50,
     );
 
-    // ★ T+120ms ★ 心碎音效（错峰避免和 wrong 重叠）
+    // ★ T+120ms ★ 心碎音效（錯峰避免和 wrong 重疊）
     if (!numberSkill) setTimeout(() => playSfx("heartLoss"), 120);
 
     if (!numberSkill) loseHeart();
   }
 
-  /** 跳过本题：不判分，直接按答错处理（与多邻国 SKIP 语义一致） */
+  /** 跳過本題：不判分，直接按答錯處理（與多鄰國 SKIP 語義一致） */
   function skipQuestion() {
     if (locked || checkedServe.current === serveKey) return;
     if (!current || phase !== "answering") return;
     checkedServe.current = serveKey;
     const firstAttempt = !attemptedRef.current.has(current.id);
     attemptedRef.current.add(current.id);
-    // 清掉已选答案，反馈阶段只高亮正确答案
+    // 清掉已選答案，反饋階段只高亮正確答案
     setAnswer("");
     applyWrongAnswer(firstAttempt);
   }
@@ -663,10 +663,10 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     setIsCorrect(true);
     setPhase("checked");
 
-    // ✅ 答对：立刻离场（solved 计入进度条）
+    // ✅ 答對：立刻離場（solved 計入進度條）
     setSolved(s => [...s, current.id]);
 
-    // === 上下文感知的 mascot mood/reaction 决策 ===
+    // === 上下文感知的 mascot mood/reaction 決策 ===
     const newCombo = combo + 1;
     const triggerCtx: MascotTriggerContext = {
       isCorrect: true,
@@ -683,7 +683,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     const nextReaction = decideMascotReaction(triggerCtx);
     setMascotMood(nextMood);
 
-    // XP / 星级按首答口径：错题重排后的复答不再加 XP（与结算入账值对齐）
+    // XP / 星級按首答口徑：錯題重排後的復答不再加 XP（與結算入賬值對齊）
     if (firstAttempt) {
       setCorrectCount(c => c + 1);
       setSessionXp(xp => xp + XP_PER_CORRECT);
@@ -691,12 +691,12 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     setCombo(newCombo);
     setMaxCombo(mc => (newCombo > mc ? newCombo : mc));
 
-    // ★ T+0ms ★ 触觉立即响应
+    // ★ T+0ms ★ 觸覺立即響應
     haptic("light");
-    // ★ T+0ms ★ 音效（Web Audio 几乎零延迟）
+    // ★ T+0ms ★ 音效（Web Audio 幾乎零延遲）
     playSfx("correct");
 
-    // +XP 飘字：从屏幕中间飞到顶栏 XP 徽章（仅首答有 XP）
+    // +XP 飄字：從螢幕中間飛到頂欄 XP 徽章（僅首答有 XP）
     if (firstAttempt && typeof window !== "undefined" && xpTargetRef.current) {
       const rect = xpTargetRef.current.getBoundingClientRect();
       const endX = rect.left + rect.width / 2;
@@ -707,10 +707,10 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       setXpFloats(list => [...list, { id, startX, startY, endX, endY }]);
     }
 
-    // ★ T+35ms ★ Mascot 反应（错峰，让用户先听到声音再看到动作）
+    // ★ T+35ms ★ Mascot 反應（錯峰，讓使用者先聽到聲音再看到動作）
     setTimeout(() => triggerReact(nextReaction), 35);
 
-    // ★ T+200ms ★ 进度条脉冲：combo 越高，幅度越大（递增刺激）
+    // ★ T+200ms ★ 進度條脈衝：combo 越高，幅度越大（遞增刺激）
     if (!prefersReduced) {
       const pulseAmp = Math.min(1.6 + newCombo * 0.05, 2.1);
       setTimeout(() => {
@@ -721,7 +721,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       }, 200);
     }
 
-    // ★ T+50ms ★ 气泡：按 mood 选择文案
+    // ★ T+50ms ★ 氣泡：按 mood 選擇文案
     setTimeout(
       () => showBubble(pickBubble(nextMood), moodToTone(nextMood), 1400),
       50,
@@ -736,7 +736,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     }
   }
 
-  /** 上一题收尾后端上下一题（错题已在判错时回到队尾） */
+  /** 上一題收尾後端上下一題（錯題已在判錯時回到隊尾） */
   function serveNext() {
     const [next, ...rest] = queue;
     setCurrentId(next ?? null);
@@ -749,7 +749,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     setMascotMood("happy");
   }
 
-  /** 通关结算：原子记账 + 任务进度快照 + 冻结展示数据 */
+  /** 通關結算：原子記賬 + 任務進度快照 + 凍結展示資料 */
   function finishLesson() {
     if (settled.current) return;
     settled.current = true;
@@ -757,11 +757,11 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     const perfect = mistakeCount === 0 && total >= 3;
     const store = useProgressStore.getState();
 
-    // 首次三星（该课历史首次达 3 星）额外奖励 —— 写入前只读快照判断，
-    // 真正的 perfectedLessons 标记由 recordLessonComplete 内部完成
+    // 首次三星（該課歷史首次達 3 星）額外獎勵 —— 寫入前只讀快照判斷，
+    // 真正的 perfectedLessons 標記由 recordLessonComplete 內部完成
     const alreadyPerfected = !!store.perfectedLessons[lesson.id];
     const firstPerfect = total >= 3 && starsFromAccuracy(accuracy) === 3 && !alreadyPerfected;
-    // XP 公式单一事实源：@cstf/core xpForLesson（挑战 ×2 → 周末再 ×2，可叠加）
+    // XP 公式單一事實源：@cstf/core xpForLesson（挑戰 ×2 → 週末再 ×2，可疊加）
     const xp = xpForLesson({
       correctCount,
       perfect,
@@ -770,17 +770,17 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       isExam,
     });
 
-    // 通关宝箱命中：有 chestSlot 且尚未领取
+    // 通關寶箱命中：有 chestSlot 且尚未領取
     const chestReward =
       chestSlot && !chestAlreadyClaimed
         ? { slot: chestSlot, ...rollChestReward() }
         : null;
 
-    // 🗓️ 任务进度快照（记账前），任务进度幕用 before → after 做推进动画
+    // 🗓️ 任務進度快照（記賬前），任務進度幕用 before → after 做推進動畫
     const questsToday = store.todayQuests();
     const before = questsToday.map(q => store.questProgress(q.kind));
 
-    // 写入 store（记录 + 宝箱领取；首次完美的标记在 recordComplete 内部）
+    // 寫入 store（記錄 + 寶箱領取；首次完美的標記在 recordComplete 內部）
     if (chestReward) {
       claimChest(chestReward.slot.id);
       addGems(chestReward.gems);
@@ -801,7 +801,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       after: after.questProgress(q.kind),
     }));
 
-    // 冻结一份展示快照供 CompletionScreen 用
+    // 凍結一份展示快照供 CompletionScreen 用
     setSessionStats({
       outcome,
       numberSenseEvidence,
@@ -831,7 +831,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       serveNext();
       return;
     }
-    // 答错致 0 心：反馈面板看完、点继续时才弹断心遮罩（web-lesson-5）
+    // 答錯致 0 心：反饋面板看完、點繼續時才彈斷心遮罩（web-lesson-5）
     if (!numberSkill && hearts <= 0) {
       setGateMounted(true);
       setGateOpen(true);
@@ -840,17 +840,17 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     serveNext();
   }
 
-  // 配对题（web-lesson-11）：全部配完自动提交 canonical answer
+  // 配對題（web-lesson-11）：全部配完自動提交 canonical answer
   useEffect(() => {
-    if (locked) return; // 遮罩打开时不许自动判分（webrunner-5）
+    if (locked) return; // 遮罩開啟時不許自動判分（webrunner-5）
     if (phase !== "answering" || !current || current.type !== "matching") return;
     if (!answer.trim()) return;
     if (gradeAnswer(current, answer)) handleCheck();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [answer, phase, currentId, locked]);
 
-  // ⌨️ 键盘快捷键（web-lesson-3）：Enter 提交 / 继续，空格 继续。
-  // 数字选选项在各题目组件内实现（1-4 选项、1/2 判断、1-8 配对、数字键盘）。
+  // ⌨️ 鍵盤快捷鍵（web-lesson-3）：Enter 提交 / 繼續，空格 繼續。
+  // 數字選選項在各題目元件內實現（1-4 選項、1/2 判斷、1-8 配對、數字鍵盤）。
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (shouldIgnoreKey(e)) return;
@@ -858,7 +858,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       if (locked) return;
       if (phase === "answering") {
         if (e.key === "Enter") {
-          if (isButtonTarget(e)) return; // 焦点在按钮上交给原生 click
+          if (isButtonTarget(e)) return; // 焦點在按鈕上交給原生 click
           if (answer.trim()) {
             e.preventDefault();
             handleCheck();
@@ -866,7 +866,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
         }
         return;
       }
-      // checked 相位：Enter / 空格 继续
+      // checked 相位：Enter / 空格 繼續
       if (e.key === "Enter" || e.key === " ") {
         if (isButtonTarget(e)) return;
         e.preventDefault();
@@ -878,8 +878,8 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   });
 
   /**
-   * 失败后"重新开始"：本组件是纯客户端渲染，router.refresh() 不会重置
-   * client state，必须手动把整个会话 state 归零后从第一题重来。
+   * 失敗後"重新開始"：本元件是純客戶端渲染，router.refresh() 不會重置
+   * client state，必須手動把整個會話 state 歸零後從第一題重來。
    */
   function resetSession() {
     clearLessonSession();
@@ -913,7 +913,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   function handleRequestExit() {
     playSfx("tap");
     haptic("light");
-    // 尚未判分时直接退出；已保存的讲解阶段与草稿仍可续学。
+    // 尚未判分時直接退出；已儲存的講解階段與草稿仍可續學。
     if (attemptedRef.current.size === 0 && solved.length === 0) {
       router.push(`/book/${lesson.bookId}/`);
       return;
@@ -923,13 +923,13 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   }
 
   function handleConfirmExit() {
-    // 普通退出只离开页面；持久化会话留给下次续学，重开由开始面板负责。
+    // 普通退出只離開頁面；持久化會話留給下次續學，重開由開始面板負責。
     playSfx("tap");
     haptic("light");
     router.push(`/book/${lesson.bookId}/`);
   }
 
-  // ===== 断心遮罩的三个出口 =====
+  // ===== 斷心遮罩的三個出口 =====
   function handleGateRefill() {
     const ok = buyHeartRefill();
     if (!ok) {
@@ -940,15 +940,15 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     playSfx("unlock");
     haptic("success");
     setGateOpen(false);
-    // 原地续课：判错时错题已回到队尾 → 端上下一题；
-    // 0 心恢复入口（answering 相位）直接关遮罩接着答当前题
+    // 原地續課：判錯時錯題已回到隊尾 → 端上下一題；
+    // 0 心恢復入口（answering 相位）直接關遮罩接著答當前題
     if (phase === "checked") serveNext();
   }
 
   function handleGateReview() {
     playSfx("tap");
     haptic("light");
-    // 会话保留（不清除 activeLesson），复习完回来无缝续课
+    // 會話保留（不清除 activeLesson），複習完回來無縫續課
     router.push(`/review/runner/?from=hearts&lesson=${encodeURIComponent(lesson.id)}`);
   }
 
@@ -956,12 +956,12 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     playSfx("tap");
     haptic("medium");
     setGateOpen(false);
-    // 遮罩承诺过「回来接着上次继续」→ 保留 activeLesson 直接返回（与 iOS onQuit 一致）。
-    // 绝不能走 setFailed(true)：那会连带清掉整节课的进度。
+    // 遮罩承諾過「回來接著上次繼續」→ 保留 activeLesson 直接返回（與 iOS onQuit 一致）。
+    // 絕不能走 setFailed(true)：那會連帶清掉整節課的進度。
     router.push(`/book/${lesson.bookId}/`);
   }
 
-  // ============ 首次加载占位（等待 persist 恢复）============
+  // ============ 首次載入佔位（等待 persist 恢復）============
   if (!ready) {
     return (
       <main className="min-h-screen bg-bg-soft flex items-center justify-center">
@@ -972,10 +972,10 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
 
   if (timeLimited) return <main className="min-h-screen flex flex-col items-center justify-center text-center px-5 gap-4">
     <Mascot mood="happy" size={100}/><h1 className="text-2xl font-extrabold text-ink">今天先休息一下</h1>
-    <p className="text-ink-light">今天的学习时间到了，已经开始的课程可以接着完成。</p>
-    <Link className="btn-chunky-primary px-6" href={`/book/${lesson.bookId}/`}>回到学习路径</Link>
+    <p className="text-ink-light">今天的學習時間到了，已經開始的課程可以接著完成。</p>
+    <Link className="btn-chunky-primary px-6" href={`/book/${lesson.bookId}/`}>回到學習路徑</Link>
   </main>;
-  // ============ 完成页 ============
+  // ============ 完成頁 ============
   if (done && sessionStats) {
     return (
       <CompletionScreen
@@ -987,7 +987,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     );
   }
 
-  // ============ 失败页 ============
+  // ============ 失敗頁 ============
   if (failed) {
     return (
       <FailScreen
@@ -998,13 +998,13 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     );
   }
 
-  // ============ 知识点讲解（首次进入） ============
+  // ============ 知識點講解（首次進入） ============
   if (contentUpdated) {
     return <main className="min-h-screen bg-bg-soft flex flex-col items-center justify-center px-5 gap-5 text-center">
       <Mascot mood="think" size={100} />
-      <h1 className="text-2xl font-extrabold text-ink">先重新练一次吧</h1>
-      <p className="max-w-sm text-ink-light">上次的练习需要重新核对，我们从这节课开头再练。已经获得的奖励还在。</p>
-      <button className="btn-chunky-primary px-8" onClick={() => setContentUpdated(false)}>开始学习</button>
+      <h1 className="text-2xl font-extrabold text-ink">先重新練一次吧</h1>
+      <p className="max-w-sm text-ink-light">上次的練習需要重新核對，我們從這節課開頭再練。已經獲得的獎勵還在。</p>
+      <button className="btn-chunky-primary px-8" onClick={() => setContentUpdated(false)}>開始學習</button>
     </main>;
   }
   if (showIntro && warmupKind === "count" && !showHandbook) {
@@ -1029,7 +1029,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
   }
 
   if (!current) {
-    // 数据异常兜底（题目为空的课程）
+    // 資料異常兜底（題目為空的課程）
     return (
       <main className="min-h-screen bg-bg-soft flex items-center justify-center">
         <Mascot mood="think" size={100} />
@@ -1037,14 +1037,14 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
     );
   }
 
-  // ============ 答题中 ============
+  // ============ 答題中 ============
   return (
     <motion.main
       animate={shakeControls}
       className="lesson-screen flex flex-col relative"
       style={backdropStyle}
     >
-      {/* +XP 飘字层 —— fixed 定位独立于 layout，不影响滚动 */}
+      {/* +XP 飄字層 —— fixed 定位獨立於 layout，不影響滾動 */}
       <div className="pointer-events-none fixed inset-0 z-50">
         <AnimatePresence>
           {xpFloats.map(f => (
@@ -1077,12 +1077,12 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
               +{xpPerCorrectShown}
               {isExam && (
                 <span className="ml-0.5 text-[10px] font-extrabold bg-white/25 rounded-full px-1.5 py-0.5">
-                  挑战×2
+                  挑戰×2
                 </span>
               )}
               {weekend && (
                 <span className="ml-0.5 text-[10px] font-extrabold bg-white/25 rounded-full px-1.5 py-0.5">
-                  周末×2
+                  週末×2
                 </span>
               )}
             </motion.div>
@@ -1090,7 +1090,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
         </AnimatePresence>
       </div>
 
-      {/* 大型 Combo Overlay —— 首次连击时才 mount，避免冷启动加载 */}
+      {/* 大型 Combo Overlay —— 首次連擊時才 mount，避免冷啟動載入 */}
       {comboMounted && (
         <ComboOverlay
           triggerKey={comboOverlay?.key ?? 0}
@@ -1099,13 +1099,13 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
         />
       )}
 
-      {/* 退出确认 —— 用户第一次点关闭按钮时才 mount */}
+      {/* 退出確認 —— 使用者第一次點關閉按鈕時才 mount */}
       {exitConfirmMounted && (
-      <Modal ariaLabel="退出课程" open={showExitConfirm} onClose={() => setShowExitConfirm(false)}>
+      <Modal ariaLabel="退出課程" open={showExitConfirm} onClose={() => setShowExitConfirm(false)}>
         <div className="flex flex-col items-center text-center">
           <Mascot mood="happy" size={96} />
           <h2 className="text-2xl font-extrabold text-ink mt-3">先休息一下？</h2>
-          <p className="text-ink-light mt-2 mb-5">进度已保存在这个浏览器，下次回来接着学。</p>
+          <p className="text-ink-light mt-2 mb-5">進度已儲存在這個瀏覽器，下次回來接著學。</p>
           <div className="flex flex-col gap-3 w-full">
             <button
               onClick={() => {
@@ -1115,31 +1115,31 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
               }}
               className="btn-chunky-primary w-full"
             >
-              继续学习
+              繼續學習
             </button>
             <button
               onClick={handleConfirmExit}
               className="btn-chunky-ghost w-full"
             >
-              保存并退出
+              儲存並退出
             </button>
           </div>
         </div>
       </Modal>
       )}
 
-      {/* 💔 断心遮罩（web-lesson-5）：0 心 + 看完反馈点继续时弹出，不清会话 */}
+      {/* 💔 斷心遮罩（web-lesson-5）：0 心 + 看完反饋點繼續時彈出，不清會話 */}
       {gateMounted && (
-      <Modal open={gateOpen} dismissible={false} ariaLabel="红心用完了">
+      <Modal open={gateOpen} dismissible={false} ariaLabel="紅心用完了">
         <div className="flex flex-col items-center text-center">
           <Mascot mood="sad" size={96} />
-          <h2 className="text-2xl font-extrabold text-ink mt-3">红心用完了！</h2>
+          <h2 className="text-2xl font-extrabold text-ink mt-3">紅心用完了！</h2>
           <p className="text-ink-light mt-2">
-            {reviewHeartClaimed ? "今天的复习回心已经领取，红心会慢慢恢复。也可以先巩固练习。" : "补满红心继续闯关，或者免费巩固练习回心。"}
+            {reviewHeartClaimed ? "今天的複習迴心已經領取，紅心會慢慢恢復。也可以先鞏固練習。" : "補滿紅心繼續闖關，或者免費鞏固練習迴心。"}
           </p>
           <div className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-secondary-dark">
             <Gem className="w-4 h-4" />
-            <span className="tabular-nums">当前宝石 {gems}</span>
+            <span className="tabular-nums">當前寶石 {gems}</span>
           </div>
           <div className="flex flex-col gap-3 w-full mt-5">
             <button
@@ -1153,31 +1153,31 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             >
               <span className="inline-flex items-center justify-center gap-1.5">
                 <Gem className="w-4 h-4" />
-                用 {HEART_REFILL_COST} 宝石补满继续
+                用 {HEART_REFILL_COST} 寶石補滿繼續
               </span>
             </button>
             {gems < HEART_REFILL_COST && (
-              <p className="text-xs text-ink-softer -mt-1">{reviewHeartClaimed ? "宝石不足，可以先休息或巩固练习。" : "宝石不足，也可以免费巩固练习回心。"}</p>
+              <p className="text-xs text-ink-softer -mt-1">{reviewHeartClaimed ? "寶石不足，可以先休息或鞏固練習。" : "寶石不足，也可以免費鞏固練習迴心。"}</p>
             )}
             <button onClick={handleGateReview} className="btn-chunky-secondary w-full">
-              {reviewHeartClaimed ? "去巩固练习（今日回心已领取）" : "去巩固练习回心"}
+              {reviewHeartClaimed ? "去鞏固練習（今日迴心已領取）" : "去鞏固練習迴心"}
             </button>
-            <p className="text-xs text-ink-softer -mt-1">做完复习回来，这节课会接着上次继续</p>
+            <p className="text-xs text-ink-softer -mt-1">做完複習回來，這節課會接著上次繼續</p>
             <button onClick={handleGateExit} className="btn-chunky-ghost w-full">
-              先退出，进度帮你留着
+              先退出，進度幫你留著
             </button>
           </div>
         </div>
       </Modal>
       )}
 
-      {/* ⚙️ 移动端设置小弹层（web-lesson-9）：音效 / 自动朗读 */}
+      {/* ⚙️ 移動端設定小彈層（web-lesson-9）：音效 / 自動朗讀 */}
       {settingsMounted && (
-      <Modal open={showSettings} onClose={() => setShowSettings(false)} ariaLabel="课程设置">
+      <Modal open={showSettings} onClose={() => setShowSettings(false)} ariaLabel="課程設定">
         <div className="flex flex-col">
-          <h2 className="text-xl font-extrabold text-ink text-center mb-4">课程设置</h2>
+          <h2 className="text-xl font-extrabold text-ink text-center mb-4">課程設定</h2>
           <div className="flex items-center justify-between py-3 border-b border-bg-softer">
-            <span className="font-bold text-ink">自动朗读</span>
+            <span className="font-bold text-ink">自動朗讀</span>
             <AutoNarrateToggle />
           </div>
           <div className="flex items-center justify-between py-3">
@@ -1205,7 +1205,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             type="button"
             onClick={handleRequestExit}
             className="ui-icon-button -ml-1 text-ink-light hover:text-ink hover:bg-bg-softer transition-colors shrink-0"
-            aria-label="退出课程"
+            aria-label="退出課程"
           >
             <Close className="w-5 h-5" />
           </button>
@@ -1218,7 +1218,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             />
           </div>
 
-          {/* Combo 徽章（顶栏） */}
+          {/* Combo 徽章（頂欄） */}
           <AnimatePresence>
             {combo >= 3 && (
               <motion.div
@@ -1235,7 +1235,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             )}
           </AnimatePresence>
 
-          {/* 本节已得 XP 徽章（飘字目标）—— 周末按 ×2 显示并挂角标 */}
+          {/* 本節已得 XP 徽章（飄字目標）—— 週末按 ×2 顯示並掛角標 */}
           <motion.div
             ref={xpTargetRef}
             animate={
@@ -1245,7 +1245,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             }
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="relative h-8 px-2.5 inline-flex items-center gap-1 rounded-full border-2 border-secondary/40 text-secondary-dark bg-secondary/10 font-extrabold text-sm select-none tabular-nums"
-            aria-label="本节已得 XP"
+            aria-label="本節已得 XP"
           >
             <Lightning className="w-4 h-4" />
             <span>{sessionXp * xpMultiplier}</span>
@@ -1260,10 +1260,10 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
                 }}
                 aria-label={
                   isExam && weekend
-                    ? "挑战 + 周末双倍 XP"
+                    ? "挑戰 + 週末雙倍 XP"
                     : isExam
-                      ? "单元挑战双倍 XP"
-                      : "周末双倍 XP"
+                      ? "單元挑戰雙倍 XP"
+                      : "週末雙倍 XP"
                 }
               >
                 ×{xpMultiplier}
@@ -1271,24 +1271,24 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
             )}
           </motion.div>
 
-          {/* 桌面端（lg+）：完整红心条 + 回心倒计时 + 朗读/音效开关 */}
+          {/* 桌面端（lg+）：完整紅心條 + 迴心倒計時 + 朗讀/音效開關 */}
           <div className="hidden lg:flex items-center gap-2">
-            {numberSkill ? <span className="text-sm font-bold text-secondary-dark">放心试</span> : <HeartsBar total={MAX_HEARTS} remaining={hearts} />}
+            {numberSkill ? <span className="text-sm font-bold text-secondary-dark">放心試</span> : <HeartsBar total={MAX_HEARTS} remaining={hearts} />}
             {!numberSkill && <HeartTimer />}
             <AutoNarrateToggle />
             <MuteToggle />
           </div>
 
-          {/* 移动端（<lg）：❤️×N 单徽章 + 齿轮设置，进度条重回视觉主角 */}
+          {/* 移動端（<lg）：❤️×N 單徽章 + 齒輪設定，進度條重回視覺主角 */}
           <div className="flex lg:hidden items-center gap-1.5">
-            {numberSkill ? <span className="text-xs font-extrabold text-secondary-dark whitespace-nowrap">放心试</span> : <div
+            {numberSkill ? <span className="text-xs font-extrabold text-secondary-dark whitespace-nowrap">放心試</span> : <div
               className={cn(
                 "h-8 px-2 inline-flex items-center gap-0.5 rounded-full border-2 font-extrabold text-sm tabular-nums select-none",
                 hearts > 0
                   ? "border-danger/30 bg-danger/10 text-danger"
                   : "border-bg-softer bg-bg-soft text-ink-softer",
               )}
-              aria-label={`剩余 ${hearts} 颗红心`}
+              aria-label={`剩餘 ${hearts} 顆紅心`}
             >
               <Heart className={cn("w-4 h-4", hearts > 0 && "fill-current")} />
               <span>×{hearts}</span>
@@ -1303,7 +1303,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
                 setShowSettings(true);
               }}
               className="ui-icon-button text-ink-light hover:text-ink hover:bg-bg-softer transition-colors"
-              aria-label="课程设置"
+              aria-label="課程設定"
             >
               <GearIcon className="w-5 h-5" />
             </button>
@@ -1312,14 +1312,14 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       </div>
 
       <div ref={questionScrollRef} className="lesson-content">
-      {/* 三星距离提示（动态：剩 N 题就三星 / 二星，临近时会更激励） */}
+      {/* 三星距離提示（動態：剩 N 題就三星 / 二星，臨近時會更激勵） */}
       {total >= 3 && !numberSkill && <StarDistanceHint
         correctCount={correctCount}
         answered={answeredFirst}
         total={total}
       />}
 
-      {/* 吉祥物 + 气泡 */}
+      {/* 吉祥物 + 氣泡 */}
       <div className="lesson-mascot max-w-md lg:max-w-2xl mx-auto w-full px-4 flex items-end gap-3" data-has-message={!!bubbleText}>
         <Mascot
           mood={phase === "checked" ? mascotMood : "happy"}
@@ -1336,14 +1336,14 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
         </div>
       </div>
 
-      {total < 3 && <p className="max-w-md mx-auto px-5 pt-3 text-sm text-ink-light">微练习 · 先试一试，再通过更多情境巩固</p>}
+      {total < 3 && <p className="max-w-md mx-auto px-5 pt-3 text-sm text-ink-light">微練習 · 先試一試，再透過更多情境鞏固</p>}
 
       {/* Question area */}
       <div className="lesson-body flex flex-col items-center justify-start">
         <div className="w-full max-w-md lg:max-w-2xl">
-          {/* "NEW WORD" 紫色胶囊 tag —— 仿 Duolingo 题型标签 */}
+          {/* "NEW WORD" 紫色膠囊 tag —— 仿 Duolingo 題型標籤 */}
           <div className={cn("mb-3 inline-flex items-center gap-1.5 flex-wrap", numberSkill && "hidden")}>
-            {/* ⚔️ 单元挑战徽章（紫金） */}
+            {/* ⚔️ 單元挑戰徽章（紫金） */}
             {isExam && (
               <span
                 className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-white text-[11px] font-extrabold tracking-wider"
@@ -1352,18 +1352,18 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
                   border: "1.5px solid #FFC800",
                 }}
               >
-                ⚔️ 单元挑战
+                ⚔️ 單元挑戰
               </span>
             )}
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary-dark text-[11px] font-extrabold uppercase tracking-wider">
               <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
               {questionTagLabel(current.type)}
             </span>
-            {/* 错题重答提示：这题之前答错过，重排回来了 */}
+            {/* 錯題重答提示：這題之前答錯過，重排回來了 */}
             {attemptedRef.current.has(current.id) && phase === "answering" && (
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-warning/15 text-warning text-[11px] font-extrabold">
                 <Flame className="w-3 h-3" />
-                再试一次
+                再試一次
               </span>
             )}
           </div>
@@ -1392,24 +1392,24 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
       </div>
 
       {lesson.knowledge && <details className="lesson-handbook max-w-md lg:max-w-2xl w-full">
-        <summary className="cursor-pointer min-h-11 flex items-center text-secondary-dark font-bold">聪聪的讲解手册</summary>
+        <summary className="cursor-pointer min-h-11 flex items-center text-secondary-dark font-bold">聰聰的講解手冊</summary>
         <div className="rounded-2xl bg-white border-2 border-bg-softer p-4 text-ink leading-relaxed space-y-3">
           <MathText text={lesson.knowledge.core_concept} />
-          <TTSButton src={lesson.knowledge.audio?.core_concept} label="朗读知识讲解" />
+          <TTSButton src={lesson.knowledge.audio?.core_concept} label="朗讀知識講解" />
           <MathText text={lesson.knowledge.key_formula} />
           <MathText text={lesson.knowledge.tips} />
         </div>
       </details>}
       </div>
 
-      {/* a11y: 屏幕阅读器实时播报答题结果（仅 sr-only） */}
+      {/* a11y: 螢幕閱讀器實時播報答題結果（僅 sr-only） */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {phase === "checked" && isCorrect === true && `回答正确。${current.explanation ?? ""}`}
+        {phase === "checked" && isCorrect === true && `回答正確。${current.explanation ?? ""}`}
         {phase === "checked" && isCorrect === false &&
-          `回答错误。正确答案是：${current.answer}。${current.explanation ?? ""}`}
+          `回答錯誤。正確答案是：${current.answer}。${current.explanation ?? ""}`}
       </div>
 
-      {/* Bottom: SKIP / CHECK 双按钮（仿 Duolingo 真机底栏） */}
+      {/* Bottom: SKIP / CHECK 雙按鈕（仿 Duolingo 真機底欄） */}
       {phase === "answering" && (
         <div className="lesson-actions bg-white border-t-2 border-bg-softer">
           <div className="max-w-md lg:max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
@@ -1417,16 +1417,16 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
               type="button"
               onClick={skipQuestion}
               className="btn-chunky-ghost px-6"
-              aria-label="跳过本题"
+              aria-label="跳過本題"
             >
-              跳过
+              跳過
             </button>
             <button
               onClick={handleCheck}
               disabled={!answerReady(current, answer)}
               className={answerReady(current, answer) ? "flex-1 btn-chunky-primary" : "flex-1 btn-chunky-disabled"}
             >
-              检查
+              檢查
             </button>
           </div>
         </div>
@@ -1450,7 +1450,7 @@ export function LessonRunner({ lesson, chestSlot = null, nextLessonId }: LessonR
 }
 
 // ============================================================
-// 完成 / 失败子页
+// 完成 / 失敗子頁
 // ============================================================
 
 function formatTime(sec: number): string {
@@ -1464,41 +1464,41 @@ function CompletionScreen({ lesson, stats, onBack, onNext }: { lesson: Lesson; s
   const skill = numberSkillForLesson(lesson.id);
   const [chestOpen, setChestOpen] = useState(false);
   useEffect(() => { playSfx("complete"); haptic("success"); }, []);
-  const heading = stats.practiceOnly ? "完成一次微练习" : stats.correctedCount > 0 ? "你把错题改对了！" : "本节练习完成！";
+  const heading = stats.practiceOnly ? "完成一次微練習" : stats.correctedCount > 0 ? "你把錯題改對了！" : "本節練習完成！";
   return <main className="min-h-screen bg-bg-soft px-5 py-8">
     <div className="max-w-md mx-auto text-center">
       <Mascot mood="cheer" size={100} />
       <h1 className="text-2xl font-extrabold text-ink mt-3">{heading}</h1>
       <p className="text-ink-light mt-2">{lesson.title}</p>
       {skill && stats.numberSenseEvidence && <div className="mt-4 p-4 rounded-2xl bg-secondary/10 text-left text-ink space-y-2">
-        <p className="font-extrabold">今天练习了：{NUMBER_LESSONS[skill].goal}</p>
-        <p>无提示首答：{stats.numberSenseEvidence.independentCorrect}/{stats.numberSenseEvidence.independentTotal} · 换情境：{stats.numberSenseEvidence.transferCorrect}/{stats.numberSenseEvidence.transferTotal}</p>
-        <p>{stats.numberSenseEvidence.hintsUsed > 0 ? `有 ${stats.numberSenseEvidence.hintsUsed} 题看过提示。会求助、会改错也在进步。` : "这次没有查看提示。"}</p>
-        <p>明天用新题看看还会不会，今天先不标成“隔天仍会”。</p>
-        <Link href="/number-sense/" className="min-h-11 inline-flex items-center text-secondary-dark font-bold underline">查看单元学习记录</Link>
+        <p className="font-extrabold">今天練習了：{NUMBER_LESSONS[skill].goal}</p>
+        <p>無提示首答：{stats.numberSenseEvidence.independentCorrect}/{stats.numberSenseEvidence.independentTotal} · 換情境：{stats.numberSenseEvidence.transferCorrect}/{stats.numberSenseEvidence.transferTotal}</p>
+        <p>{stats.numberSenseEvidence.hintsUsed > 0 ? `有 ${stats.numberSenseEvidence.hintsUsed} 題看過提示。會求助、會改錯也在進步。` : "這次沒有查看提示。"}</p>
+        <p>明天用新題看看還會不會，今天先不標成“隔天仍會”。</p>
+        <Link href="/number-sense/" className="min-h-11 inline-flex items-center text-secondary-dark font-bold underline">查看單元學習記錄</Link>
       </div>}
-      {skill ? null : stats.practiceOnly ? <p className="mt-3 text-sm text-ink-light">一次作答是一个开始。再练不同情境，才能更了解这个知识点。</p> :
-        <div className="flex justify-center gap-2 mt-4" aria-label={`本次练习 ${outcome.stars} 星`}>
+      {skill ? null : stats.practiceOnly ? <p className="mt-3 text-sm text-ink-light">一次作答是一個開始。再練不同情境，才能更瞭解這個知識點。</p> :
+        <div className="flex justify-center gap-2 mt-4" aria-label={`本次練習 ${outcome.stars} 星`}>
           {[1, 2, 3].map(n => <Star key={n} className={cn("w-9 h-9", n <= outcome.stars ? "text-gold fill-current" : "text-ink-softer")} />)}
         </div>}
       <div className="grid grid-cols-2 gap-3 mt-5">
-        <StatCard label="首次答对" value={`${stats.firstCorrect}/${stats.totalQuestions}`} color={stats.accuracy >= .8 ? "text-primary-dark" : "text-ink"} />
-        <StatCard label={stats.correctedCount > 0 ? "重练后答对" : "练习结束答对"} value={`${stats.totalQuestions}/${stats.totalQuestions}`} color="text-primary-dark" />
-        <StatCard label="经验" value={`+${outcome.xpGained}`} color="text-secondary-dark" />
-        <StatCard label="宝石" value={`+${outcome.gemsGained + outcome.milestoneGems + (stats.chestReward?.gems ?? 0)}`} color="text-secondary-dark" icon="gem" />
+        <StatCard label="首次答對" value={`${stats.firstCorrect}/${stats.totalQuestions}`} color={stats.accuracy >= .8 ? "text-primary-dark" : "text-ink"} />
+        <StatCard label={stats.correctedCount > 0 ? "重練後答對" : "練習結束答對"} value={`${stats.totalQuestions}/${stats.totalQuestions}`} color="text-primary-dark" />
+        <StatCard label="經驗" value={`+${outcome.xpGained}`} color="text-secondary-dark" />
+        <StatCard label="寶石" value={`+${outcome.gemsGained + outcome.milestoneGems + (stats.chestReward?.gems ?? 0)}`} color="text-secondary-dark" icon="gem" />
       </div>
-      {stats.correctedCount > 0 && <p className="mt-4 text-sm text-ink">认真改对了 {stats.correctedCount} 道题。首答成绩帮你找到要巩固的地方，改错也是进步。</p>}
+      {stats.correctedCount > 0 && <p className="mt-4 text-sm text-ink">認真改對了 {stats.correctedCount} 道題。首答成績幫你找到要鞏固的地方，改錯也是進步。</p>}
       <div className="mt-4 rounded-2xl border-2 border-bg-softer bg-white p-4 text-left text-sm text-ink space-y-2">
-        <p>🔥 连续学习 {outcome.streakAfter} 天 · 前台学习用时 {formatTime(stats.durationSec)}</p>
-        {outcome.dailyGoalReachedNow && <p>🎯 今日目标达成，奖励已到账</p>}
-        {outcome.milestoneGems > 0 && <p>🎉 连胜里程碑！+{outcome.milestoneGems} 宝石已到账</p>}
-        {stats.conquered && <p>⚔️ 单元挑战达标</p>}
+        <p>🔥 連續學習 {outcome.streakAfter} 天 · 前臺學習用時 {formatTime(stats.durationSec)}</p>
+        {outcome.dailyGoalReachedNow && <p>🎯 今日目標達成，獎勵已到賬</p>}
+        {outcome.milestoneGems > 0 && <p>🎉 連勝里程碑！+{outcome.milestoneGems} 寶石已到賬</p>}
+        {stats.conquered && <p>⚔️ 單元挑戰達標</p>}
         {stats.quests.map(({ quest, after }) => <p key={quest.id}>{after >= quest.target ? "✓" : "○"} {quest.title} · {Math.min(after, quest.target)}/{quest.target}</p>)}
       </div>
-      {stats.chestReward && <button type="button" className="min-h-11 mt-3 text-secondary-dark font-bold" onClick={() => setChestOpen(true)}>看看宝箱奖励（已到账）</button>}
-      <button autoFocus type="button" className="btn-chunky-primary w-full mt-5" onClick={onNext ?? onBack}>{skill === "apply" ? "回到单元，看看进步" : onNext ? "下一课" : "回到学习路径"}</button>
+      {stats.chestReward && <button type="button" className="min-h-11 mt-3 text-secondary-dark font-bold" onClick={() => setChestOpen(true)}>看看寶箱獎勵（已到賬）</button>}
+      <button autoFocus type="button" className="btn-chunky-primary w-full mt-5" onClick={onNext ?? onBack}>{skill === "apply" ? "回到單元，看看進步" : onNext ? "下一課" : "回到學習路徑"}</button>
       {onNext && <button type="button" className="min-h-11 mt-2 text-ink-light font-bold" onClick={onBack}>先休息一下</button>}
-      <p className="text-xs text-ink-light mt-3">学习成果已保存 · 每日任务奖励可在“我的”领取</p>
+      <p className="text-xs text-ink-light mt-3">學習成果已儲存 · 每日任務獎勵可在“我的”領取</p>
       {stats.chestReward && <ChestModal open={chestOpen} gems={stats.chestReward.gems} tier={stats.chestReward.tier} onClose={() => setChestOpen(false)} />}
     </div>
   </main>;
@@ -1532,9 +1532,9 @@ function StatCard({
 }
 
 // ============================================================
-// IntroCard — 多邻国 Tips 风格的分步讲解
-// 每屏只讲一件事（core_concept / key_formula / common_mistakes / tips）
-// 为小朋友设计：吉祥物反应 + 多层音效 + 弹性动画 + 鼓励气泡
+// IntroCard — 多鄰國 Tips 風格的分步講解
+// 每屏只講一件事（core_concept / key_formula / common_mistakes / tips）
+// 為小朋友設計：吉祥物反應 + 多層音效 + 彈性動畫 + 鼓勵氣泡
 // ============================================================
 
 type IntroTone = "concept" | "rule" | "mistake" | "tip";
@@ -1545,14 +1545,14 @@ interface IntroPage {
   icon: React.ComponentType<{ className?: string }>;
   iconBg: string;
   iconColor: string;
-  accent: string; // hex，用于进度点和底部装饰
-  mascotMood: MascotMood; // 每页吉祥物心情
-  bubbleText: string; // 吉祥物气泡鼓励语
-  /** 该页要按顺序自动播的所有 TTS 音频。单字段页只有一段，mistake 页有多段。 */
+  accent: string; // hex，用於進度點和底部裝飾
+  mascotMood: MascotMood; // 每頁吉祥物心情
+  bubbleText: string; // 吉祥物氣泡鼓勵語
+  /** 該頁要按順序自動播的所有 TTS 音訊。單欄位頁只有一段，mistake 頁有多段。 */
   audioSrcs?: Array<string | null | undefined>;
-  /** 给标题旁的 TTSButton 用的"代表音频"。单段页 = audioSrcs[0]；多段页留空，避免重复。 */
+  /** 給標題旁的 TTSButton 用的"代表音訊"。單段頁 = audioSrcs[0]；多段頁留空，避免重複。 */
   titleAudio?: string;
-  /** 自定义 render，可接收当前播放索引（仅 mistake 页用） */
+  /** 自定義 render，可接收當前播放索引（僅 mistake 頁用） */
   render: (playingIdx: number) => React.ReactNode;
 }
 
@@ -1572,18 +1572,18 @@ function IntroCard({
   onStart: () => void;
   onExit: () => void;
 }) {
-  // 动态组装存在的页面（缺字段自动跳过）
+  // 動態組裝存在的頁面（缺欄位自動跳過）
   const pages: IntroPage[] = [];
   if (knowledge.core_concept) {
     pages.push({
       tone: "concept",
-      title: "这是什么？",
+      title: "這是什麼？",
       icon: BookOpen,
       iconBg: "bg-secondary/15",
       iconColor: "text-secondary-dark",
       accent: "#1CB0F6",
       mascotMood: "think",
-      bubbleText: "一起学！",
+      bubbleText: "一起學！",
       audioSrcs: [knowledge.audio?.core_concept],
       titleAudio: knowledge.audio?.core_concept,
       render: () => (
@@ -1596,13 +1596,13 @@ function IntroCard({
   if (knowledge.key_formula) {
     pages.push({
       tone: "rule",
-      title: "记住这个！",
+      title: "記住這個！",
       icon: Target,
       iconBg: "bg-primary/15",
       iconColor: "text-primary-dark",
       accent: "#58CC02",
       mascotMood: "wave",
-      bubbleText: "超级重要!",
+      bubbleText: "超級重要!",
       audioSrcs: [knowledge.audio?.key_formula],
       titleAudio: knowledge.audio?.key_formula,
       render: () => (
@@ -1623,7 +1623,7 @@ function IntroCard({
       iconColor: "text-danger-dark",
       accent: "#FF4B4B",
       mascotMood: "surprise",
-      bubbleText: "一起学！",
+      bubbleText: "一起學！",
       audioSrcs: knowledge.audio?.common_mistakes,
       render: (playingIdx: number) => (
         <ul className="space-y-3">
@@ -1655,7 +1655,7 @@ function IntroCard({
                 <TTSButton
                   src={knowledge.audio?.common_mistakes?.[i] ?? null}
                   size="sm"
-                  label="朗读"
+                  label="朗讀"
                   disabled={narration.status === "playing" || narration.status === "loading"}
                   onPlay={narration.locked ? narration.start : undefined}
                 />
@@ -1669,7 +1669,7 @@ function IntroCard({
   if (knowledge.tips) {
     pages.push({
       tone: "tip",
-      title: "学习小妙招",
+      title: "學習小妙招",
       icon: Lightning,
       iconBg: "bg-warning/20",
       iconColor: "text-warning",
@@ -1686,7 +1686,7 @@ function IntroCard({
     });
   }
 
-  // 异常保护：知识点全是空的就直接开始
+  // 異常保護：知識點全是空的就直接開始
   useEffect(() => {
     if (pages.length === 0) onStart();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1710,12 +1710,12 @@ function IntroCard({
   const playableMistakes = contentSources.map((src, i) => src ? i : -1).filter(i => i >= 0);
   const playingMistakeIdx = playingContent >= 0 ? (playableMistakes[playingContent] ?? -1) : -1;
 
-  // 进入每一页时：触发吉祥物反应动画 + 分层音效
-  // 注意：依赖里只放 pageIdx，不能放 current（current 是 pages[pageIdx]，每次渲染都是新对象引用，会触发无限循环）
+  // 進入每一頁時：觸發吉祥物反應動畫 + 分層音效
+  // 注意：依賴裡只放 pageIdx，不能放 current（current 是 pages[pageIdx]，每次渲染都是新物件引用，會觸發無限迴圈）
   useEffect(() => {
     if (pages.length === 0) return;
     setMascotReactKey(k => k + 1);
-    // 图标徽章弹入时再补一声轻响（和动画节拍一致）
+    // 圖示徽章彈入時再補一聲輕響（和動畫節拍一致）
     const t = setTimeout(() => playSfx("progressTick"), 140);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1725,7 +1725,7 @@ function IntroCard({
     if (narration.locked) return;
     cancelNarrate();
     if (isLast) {
-      // 最后一步：从"学"过渡到"练"，多层音效 + 强反馈
+      // 最後一步：從"學"過渡到"練"，多層音效 + 強反饋
       playSfx("unlock");
       setTimeout(() => playSfx("star"), 120);
       haptic("medium");
@@ -1733,7 +1733,7 @@ function IntroCard({
       onStart();
       return;
     }
-    // 翻页：tap + star 叠加，带来清脆的"咔嗒+叮"双层反馈
+    // 翻頁：tap + star 疊加，帶來清脆的"咔嗒+叮"雙層反饋
     playSfx("tap");
     setTimeout(() => playSfx("star", { volume: 0.6 }), 60);
     haptic("light");
@@ -1755,7 +1755,7 @@ function IntroCard({
 
   return (
     <main className="min-h-screen bg-bg flex flex-col overflow-x-hidden">
-      {/* 顶栏：关闭 + 进度点 */}
+      {/* 頂欄：關閉 + 進度點 */}
       <div className="bg-white border-b border-bg-softer">
         <div className="max-w-md lg:max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button
@@ -1766,7 +1766,7 @@ function IntroCard({
               onExit();
             }}
             className="w-11 h-11 inline-flex items-center justify-center text-ink-light hover:text-ink transition-colors shrink-0"
-            aria-label="退出课程"
+            aria-label="退出課程"
           >
             <Close className="w-6 h-6" />
           </button>
@@ -1793,17 +1793,17 @@ function IntroCard({
         </div>
       </div>
 
-      {/* 单元 & 课程标题（小） */}
+      {/* 單元 & 課程標題（小） */}
       <div className="max-w-md lg:max-w-2xl mx-auto w-full px-5 pt-3 text-center">
         <div className="text-xs font-bold text-ink-softer uppercase tracking-wide">
-          {lesson.unitLabel ?? `第 ${lesson.unitNumber} 单元`} · {lesson.unitTitle}
+          {lesson.unitLabel ?? `第 ${lesson.unitNumber} 單元`} · {lesson.unitTitle}
         </div>
         <div className="text-base font-extrabold text-ink-light mt-0.5 truncate">
           {lesson.title}
         </div>
       </div>
 
-      {/* 主内容：单页聚焦 */}
+      {/* 主內容：單頁聚焦 */}
       <div className="flex-1 flex items-center px-5 py-4">
         <div className="max-w-md lg:max-w-2xl mx-auto w-full">
           <AnimatePresence mode="wait" custom={direction}>
@@ -1816,7 +1816,7 @@ function IntroCard({
               transition={{ type: "spring", damping: 20, stiffness: 240 }}
               className="flex flex-col items-center text-center"
             >
-              {/* 吉祥物 + 气泡 */}
+              {/* 吉祥物 + 氣泡 */}
               <div className="flex items-end gap-2 mb-2 min-h-[96px]">
                 <motion.div
                   initial={{ y: 14, scale: 0.8, opacity: 0 }}
@@ -1849,14 +1849,14 @@ function IntroCard({
                 </motion.div>
               </div>
 
-              {/* 图标徽章 + 脉冲光环 */}
+              {/* 圖示徽章 + 脈衝光環 */}
               <motion.div
                 initial={{ scale: 0.5, rotate: -20, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
                 transition={{ type: "spring", damping: 10, stiffness: 220, delay: 0.12 }}
                 className="relative mb-4"
               >
-                {/* 脉冲光圈 */}
+                {/* 脈衝光圈 */}
                 <motion.div
                   aria-hidden
                   animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
@@ -1864,7 +1864,7 @@ function IntroCard({
                   className="absolute inset-0 rounded-full"
                   style={{ backgroundColor: `${current.accent}33` }}
                 />
-                {/* 悬浮漂浮的图标圆 */}
+                {/* 懸浮漂浮的圖示圓 */}
                 <motion.div
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
@@ -1880,7 +1880,7 @@ function IntroCard({
                 </motion.div>
               </motion.div>
 
-              {/* 标题 */}
+              {/* 標題 */}
               <motion.div
                 initial={{ y: 12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -1891,13 +1891,13 @@ function IntroCard({
                   {current.title}
                 </h1>
                 {current.titleAudio && (
-                  <TTSButton src={current.titleAudio} label="朗读讲解"
+                  <TTSButton src={current.titleAudio} label="朗讀講解"
                     disabled={narration.status === "playing" || narration.status === "loading"}
                     onPlay={narration.locked ? narration.start : undefined} />
                 )}
               </motion.div>
 
-              {/* 内容（继承父级居中） */}
+              {/* 內容（繼承父級居中） */}
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -1911,14 +1911,14 @@ function IntroCard({
         </div>
       </div>
 
-      <button type="button" className="min-h-11 mx-auto px-5 py-3 text-secondary-dark font-bold" onClick={() => { cancelNarrate(); onStart(); }}>先试试，讲解可以随时再看</button>
-      {/* 底部：上一步 + 主按钮 */}
+      <button type="button" className="min-h-11 mx-auto px-5 py-3 text-secondary-dark font-bold" onClick={() => { cancelNarrate(); onStart(); }}>先試試，講解可以隨時再看</button>
+      {/* 底部：上一步 + 主按鈕 */}
       <div className="bg-white border-t-2 border-bg-softer" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
         {narration.locked && (narration.muted || narration.status === "error") && <div className="max-w-md lg:max-w-2xl mx-auto px-5 pt-3 text-center text-sm text-ink-light" role="status">
           {narration.locked && narration.muted ? (
-            <><span>当前已静音，可以阅读后继续。</span><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">阅读后继续</button></>
+            <><span>當前已靜音，可以閱讀後繼續。</span><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">閱讀後繼續</button></>
           ) : narration.locked && narration.status === "error" ? (
-            <><span>语音暂时无法播放。</span><button type="button" onClick={narration.start} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">重新播放</button><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-ink-light underline">阅读后继续</button></>
+            <><span>語音暫時無法播放。</span><button type="button" onClick={narration.start} className="ml-3 min-h-11 inline-flex items-center font-bold text-secondary-dark underline">重新播放</button><button type="button" onClick={narration.continueWithoutAudio} className="ml-3 min-h-11 inline-flex items-center font-bold text-ink-light underline">閱讀後繼續</button></>
           ) : null}
         </div>}
         <div className="max-w-md lg:max-w-2xl mx-auto px-5 py-4 flex items-center gap-3">
@@ -1972,22 +1972,22 @@ function FailScreen({
       >
         <Mascot mood="sad" size={140} />
         <h1 className="text-3xl font-extrabold text-danger mt-4">
-          {canRetry ? "没关系，再来一次！" : "红心用完啦"}
+          {canRetry ? "沒關係，再來一次！" : "紅心用完啦"}
         </h1>
         <p className="text-ink-light mt-2 mb-4">{lesson.title}</p>
 
         {!canRetry && nextHeartAt && (
           <div className="mb-6 text-center">
-            <p className="text-sm text-ink-light">下一颗心还需</p>
+            <p className="text-sm text-ink-light">下一顆心還需</p>
             <div className="text-3xl font-extrabold text-danger tabular-nums mt-1">
               {formatMsCountdown(msToNext)}
             </div>
-            <p className="text-xs text-ink-softer mt-1">每 5 分钟恢复 1 颗心</p>
+            <p className="text-xs text-ink-softer mt-1">每 5 分鐘恢復 1 顆心</p>
           </div>
         )}
 
         <div className="flex flex-col gap-3 w-64">
-          {!canRetry && <SoundLink href={`/review/runner/?from=hearts&lesson=${encodeURIComponent(lesson.id)}`} className="btn-chunky-secondary">{reviewHeartClaimed ? "巩固练习（今日回心已领取）" : "免费巩固练习回心"}</SoundLink>}
+          {!canRetry && <SoundLink href={`/review/runner/?from=hearts&lesson=${encodeURIComponent(lesson.id)}`} className="btn-chunky-secondary">{reviewHeartClaimed ? "鞏固練習（今日迴心已領取）" : "免費鞏固練習迴心"}</SoundLink>}
           <button
             onClick={() => {
               if (!canRetry) return;
@@ -1998,7 +1998,7 @@ function FailScreen({
             disabled={!canRetry}
             className={canRetry ? "btn-chunky-primary" : "btn-chunky-disabled"}
           >
-            重新开始
+            重新開始
           </button>
           <button
             onClick={() => {
@@ -2008,7 +2008,7 @@ function FailScreen({
             }}
             className="btn-chunky-ghost"
           >
-            返回路径
+            返回路徑
           </button>
         </div>
       </motion.div>

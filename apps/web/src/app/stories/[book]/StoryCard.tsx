@@ -19,7 +19,7 @@ export function StoryCard({ story, bookId }: Props) {
   useEffect(() => setHydrated(true), []);
 
   const audioReady = story.sentences.some(s => s.audio);
-  // 查询键与写入键同源：core 规范阅读 id `reading:story:{storyId}`
+  // 查詢鍵與寫入鍵同源：core 規範閱讀 id `reading:story:{storyId}`
   const done = hydrated && completedReadings[readingId("story", story.id)] != null;
 
   return (
@@ -30,7 +30,7 @@ export function StoryCard({ story, bookId }: Props) {
         done ? "border-primary/30" : "border-bg-softer",
       )}
     >
-      {/* 配图 */}
+      {/* 配圖 */}
       {story.image && (
         <div className="w-full aspect-[2/1] overflow-hidden bg-bg-softer">
           <img
@@ -58,12 +58,12 @@ export function StoryCard({ story, bookId }: Props) {
             {done ? (
               <span className="inline-flex items-center gap-1 text-primary font-bold">
                 <Star className="w-3.5 h-3.5 fill-current" />
-                已读完
+                已讀完
               </span>
             ) : (
               <span>
-                {story.sentences.length} 句 · {story.questions.length} 道题
-                {!audioReady && " · 音频生成中"}
+                {story.sentences.length} 句 · {story.questions.length} 道題
+                {!audioReady && " · 音訊生成中"}
               </span>
             )}
           </div>

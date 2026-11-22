@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * PassageReader — 课文听读 / 跟读组件。
+ * PassageReader — 課文聽讀 / 跟讀元件。
  *
- * 三种模式：
- *   1. 听读：顺序播放每句 mp3，当前播放句高亮
- *   2. 单句：点每句前的小喇叭播这一句
- *   3. 跟读：对每句先播原音、再录音、走完全文后可逐句回放（原音 vs 我的）
+ * 三種模式：
+ *   1. 聽讀：順序播放每句 mp3，當前播放句高亮
+ *   2. 單句：點每句前的小喇叭播這一句
+ *   3. 跟讀：對每句先播原音、再錄音、走完全文後可逐句回放（原音 vs 我的）
  *
- * 复用 `lib/tts.ts` 的单例 audio + mute 状态，避免两段同时播。
- * 录音用原生 MediaRecorder（`useRecorder`），不上传、刷新即丢。
+ * 複用 `lib/tts.ts` 的單例 audio + mute 狀態，避免兩段同時播。
+ * 錄音用原生 MediaRecorder（`useRecorder`），不上傳、重新整理即丟。
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -29,8 +29,8 @@ import { cn } from "@/lib/cn";
 import type { Passage } from "@/types";
 
 /**
- * 课文听读/跟读奖励的两种类型：奖励记录存在 progress store 的 completedReadings 里。
- * 键一律用 core 的规范阅读 id（`reading:{kind}:{rawId}`），与 iOS / 备份互通。
+ * 課文聽讀/跟讀獎勵的兩種型別：獎勵記錄存在 progress store 的 completedReadings 裡。
+ * 鍵一律用 core 的規範閱讀 id（`reading:{kind}:{rawId}`），與 iOS / 備份互通。
  */
 type RewardKind = Extract<ReadingKind, "listen" | "followup">;
 
@@ -49,7 +49,7 @@ export function PassageReader({ passage, backHref }: Props) {
   const [playbackError, setPlaybackError] = useState<string | null>(null);
   const [mode, setMode] = useState<Mode>("idle");
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  /** 跟读模式下每句的学生录音 blob URL */
+  /** 跟讀模式下每句的學生錄音 blob URL */
   const [recordings, setRecordings] = useState<(string | null)[]>(
     () => passage.sentences.map(() => null),
   );
@@ -57,17 +57,17 @@ export function PassageReader({ passage, backHref }: Props) {
   const playbackGenerationRef = useRef(0);
   const rec = useRecorder();
 
-  // XP 奖励集成：走 store 的 completeReading（纯 XP、不发宝石、不算课时）
+  // XP 獎勵整合：走 store 的 completeReading（純 XP、不發寶石、不算課時）
   const completeReading = useProgressStore(s => s.completeReading);
   const [xpToast, setXpToast] = useState<{ amount: number; key: number } | null>(null);
 
   function grantPassageReward(kind: RewardKind, xp: number) {
-    // 规范阅读 id（core readingId）：`reading:listen:{passageId}` / `reading:followup:{passageId}`，
-    // 与 iOS 同一键空间，备份互导后不会重复领 XP、也不会显示成未读。
+    // 規範閱讀 id（core readingId）：`reading:listen:{passageId}` / `reading:followup:{passageId}`，
+    // 與 iOS 同一鍵空間，備份互導後不會重複領 XP、也不會顯示成未讀。
     const id = readingId(kind, passage.id);
-    // 幂等：领过就不再发（store 内也会查重，这里提前 return 避免重复 toast）。
-    // 走 store 的 isReadingDone，别自己翻 completedReadings —— 表里的值是完成日期，
-    // 老档/另一端导入的档可能没有日期，手写真值判断会把已读当成未读、重复发 XP。
+    // 冪等：領過就不再發（store 內也會查重，這裡提前 return 避免重複 toast）。
+    // 走 store 的 isReadingDone，別自己翻 completedReadings —— 表裡的值是完成日期，
+    // 老檔/另一端匯入的檔可能沒有日期，手寫真值判斷會把已讀當成未讀、重複發 XP。
     if (useProgressStore.getState().isReadingDone(kind, passage.id)) return;
     completeReading(id, xp);
     setXpToast({ amount: xp, key: Date.now() });
@@ -75,8 +75,8 @@ export function PassageReader({ passage, backHref }: Props) {
     haptic("success");
   }
 
-  // 课本原页：render_pages.py 已经应用了书级 offset 算出真实 PDF 物理页 pdfPage，
-  // pageImages 一般是 [pdfPage-1, pdfPage, pdfPage+1] 按页号升序。默认显示 pdfPage。
+  // 課本原頁：render_pages.py 已經應用了書級 offset 算出真實 PDF 物理頁 pdfPage，
+  // pageImages 一般是 [pdfPage-1, pdfPage, pdfPage+1] 按頁號升序。預設顯示 pdfPage。
   const pageImages = passage.pageImages ?? [];
   const defaultPageIdx = useMemo(() => {
     if (pageImages.length === 0) return 0;
@@ -90,14 +90,14 @@ export function PassageReader({ passage, backHref }: Props) {
   const [pageIdx, setPageIdx] = useState(defaultPageIdx);
   useEffect(() => setPageIdx(defaultPageIdx), [defaultPageIdx]);
 
-  // 预加载全部句子音频，减少切换时的停顿
+  // 預載入全部句子音訊，減少切換時的停頓
   useEffect(() => {
     for (const s of passage.sentences) {
       if (s.audio) preloadTTS(s.audio);
     }
   }, [passage]);
 
-  // 清理：卸载时停掉一切
+  // 清理：卸載時停掉一切
   useEffect(() => {
     return () => {
       abortRef.current = true;
@@ -148,10 +148,10 @@ export function PassageReader({ passage, backHref }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, passage]);
 
-  // 跟读流程：逐句 → 播原音 → 录音 → 下一句
+  // 跟讀流程：逐句 → 播原音 → 錄音 → 下一句
   const runFollowup = useCallback(async () => {
     if (mode === "followup") {
-      // 中断
+      // 中斷
       abortRef.current = true;
       playbackGenerationRef.current++;
       await rec.stop();
@@ -183,8 +183,8 @@ export function PassageReader({ passage, backHref }: Props) {
   }, [mode, passage, rec]);
 
   function showPlaybackError(result: ReadingResult) {
-    if (result === "audio-unavailable") setPlaybackError("声音未能完整播放，请确认声音已开启并重试。本次未记录完成。");
-    if (result === "recording-unavailable") setPlaybackError("录音未完成，请检查麦克风权限后重试。本次未记录完成。");
+    if (result === "audio-unavailable") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。本次未記錄完成。");
+    if (result === "recording-unavailable") setPlaybackError("錄音未完成，請檢查麥克風許可權後重試。本次未記錄完成。");
   }
 
   const playMyRecording = useCallback(async (idx: number) => {
@@ -228,27 +228,27 @@ export function PassageReader({ passage, backHref }: Props) {
         subtitle={passage.author ?? undefined}
       />
 
-      {/* 桌面双栏：lg+ 时课本原页(左) + 课文正文(右) 并排；移动端顺序堆叠 */}
+      {/* 桌面雙欄：lg+ 時課本原頁(左) + 課文正文(右) 並排；移動端順序堆疊 */}
       <div
         className={cn(
           "max-w-md lg:max-w-6xl mx-auto",
           pageImages.length > 0 && "lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:items-start",
         )}
       >
-      {/* 课本原页 */}
+      {/* 課本原頁 */}
       {pageImages.length > 0 && (
         <div className="px-4 pt-4 lg:pt-5">
           <div className="relative rounded-2xl overflow-hidden bg-white border border-bg-softer shadow-sm">
             <img
               src={pageImages[pageIdx]}
-              alt={`${passage.title} - 课本原页`}
+              alt={`${passage.title} - 課本原頁`}
               className="w-full h-auto block"
             />
             {pageImages.length > 1 && (
               <>
                 <button
                   type="button"
-                  aria-label="上一页"
+                  aria-label="上一頁"
                   disabled={pageIdx === 0}
                   onClick={() => setPageIdx(i => Math.max(0, i - 1))}
                   className={cn(
@@ -262,7 +262,7 @@ export function PassageReader({ passage, backHref }: Props) {
                 </button>
                 <button
                   type="button"
-                  aria-label="下一页"
+                  aria-label="下一頁"
                   disabled={pageIdx === pageImages.length - 1}
                   onClick={() =>
                     setPageIdx(i => Math.min(pageImages.length - 1, i + 1))
@@ -285,11 +285,11 @@ export function PassageReader({ passage, backHref }: Props) {
         </div>
       )}
 
-      {/* 课文正文 */}
+      {/* 課文正文 */}
       <div className="px-4 pt-5 lg:pt-5">
         {!hasAnyAudio && (
           <div className="mb-4 rounded-xl bg-warning/10 text-ink-light text-xs px-3 py-2">
-            本课文的朗读音频还在生成中，暂时只能看文字
+            本課文的朗讀音訊還在生成中，暫時只能看文字
           </div>
         )}
 
@@ -313,7 +313,7 @@ export function PassageReader({ passage, backHref }: Props) {
                 {!isPoem && (
                   <button
                     type="button"
-                    aria-label={`朗读第 ${i + 1} 句`}
+                    aria-label={`朗讀第 ${i + 1} 句`}
                     onClick={() => playSingle(i)}
                     disabled={!s.audio || mode !== "idle"}
                     className={cn(
@@ -339,7 +339,7 @@ export function PassageReader({ passage, backHref }: Props) {
           })}
         </div>
 
-        {/* 跟读模式：已录音列表，可回放原音 vs 我的 */}
+        {/* 跟讀模式：已錄音列表，可回放原音 vs 我的 */}
         <AnimatePresence>
           {recordings.some(Boolean) && mode !== "followup" && (
             <motion.div
@@ -349,7 +349,7 @@ export function PassageReader({ passage, backHref }: Props) {
               className="mt-5 rounded-2xl bg-white border border-bg-softer p-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <div className="text-sm font-bold text-ink">我的朗读</div>
+                <div className="text-sm font-bold text-ink">我的朗讀</div>
                 <button
                   type="button"
                   onClick={resetRecordings}
@@ -397,9 +397,9 @@ export function PassageReader({ passage, backHref }: Props) {
       </div>
       </div>
 
-      {/* 底部操作栏 */}
-      {/* z-40：与 BottomNav 同层，任何时候都不会被固定底栏压住（阅读器本就隐藏底栏，
-          这里显式给层级，防止将来改路由匹配时重演「按钮被盖住」） */}
+      {/* 底部操作欄 */}
+      {/* z-40：與 BottomNav 同層，任何時候都不會被固定底欄壓住（閱讀器本就隱藏底欄，
+          這裡顯式給層級，防止將來改路由匹配時重演「按鈕被蓋住」） */}
       <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-bg-softer shadow-[0_-4px_12px_rgba(0,0,0,0.04)]" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
         <div className="max-w-md lg:max-w-6xl mx-auto px-4 py-3 flex gap-3">
           <motion.button
@@ -420,7 +420,7 @@ export function PassageReader({ passage, backHref }: Props) {
             ) : (
               <>
                 <Play className="w-5 h-5" />
-                听全文
+                聽全文
               </>
             )}
           </motion.button>
@@ -438,12 +438,12 @@ export function PassageReader({ passage, backHref }: Props) {
             {mode === "followup" ? (
               <>
                 <Square className="w-5 h-5" />
-                结束跟读
+                結束跟讀
               </>
             ) : (
               <>
                 <Mic className="w-5 h-5" />
-                跟读
+                跟讀
               </>
             )}
           </motion.button>
@@ -452,7 +452,7 @@ export function PassageReader({ passage, backHref }: Props) {
 
       </div>
 
-      {/* +XP 奖励 toast（首次听完整篇 / 首次跟读全篇） */}
+      {/* +XP 獎勵 toast（首次聽完整篇 / 首次跟讀全篇） */}
       <AnimatePresence>
         {xpToast && (
           <motion.div

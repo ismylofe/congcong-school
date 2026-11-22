@@ -1,14 +1,14 @@
 "use client";
 
 /**
- * LeagueWatcher —— 本地模拟联赛的全局看门人
+ * LeagueWatcher —— 本地模擬聯賽的全域看門人
  *
- * 职责（与 DailyRewardWatcher 同时机，挂在根 layout）：
- *   - 每次打开 app：调用 store.settleLeagueIfNeeded()
- *     （首次生成 leagueSalt / 首次入场记周键 / 跨周结算上周）；
- *   - 消费 store.pendingLeagueResult，弹「上周战报」结算幕：
- *     名次 + 段位升降动画 + 宝石奖励；
- *   - 沉浸页（课程 / 阅读器）不打扰，回到普通页面再弹。
+ * 職責（與 DailyRewardWatcher 同時機，掛在根 layout）：
+ *   - 每次開啟 app：呼叫 store.settleLeagueIfNeeded()
+ *     （首次生成 leagueSalt / 首次入場記周鍵 / 跨周結算上週）；
+ *   - 消費 store.pendingLeagueResult，彈「上週戰報」結算幕：
+ *     名次 + 段位升降動畫 + 寶石獎勵；
+ *   - 沉浸頁（課程 / 閱讀器）不打擾，回到普通頁面再彈。
  */
 
 import { useEffect, useState } from "react";
@@ -26,10 +26,10 @@ import { isImmersivePath } from "@/lib/immersiveRoutes";
 export function LeagueWatcher() {
   const pathname = usePathname() ?? "/";
   const [result, setResult] = useState<PendingLeagueResult | null>(null);
-  // 沉浸页（答题 / 阅读器）不打扰 —— 判定走 lib/immersiveRoutes 的单一事实源
+  // 沉浸頁（答題 / 閱讀器）不打擾 —— 判定走 lib/immersiveRoutes 的單一事實源
   const immersive = isImmersivePath(pathname);
 
-  // 打开 / 回到普通页面时做联赛例行检查（persist 恢复后再执行）
+  // 開啟 / 回到普通頁面時做聯賽例行檢查（persist 恢復後再執行）
   useEffect(() => {
     if (immersive) return;
     const t = window.setTimeout(() => {
@@ -58,15 +58,15 @@ export function LeagueWatcher() {
   const changed = result.promoted || result.demoted;
 
   return (
-    <Modal open onClose={handleClose} ariaLabel="上周联赛战报">
+    <Modal open onClose={handleClose} ariaLabel="上週聯賽戰報">
       <div className="flex flex-col items-center text-center">
         <Mascot mood={result.demoted ? "embarrassed" : "cheer"} size={96} />
         <h2 className="text-2xl font-extrabold text-ink mt-3">
           {result.promoted
-            ? "恭喜晋级！"
+            ? "恭喜晉級！"
             : result.demoted
-              ? "上周战报"
-              : "上周战报"}
+              ? "上週戰報"
+              : "上週戰報"}
         </h2>
 
         {/* 名次大字 */}
@@ -81,9 +81,9 @@ export function LeagueWatcher() {
             第 {result.rank} 名
           </span>
         </motion.div>
-        <p className="text-sm text-ink-light mt-1">{before.name} · 16 人小组</p>
+        <p className="text-sm text-ink-light mt-1">{before.name} · 16 人小組</p>
 
-        {/* 段位变化动画 */}
+        {/* 段位變化動畫 */}
         {changed && (
           <motion.div
             initial={{ y: 12, opacity: 0 }}
@@ -111,16 +111,16 @@ export function LeagueWatcher() {
         )}
         {result.demoted && (
           <p className="text-xs text-ink-light mt-2">
-            没关系，这周加油学，把段位赢回来！
+            沒關係，這週加油學，把段位贏回來！
           </p>
         )}
         {!changed && (
           <p className="text-xs text-ink-light mt-3">
-            继续留在{after.name}，这周冲进前 5 就能晋级！
+            繼續留在{after.name}，這週衝進前 5 就能晉級！
           </p>
         )}
 
-        {/* 宝石奖励 */}
+        {/* 寶石獎勵 */}
         {result.gems > 0 && (
           <motion.div
             initial={{ scale: 0, y: 10, opacity: 0 }}
@@ -142,7 +142,7 @@ export function LeagueWatcher() {
           onClick={handleClose}
           className="btn-chunky-primary w-full mt-6"
         >
-          {result.promoted ? "太棒了！" : "继续加油"}
+          {result.promoted ? "太棒了！" : "繼續加油"}
         </button>
       </div>
     </Modal>

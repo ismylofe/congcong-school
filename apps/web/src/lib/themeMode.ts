@@ -1,14 +1,14 @@
 "use client";
 
 /**
- * themeMode.ts —— 免费深色模式的三态偏好（跟随系统 / 亮 / 暗）。
+ * themeMode.ts —— 免費深色模式的三態偏好（跟隨系統 / 亮 / 暗）。
  *
- * 与美妆主题（equippedTheme）互相独立：
- *   - 购买的暗色美妆主题（isDark）永远「强制暗色」，覆盖这里的偏好；
- *   - 其余情况按这里的三态决定是否挂 .theme-dark（night 色板）。
+ * 與美妝主題（equippedTheme）互相獨立：
+ *   - 購買的暗色美妝主題（isDark）永遠「強制暗色」，覆蓋這裡的偏好；
+ *   - 其餘情況按這裡的三態決定是否掛 .theme-dark（night 色板）。
  *
- * 存储在 localStorage（THEME_MODE_KEY），首屏由 layout.tsx 的内联脚本
- * 提前读取并挂类，防止白闪。
+ * 儲存在 localStorage（THEME_MODE_KEY），首屏由 layout.tsx 的內聯腳本
+ * 提前讀取並掛類，防止白閃。
  */
 
 import { learnerLocalStorage, learnerStorageKey } from "@/lib/learnerProfiles";
@@ -39,7 +39,7 @@ export function setThemeMode(mode: ThemeMode) {
 
 function subscribe(cb: () => void): () => void {
   listeners.add(cb);
-  // 其他标签页改了偏好也同步
+  // 其他標籤頁改了偏好也同步
   const onStorage = (e: StorageEvent) => {
     if (e.key === learnerStorageKey(THEME_MODE_KEY)) cb();
   };
@@ -50,12 +50,12 @@ function subscribe(cb: () => void): () => void {
   };
 }
 
-/** 响应式读取当前三态偏好 */
+/** 響應式讀取當前三態偏好 */
 export function useThemeMode(): ThemeMode {
   return useSyncExternalStore(subscribe, getThemeMode, () => "system" as ThemeMode);
 }
 
-/** 系统是否偏好深色（响应式） */
+/** 系統是否偏好深色（響應式） */
 export function useSystemPrefersDark(): boolean {
   return useSyncExternalStore(
     cb => {

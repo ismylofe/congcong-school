@@ -62,30 +62,30 @@ import {
 } from "@cstf/core/backup";
 
 /**
- * 错题条目，含 SRS（间隔重复）字段。
- * box / correctCount / lastReviewedAt / nextReviewDate 由 lib/srs.ts 维护。
+ * 錯題條目，含 SRS（間隔重複）欄位。
+ * box / correctCount / lastReviewedAt / nextReviewDate 由 lib/srs.ts 維護。
  */
 interface MistakeEntry {
   lessonId: string;
   lessonTitle?: string;
   question: Question;
   addedAt: string;
-  /** SRS box（1=新错题/今天复习，2=明天，3=毕业级 7 天） */
+  /** SRS box（1=新錯題/今天覆習，2=明天，3=畢業級 7 天） */
   box?: 1 | 2 | 3;
-  /** 累计答对次数 */
+  /** 累計答對次數 */
   correctCount?: number;
-  /** 上次复习时间（ISO） */
+  /** 上次複習時間（ISO） */
   lastReviewedAt?: string;
-  /** 下次复习日期（YYYY-MM-DD），<= today 即可复习 */
+  /** 下次複習日期（YYYY-MM-DD），<= today 即可複習 */
   nextReviewDate?: string;
-  /** 已毕业（box3 + 答对≥2）：保留展示「已掌握」，不再进入 due 队列 */
+  /** 已畢業（box3 + 答對≥2）：保留展示「已掌握」，不再進入 due 佇列 */
   graduated?: boolean;
 }
 
 /**
- * 未完成的课程会话。
- * 当用户关闭浏览器 / 切走 / 刷新时，这个对象被持久化，
- * 下次进入同一课程可以无缝恢复到上次答到的题目。
+ * 未完成的課程會話。
+ * 當使用者關閉瀏覽器 / 切走 / 重新整理時，這個物件被持久化，
+ * 下次進入同一課程可以無縫恢復到上次答到的題目。
  */
 export interface ActiveLessonSession {
   lessonId: string;
@@ -96,14 +96,14 @@ export interface ActiveLessonSession {
   startedAt: number; // legacy timestamp; not an elapsed-time counter
   /** Checkpointed foreground time; absent on legacy drafts. */
   activeTimeMs?: number;
-  // —— 可选扩展字段；恢复前由 lessonSession 校验课程内容是否一致 ——
-  /** 剩余待答题目 id 队列（含错题重排回队尾的顺序） */
+  // —— 可選擴充欄位；恢復前由 lessonSession 校驗課程內容是否一致 ——
+  /** 剩餘待答題目 id 佇列（含錯題重排回隊尾的順序） */
   queueIds?: number[];
-  /** 已答对（离场）的题目 id */
+  /** 已答對（離場）的題目 id */
   solvedIds?: number[];
-  /** 本次会话最高连击 */
+  /** 本次會話最高連擊 */
   maxCombo?: number;
-  /** 本次会话已累计 XP（展示用） */
+  /** 本次會話已累計 XP（展示用） */
   sessionXp?: number;
   stage?: "intro" | "practice";
   introPage?: number;
@@ -123,74 +123,74 @@ export interface ActiveLessonSession {
   contentKey?: string;
 }
 
-/** 🚩 题目报错类型（E2：小旗子三选） */
+/** 🚩 題目報錯型別（E2：小旗子三選） */
 export type ReportKind = "question_wrong" | "answer_should_count" | "audio_issue";
 
-/** 报错类型 → 儿童友好中文标签（UI 单一事实源） */
+/** 報錯型別 → 兒童友好中文標籤（UI 單一事實源） */
 export const REPORT_KIND_LABELS: Record<ReportKind, string> = {
-  question_wrong: "题目有误",
-  answer_should_count: "我的答案应该算对",
-  audio_issue: "音频有问题",
+  question_wrong: "題目有誤",
+  answer_should_count: "我的答案應該算對",
+  audio_issue: "音訊有問題",
 };
 
 /**
- * 🚩 一条本地报错记录（E2）：只存在本机，不上传任何服务器。
- * 「我的」页可查看与一键导出 JSON。
+ * 🚩 一條本地報錯記錄（E2）：只存在本機，不上傳任何伺服器。
+ * 「我的」頁可查看與一鍵匯出 JSON。
  */
 export interface QuestionReport {
   id: string;
   lessonId: string;
   questionId: number;
-  /** 题干快照（截断），列表展示用 */
+  /** 題幹快照（截斷），列表展示用 */
   questionText: string;
   kind: ReportKind;
   createdAt: string; // ISO
-  /** 当次作答（可选，「我的答案应该算对」时最有用） */
+  /** 當次作答（可選，「我的答案應該算對」時最有用） */
   answerGiven?: string;
 }
 
 /**
- * 通关结算单 —— recordLessonComplete 的原子返回值，
- * 对齐 iOS ProgressStore.completeLesson 的 LessonOutcome 形态。
- * 结算页/庆祝动画只读这里的数字，不再自己扒 store 二次推算。
+ * 通關結算單 —— recordLessonComplete 的原子返回值，
+ * 對齊 iOS ProgressStore.completeLesson 的 LessonOutcome 形態。
+ * 結算頁/慶祝動畫只讀這裡的數字，不再自己扒 store 二次推算。
  */
 export interface LessonOutcome {
-  /** 实际入账 XP（调用方经 xpForLesson 算好传入，含周末 ×2） */
+  /** 實際入賬 XP（呼叫方經 xpForLesson 算好傳入，含週末 ×2） */
   xpGained: number;
-  /** 本课宝石总额（drip：基础+星级+首次三星+每日目标 +20，全含） */
+  /** 本課寶石總額（drip：基礎+星級+首次三星+每日目標 +20，全含） */
   gemsGained: number;
   stars: 1 | 2 | 3;
   streakBefore: number;
   streakAfter: number;
-  /** 本次通关是否推进了连胜（今天首次学习） */
+  /** 本次通關是否推進了連勝（今天首次學習） */
   streakIncreased: boolean;
-  /** 本次入账是否让今日 XP 首次跨过每日目标 */
+  /** 本次入賬是否讓今日 XP 首次跨過每日目標 */
   dailyGoalReachedNow: boolean;
-  /** 本次触发的连胜里程碑宝石（0 = 未到里程碑），已计入余额 */
+  /** 本次觸發的連勝里程碑寶石（0 = 未到里程碑），已計入餘額 */
   milestoneGems: number;
-  /** 是否该课历史首次三星 */
+  /** 是否該課歷史首次三星 */
   isFirstPerfect: boolean;
 }
 
 /**
- * 联赛周一结算单 —— settleLeagueIfNeeded 发现跨周后写入，
- * LeagueWatcher 消费并弹「上周战报」结算幕（名次 + 段位变化 + 宝石）。
+ * 聯賽週一結算單 —— settleLeagueIfNeeded 發現跨周後寫入，
+ * LeagueWatcher 消費並彈「上週戰報」結算幕（名次 + 段位變化 + 寶石）。
  */
 export interface PendingLeagueResult {
-  /** 被结算的那一周（周一 YYYY-MM-DD） */
+  /** 被結算的那一週（週一 YYYY-MM-DD） */
   weekKey: string;
-  /** 上周末终值名次（1..16） */
+  /** 上週末終值名次（1..16） */
   rank: number;
   tierBefore: LeagueTierId;
   tierAfter: LeagueTierId;
   promoted: boolean;
   demoted: boolean;
-  /** 名次奖励 +（晋级时）晋级奖励，已入账 */
+  /** 名次獎勵 +（晉級時）晉級獎勵，已入賬 */
   gems: number;
 }
 
 interface ProgressState {
-  // 核心进度
+  // 核心進度
   xp: number;
   streak: number;
   lastActiveDate: string; // YYYY-MM-DD
@@ -199,134 +199,134 @@ interface ProgressState {
 
   // 偏好
   muted: boolean;
-  /** 自动朗读题干/讲解/知识卡（面向低龄）。默认 on。 */
+  /** 自動朗讀題幹/講解/知識卡（面向低齡）。預設 on。 */
   autoNarrate: boolean;
 
-  // 心数系统（持久化，跨会话恢复）
+  // 心數系統（持久化，跨會話恢復）
   hearts: number;
   nextHeartAt: number | null; // ms timestamp
   /**
-   * 上次靠「复习错题」赚到红心的日期（YYYY-MM-DD，"" = 从未）。
-   * 每天只能靠复习补一次心 —— 否则重复进出同一批错题就能无限刷心。
-   * 与 iOS ProgressStore 的 lastReviewHeartDate 同名同义。
+   * 上次靠「複習錯題」賺到紅心的日期（YYYY-MM-DD，"" = 從未）。
+   * 每天只能靠複習補一次心 —— 否則重複進出同一批錯題就能無限刷心。
+   * 與 iOS ProgressStore 的 lastReviewHeartDate 同名同義。
    */
   lastReviewHeartDate: string;
 
-  // 每日目标
+  // 每日目標
   dailyGoal: number;
   todayXp: number;
   lastXpDate: string;
 
-  // 连胜护盾
+  // 連勝護盾
   streakFreezes: number;
   /**
-   * 「护盾一次性补发」是否已经执行过（与 iOS Progress.freezesMigrated 同名同义）。
-   * 没有这个开关的话，persist version 每提升一次，migrate 里的
-   * `max(现值, INITIAL_FREEZES)` 就会再白送一轮护盾。
+   * 「護盾一次性補發」是否已經執行過（與 iOS Progress.freezesMigrated 同名同義）。
+   * 沒有這個開關的話，persist version 每提升一次，migrate 裡的
+   * `max(現值, INITIAL_FREEZES)` 就會再白送一輪護盾。
    */
   freezesMigrated: boolean;
 
-  // 未完成课程会话
+  // 未完成課程會話
   activeLesson: ActiveLessonSession | null;
 
-  // 💎 宝石货币 / 宝箱 / 首次完美通关记录
+  // 💎 寶石貨幣 / 寶箱 / 首次完美通關記錄
   gems: number;
   lifetimeGems: number;
   claimedChests: Record<string, true>;
   perfectedLessons: Record<string, true>;
 
-  // 🎨 美妆系统 v4
-  /** 已解锁的 cosmetic id 集合 */
+  // 🎨 美妝系統 v4
+  /** 已解鎖的 cosmetic id 集合 */
   ownedCosmetics: Record<string, true>;
-  /** 当前装备的吉祥物皮肤 id */
+  /** 當前裝備的吉祥物皮膚 id */
   equippedMascotSkin: string;
-  /** 当前装备的 UI 主题 id */
+  /** 當前裝備的 UI 主題 id */
   equippedTheme: string;
-  /** 当前装备的课程背景 id */
+  /** 當前裝備的課程背景 id */
   equippedBackdrop: string;
-  /** 已发放过的"连胜里程碑"礼物（防止重复发） */
+  /** 已發放過的"連勝里程碑"禮物（防止重複發） */
   claimedStreakRewards: Record<number, true>;
 
-  // ⏱️ 时间关怀（家长可选开启） v4
-  /** 每日累计学习时间（毫秒，按 lastXpDate 重置） */
+  // ⏱️ 時間關懷（家長可選開啟） v4
+  /** 每日累計學習時間（毫秒，按 lastXpDate 重置） */
   todayTimeMs: number;
-  /** 单日学习时间上限（毫秒），0 表示无限制 */
+  /** 單日學習時間上限（毫秒），0 表示無限制 */
   dailyTimeLimitMs: number;
-  /** 单次课程时长上限（毫秒），0 表示无限制 */
+  /** 單次課程時長上限（毫秒），0 表示無限制 */
   sessionTimeLimitMs: number;
 
-  // 📅 v5：每日 XP 历史 + 每日登陆奖励
-  /** 每日 XP 历史 { "YYYY-MM-DD": xp }，最多保留近 60 天 */
+  // 📅 v5：每日 XP 歷史 + 每日登陸獎勵
+  /** 每日 XP 歷史 { "YYYY-MM-DD": xp }，最多保留近 60 天 */
   xpHistory: Record<string, number>;
-  /** 每日完成课程数历史 { "YYYY-MM-DD": count } */
+  /** 每日完成課程數歷史 { "YYYY-MM-DD": count } */
   lessonHistory: Record<string, number>;
   /** Effective learning days, independent of XP and reward eligibility. */
   studyDays: Record<string, true>;
   numberSenseProgress: NumberProgress;
-  /** 上次领取每日登陆奖励的日期 */
+  /** 上次領取每日登陸獎勵的日期 */
   lastDailyRewardDate: string;
 
-  // 🎒 v6：用户选择的年级（首次进入时引导选择，决定 home 显示哪一年级的教材）
+  // 🎒 v6：使用者選擇的年級（首次進入時引導選擇，決定 home 顯示哪一年級的教材）
   selectedGrade: number | null;
 
-  // 📖 v7：阅读完成记录，**规范阅读 id**（@cstf/core/reading 的
-  // `reading:{kind}:{rawId}`）→ 完成时间 ISO。
-  // 与课程记录彻底分离：阅读只发 XP、不发宝石、不算课时（对齐 iOS completeReading）。
-  // ⚠️ 不要手拼 key：读用 isReadingDone / 写用 completeReading(readingId(kind, rawId), xp)。
+  // 📖 v7：閱讀完成記錄，**規範閱讀 id**（@cstf/core/reading 的
+  // `reading:{kind}:{rawId}`）→ 完成時間 ISO。
+  // 與課程記錄徹底分離：閱讀只發 XP、不發寶石、不算課時（對齊 iOS completeReading）。
+  // ⚠️ 不要手拼 key：讀用 isReadingDone / 寫用 completeReading(readingId(kind, rawId), xp)。
   completedReadings: Record<string, string>;
 
-  // 🏆 v8：成就永久解锁账本（只进不出，防连胜回落"回锁"；奖励只发一次）
+  // 🏆 v8：成就永久解鎖賬本（只進不出，防連勝回落"回鎖"；獎勵只發一次）
   unlockedAchievements: Record<string, true>;
-  /** 最近一次发放但尚未庆祝的连胜里程碑（DailyRewardWatcher 消费后清空） */
+  /** 最近一次發放但尚未慶祝的連勝里程碑（DailyRewardWatcher 消費後清空） */
   pendingStreakMilestone: { streak: number; gems: number } | null;
 
-  // 🗓️ v9：每日任务计数（对齐 iOS rollDailyIfNeeded 的 dailyXxx 三计数）
-  /** 计数所属日期（YYYY-MM-DD），跨日清零 */
+  // 🗓️ v9：每日任務計數（對齊 iOS rollDailyIfNeeded 的 dailyXxx 三計數）
+  /** 計數所屬日期（YYYY-MM-DD），跨日清零 */
   dailyQuestDate: string;
-  /** 今日完成课程数 */
+  /** 今日完成課程數 */
   dailyLessons: number;
-  /** 今日复习错题道数 */
+  /** 今日複習錯題道數 */
   dailyReviews: number;
-  /** 今日读完的课文/故事篇数 */
+  /** 今日讀完的課文/故事篇數 */
   dailyReadings: number;
-  /** 任务领取账本，key = "YYYY-MM-DD:questId"（防重复领取） */
+  /** 任務領取賬本，key = "YYYY-MM-DD:questId"（防重複領取） */
   claimedQuests: Record<string, true>;
 
-  // ⏱️ v9：学习时长独立换日字段（修复 addLearningTimeMs 污染 lastXpDate）
+  // ⏱️ v9：學習時長獨立換日欄位（修復 addLearningTimeMs 汙染 lastXpDate）
   lastTimeDate: string;
 
-  // 🏠 v9：首页 IA——当前正在学的教材
+  // 🏠 v9：首頁 IA——當前正在學的教材
   activeBookId: string | null;
 
-  // 🏆 v10：本地模拟联赛（确定性影子同学，纯单机）
-  /** 每台设备一次性生成的稳定随机串——联赛 seed 的一部分（"" = 尚未生成） */
+  // 🏆 v10：本地模擬聯賽（確定性影子同學，純單機）
+  /** 每臺裝置一次性生成的穩定隨機串——聯賽 seed 的一部分（"" = 尚未生成） */
   leagueSalt: string;
-  /** 当前段位 */
+  /** 當前段位 */
   leagueTier: LeagueTierId;
-  /** 当前参赛周（本周周一 YYYY-MM-DD；"" = 尚未入场） */
+  /** 當前參賽周（本週週一 YYYY-MM-DD；"" = 尚未入場） */
   leagueWeekKey: string;
-  /** 待展示的上周结算幕（LeagueWatcher 消费后清空） */
+  /** 待展示的上週結算幕（LeagueWatcher 消費後清空） */
   pendingLeagueResult: PendingLeagueResult | null;
 
-  // 🚩 v11：题目报错（本地列表，不上传）
+  // 🚩 v11：題目報錯（本地列表，不上傳）
   reports: QuestionReport[];
 
   // actions
   setSelectedGrade: (grade: number | null) => void;
-  /** 设置首页当前教材（null = 未选择，回到选书流程） */
+  /** 設定首頁當前教材（null = 未選擇，回到選書流程） */
   setActiveBookId: (bookId: string | null) => void;
   /**
-   * 通关记账（原子）：XP/宝石/星级/连胜推进/里程碑/每日任务计数一次完成，
-   * 返回结算单 LessonOutcome 供结算页展示。
+   * 通關記賬（原子）：XP/寶石/星級/連勝推進/里程碑/每日任務計數一次完成，
+   * 返回結算單 LessonOutcome 供結算頁展示。
    */
   recordLessonComplete: (lessonId: string, lessonTitle: string, accuracy: number, xpGained: number, evidence?: { questionCount: number; numberSense?: NumberPracticeEvidence }) => LessonOutcome;
   /**
-   * 完成一篇阅读（课文听读/跟读/故事）：幂等，首次才发 XP，不发通关宝石、不写课程记录。
-   * id 请传 `readingId(kind, rawId)`；传历史格式也不会记错账（内部会归一化）。
+   * 完成一篇閱讀（課文聽讀/跟讀/故事）：冪等，首次才發 XP，不發通關寶石、不寫課程記錄。
+   * id 請傳 `readingId(kind, rawId)`；傳歷史格式也不會記錯賬（內部會歸一化）。
    */
   completeReading: (id: string, xp: number) => void;
   recordNumberSenseReview: (results: { skill: NumberSkill; correct: number; total: number }[]) => boolean;
-  /** 某篇阅读是否已完成（内部按规范 id 查表，调用方不用关心 key 格式） */
+  /** 某篇閱讀是否已完成（內部按規範 id 查表，呼叫方不用關心 key 格式） */
   isReadingDone: (kind: ReadingKind, rawId: string) => boolean;
   addMistake: (lessonId: string, lessonTitle: string, question: Question) => void;
   removeMistake: (lessonId: string, questionId: number) => void;
@@ -337,140 +337,140 @@ interface ProgressState {
 
   loseHeart: () => void;
   refreshHearts: () => void;
-  refillHeartsFull: () => void; // 调试/管理用
+  refillHeartsFull: () => void; // 除錯/管理用
   /**
-   * 补回 n 颗红心（默认 1）：先结算自然回复再封顶 MAX_HEARTS，满心清计时。
-   * 对齐 iOS ProgressStore.addHeart。
+   * 補回 n 顆紅心（預設 1）：先結算自然回覆再封頂 MAX_HEARTS，滿心清計時。
+   * 對齊 iOS ProgressStore.addHeart。
    */
   addHeart: (n?: number) => void;
   /**
-   * 复习一轮错题后的补心结算（Web按可用题数调整门槛）：
-   * 首答正确达五题（可用题不足五题则需整轮正确）补 REVIEW_HEART_REWARD 颗，
-   * 每天最多一次（lastReviewHeartDate 账本，防止刷同一批错题无限刷心）。
-   * 返回实际补到的红心数（0 = 没到门槛 / 今天领过 / 已满心）。
+   * 複習一輪錯題後的補心結算（Web按可用題數調整門檻）：
+   * 首答正確達五題（可用題不足五題則需整輪正確）補 REVIEW_HEART_REWARD 顆，
+   * 每天最多一次（lastReviewHeartDate 賬本，防止刷同一批錯題無限刷心）。
+   * 返回實際補到的紅心數（0 = 沒到門檻 / 今天領過 / 已滿心）。
    */
   awardReviewHeart: (correctCount: number, availableCount?: number) => number;
-  /** 花 350 宝石立即补满红心（先刷新自然回复；已满不扣费返回 false） */
+  /** 花 350 寶石立即補滿紅心（先重新整理自然回覆；已滿不扣費返回 false） */
   buyHeartRefill: () => boolean;
-  /** 花 200 宝石购买一枚连胜护盾（持有上限 2，满则返回 false） */
+  /** 花 200 寶石購買一枚連勝護盾（持有上限 2，滿則返回 false） */
   buyStreakFreeze: () => boolean;
   setDailyGoal: (goal: number) => void;
 
-  /** 更新/写入当前进行中的课程会话 */
+  /** 更新/寫入當前進行中的課程會話 */
   upsertLessonSession: (session: ActiveLessonSession) => void;
-  /** 清除进行中的会话（通关/退出/失败时调用） */
+  /** 清除進行中的會話（通關/退出/失敗時呼叫） */
   clearLessonSession: () => void;
 
-  // 💎 宝石 / 宝箱 / 首次完美
+  // 💎 寶石 / 寶箱 / 首次完美
   addGems: (n: number) => void;
-  /** 花费宝石，成功返回 true，不够返回 false */
+  /** 花費寶石，成功返回 true，不夠返回 false */
   spendGems: (n: number) => boolean;
-  /** 标记某课为已首次完美通关（幂等），返回 true 表示是首次 */
+  /** 標記某課為已首次完美通關（冪等），返回 true 表示是首次 */
   markPerfected: (lessonId: string) => boolean;
-  /** 领取宝箱（幂等），返回 true 表示是首次领取 */
+  /** 領取寶箱（冪等），返回 true 表示是首次領取 */
   claimChest: (chestId: string) => boolean;
 
-  // 🎨 美妆系统 actions
-  /** 拥有 cosmetic（不扣 gems，比如初始赠送 / 任务奖励） */
+  // 🎨 美妝系統 actions
+  /** 擁有 cosmetic（不扣 gems，比如初始贈送 / 任務獎勵） */
   unlockCosmetic: (id: string) => void;
-  /** 购买 cosmetic：扣 gems → 加入 owned → 自动装备。失败返回 false（gems 不够 / 已拥有 / 道具不存在） */
+  /** 購買 cosmetic：扣 gems → 加入 owned → 自動裝備。失敗返回 false（gems 不夠 / 已擁有 / 道具不存在） */
   purchaseCosmetic: (id: string) => { ok: boolean; reason?: string };
-  /** 切换装备（必须已拥有） */
+  /** 切換裝備（必須已擁有） */
   equipCosmetic: (id: string) => boolean;
 
-  // ⏱️ 时间关怀 actions
+  // ⏱️ 時間關懷 actions
   setDailyTimeLimit: (ms: number) => void;
   setSessionTimeLimit: (ms: number) => void;
-  /** 课程过程中按秒累加学习时间 */
+  /** 課程過程中按秒累加學習時間 */
   addLearningTimeMs: (ms: number) => void;
 
-  // 🔁 连胜补卡：花 50 gems 找回昨天的 streak（不让小朋友因为漏了一天就清零）
+  // 🔁 連勝補卡：花 50 gems 找回昨天的 streak（不讓小朋友因為漏了一天就清零）
   makeUpYesterdayStreak: () => boolean;
 
   /**
-   * 领取今日登陆奖励。数额按「有效连胜」折算（断签未救回按 0 档）。
-   * 返回 { gems, effectiveStreak }；已领过返回 gems=0。
+   * 領取今日登陸獎勵。數額按「有效連勝」折算（斷籤未救回按 0 檔）。
+   * 返回 { gems, effectiveStreak }；已領過返回 gems=0。
    */
   claimDailyReward: () => { gems: number; effectiveStreak: number };
 
-  /** 按成就账本发放一枚成就的解锁奖励（幂等），返回发放的宝石数；已在账本返回 0 */
+  /** 按成就賬本發放一枚成就的解鎖獎勵（冪等），返回發放的寶石數；已在賬本返回 0 */
   claimAchievement: (id: string) => number;
-  /** 里程碑庆祝已展示，清除 pending 标记 */
+  /** 里程碑慶祝已展示，清除 pending 標記 */
   clearPendingStreakMilestone: () => void;
 
-  // 📚 SRS：复习答题后的更新（core reviewSrsEntry 单一事实源）。
-  // 返回 true 表示本次复习让该题「新毕业」（box3 + 答对≥2），供 UI 庆祝。
+  // 📚 SRS：複習答題後的更新（core reviewSrsEntry 單一事實源）。
+  // 返回 true 表示本次複習讓該題「新畢業」（box3 + 答對≥2），供 UI 慶祝。
   reviewMistake: (lessonId: string, questionId: number, isCorrect: boolean) => boolean;
   refreshMistakeContent: (lessons: Map<string, Lesson | null>) => void;
 
   /**
-   * 复习会话结算：每答对一题 +5 XP（走统一记账，含每日目标判定与
-   * 达标 +20 宝石），dailyReviews += reviewedCount，推进连胜。
-   * 对齐 iOS ProgressStore.awardReviewXP。返回本次入账的 XP。
+   * 複習會話結算：每答對一題 +5 XP（走統一記賬，含每日目標判定與
+   * 達標 +20 寶石），dailyReviews += reviewedCount，推進連勝。
+   * 對齊 iOS ProgressStore.awardReviewXP。返回本次入賬的 XP。
    */
   awardReviewXP: (correctCount: number, reviewedCount: number) => number;
 
-  // 🗓️ 每日任务
-  /** 今天的三条任务（core dailyQuests，确定性，与 iOS 同日同任务） */
+  // 🗓️ 每日任務
+  /** 今天的三條任務（core dailyQuests，確定性，與 iOS 同日同任務） */
   todayQuests: () => Quest[];
-  /** 某类任务今天的进度值（earnXP 用今日 XP，其余用 daily 计数） */
+  /** 某類任務今天的進度值（earnXP 用今日 XP，其餘用 daily 計數） */
   questProgress: (kind: QuestKind) => number;
   /**
-   * 领取一条已完成任务的宝石：按 "今天:questId" 记账防重复。
-   * 实发数额以任务池为准（reward 入参仅为调用方便/接口对齐）。
-   * 返回 true = 领取成功。
+   * 領取一條已完成任務的寶石：按 "今天:questId" 記賬防重複。
+   * 實發數額以任務池為準（reward 入參僅為呼叫方便/介面對齊）。
+   * 返回 true = 領取成功。
    */
   claimQuest: (questId: string, reward: number) => boolean;
-  /** 已完成且未领取的任务数（首页红点/角标用） */
+  /** 已完成且未領取的任務數（首頁紅點/角標用） */
   claimableQuestCount: () => number;
 
-  // ⏱️ 时间关怀 selectors
-  /** 今天已学习的毫秒数（跨日自动归零口径） */
+  // ⏱️ 時間關懷 selectors
+  /** 今天已學習的毫秒數（跨日自動歸零口徑） */
   todayLearningTimeMs: () => number;
-  /** 是否已达到家长设置的每日时长上限（未设置上限恒为 false） */
+  /** 是否已達到家長設定的每日時長上限（未設定上限恆為 false） */
   dailyTimeLimitReached: () => boolean;
 
-  // 🏆 联赛
-  /** 联赛是否已解锁（累计完成 ≥ 10 节课） */
+  // 🏆 聯賽
+  /** 聯賽是否已解鎖（累計完成 ≥ 10 節課） */
   leagueUnlocked: () => boolean;
   /**
-   * 打开 app 时的联赛例行检查：
-   *   - 首次调用生成 leagueSalt（一次性，之后稳定不变）；
-   *   - 首次入场把 leagueWeekKey 设为本周（不结算）；
-   *   - 发现跨周 → 按 core settleRank 结算上周终值名次：发宝石、
-   *     晋降段位、写 pendingLeagueResult 供 UI 弹结算幕。
+   * 開啟 app 時的聯賽例行檢查：
+   *   - 首次呼叫生成 leagueSalt（一次性，之後穩定不變）；
+   *   - 首次入場把 leagueWeekKey 設為本週（不結算）；
+   *   - 發現跨周 → 按 core settleRank 結算上週終值名次：發寶石、
+   *     晉降段位、寫 pendingLeagueResult 供 UI 彈結算幕。
    */
   settleLeagueIfNeeded: () => void;
-  /** 结算幕已展示，清除 pending 标记 */
+  /** 結算幕已展示，清除 pending 標記 */
   clearPendingLeagueResult: () => void;
 
-  // ⚡ 跳级（jump ahead）
+  // ⚡ 跳級（jump ahead）
   /**
-   * 跳级测试通过后的批量补标：把传入课程里尚未完成的批量标记为
-   * completed{stars:1, accuracy:0.8}（防刷：不发 XP / 宝石 / 连胜 / 任务计数）。
-   * 已完成的课程保持原成绩不动。返回本次新标记的课程数。
+   * 跳級測試透過後的批次補標：把傳入課程裡尚未完成的批次標記為
+   * completed{stars:1, accuracy:0.8}（防刷：不發 XP / 寶石 / 連勝 / 任務計數）。
+   * 已完成的課程保持原成績不動。返回本次新標記的課程數。
    */
   jumpAheadComplete: (lessonIds: string[]) => number;
 
-  // 💾 存档备份（BackupEnvelope v1，双端互通）
-  /** 导出当前进度为中立信封（core buildBackup，platform="web"） */
+  // 💾 存檔備份（BackupEnvelope v1，雙端互通）
+  /** 匯出當前進度為中立信封（core buildBackup，platform="web"） */
   exportBackup: () => BackupEnvelope;
   /**
-   * 导入一个已经过 core validateBackup 规整的信封：覆盖当前进度。
-   * 红心计时 / 进行中课程 / 每日任务计数等瞬态全部复位。
+   * 匯入一個已經過 core validateBackup 規整的信封：覆蓋當前進度。
+   * 紅心計時 / 進行中課程 / 每日任務計數等瞬態全部復位。
    */
   importBackup: (envelope: BackupEnvelope) => void;
 
-  // 🚩 题目报错
-  /** 写入一条本地报错记录（列表封顶 200 条，超出丢最旧） */
+  // 🚩 題目報錯
+  /** 寫入一條本地報錯記錄（列表封頂 200 條，超出丟最舊） */
   addReport: (input: Omit<QuestionReport, "id" | "createdAt">) => void;
 }
 
-/** 每多少课出现一个宝箱节点（真值在 @cstf/core/chestLogic 中，这里 re-export 保持向后兼容） */
+/** 每多少課出現一個寶箱節點（真值在 @cstf/core/chestLogic 中，這裡 re-export 保持向後相容） */
 export { CHEST_EVERY_N_LESSONS } from "@cstf/core/chestLogic";
 
 // ============================================================
-// 常量 —— 全部来自 @cstf/core/economy（经济单一事实源），这里只 re-export
+// 常量 —— 全部來自 @cstf/core/economy（經濟單一事實源），這裡只 re-export
 // ============================================================
 
 export {
@@ -490,17 +490,17 @@ export {
 };
 
 /**
- * 阅读完成 id 的单一事实源（@cstf/core/reading）。
- * UI 调用点（PassageReader / StoryReaderClient / StoryCard）统一用它拼 key：
+ * 閱讀完成 id 的單一事實源（@cstf/core/reading）。
+ * UI 呼叫點（PassageReader / StoryReaderClient / StoryCard）統一用它拼 key：
  *   readingId("listen" | "followup", passage.id) / readingId("story", story.id)
  */
 export { readingId, type ReadingKind };
 
-/** 一颗红心的回复时长（ms），由 core HEART_REGEN_SECONDS 折算 */
+/** 一顆紅心的回覆時長（ms），由 core HEART_REGEN_SECONDS 折算 */
 export const HEART_RECHARGE_MS = HEART_REGEN_SECONDS * 1000;
 
 // ============================================================
-// 工具函数
+// 工具函式
 // ============================================================
 
 function todayStr(): string {
@@ -515,12 +515,12 @@ function daysBetween(a: string, b: string): number {
   return Math.round((db.getTime() - da.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-/** 当前是否为周一（用于连胜护盾补给） */
+/** 當前是否為週一（用於連勝護盾補給） */
 function isMonday(): boolean {
   return new Date().getDay() === 1;
 }
 
-/** 保留最近 60 天的历史，防止 localStorage 持续膨胀 */
+/** 保留最近 60 天的歷史，防止 localStorage 持續膨脹 */
 function pruneHistory<T>(history: Record<string, T>): Record<string, T> {
   const keys = Object.keys(history).sort();
   if (keys.length <= 60) return history;
@@ -531,8 +531,8 @@ function pruneHistory<T>(history: Record<string, T>): Record<string, T> {
 }
 
 /**
- * 一次 XP 入账的通用记账：xp / todayXp / xpHistory 累加 + 每日目标首次达成的 +20 gems 判定。
- * recordLessonComplete 与 completeReading 共用，避免两份手抄的记账逻辑漂移。
+ * 一次 XP 入賬的通用記賬：xp / todayXp / xpHistory 累加 + 每日目標首次達成的 +20 gems 判定。
+ * recordLessonComplete 與 completeReading 共用，避免兩份手抄的記賬邏輯漂移。
  */
 function applyXpGain(
   state: ProgressState,
@@ -542,7 +542,7 @@ function applyXpGain(
   xp: number;
   todayXp: number;
   xpHistory: Record<string, number>;
-  /** 首次跨过 dailyGoal 阈值的一次性奖励（未达成为 0） */
+  /** 首次跨過 dailyGoal 閾值的一次性獎勵（未達成為 0） */
   goalBonusGems: number;
 } {
   const isSameDay = state.lastXpDate === today;
@@ -569,8 +569,8 @@ function applyXpGain(
 }
 
 /**
- * 有效连胜（展示/结算口径）：
- * gap ≤ 1 或漏掉的天数能被护盾兜住 → 连胜仍有效；否则视为 0（已断签）。
+ * 有效連勝（展示/結算口徑）：
+ * gap ≤ 1 或漏掉的天數能被護盾兜住 → 連勝仍有效；否則視為 0（已斷籤）。
  */
 function effectiveStreakOf(
   streak: number,
@@ -584,9 +584,9 @@ function effectiveStreakOf(
 }
 
 /**
- * rollQuestDayIfNeeded 的纯函数内核：跨日时把每日任务计数清零。
- * 返回需要合并进 set() 的补丁（同日返回空对象），保证与本次埋点在
- * 同一个 set 里原子生效。
+ * rollQuestDayIfNeeded 的純函式核心：跨日時把每日任務計數清零。
+ * 返回需要合併進 set() 的補丁（同日返回空物件），保證與本次埋點在
+ * 同一個 set 裡原子生效。
  */
 function questDayRollover(
   state: Pick<ProgressState, "dailyQuestDate" | "dailyLessons" | "dailyReviews" | "dailyReadings">,
@@ -596,14 +596,14 @@ function questDayRollover(
   return { dailyQuestDate: today, dailyLessons: 0, dailyReviews: 0, dailyReadings: 0 };
 }
 
-/** 复习错题：每答对一题的 XP（与 iOS MistakeReviewRunnerView.xpPerCorrect 一致） */
+/** 複習錯題：每答對一題的 XP（與 iOS MistakeReviewRunnerView.xpPerCorrect 一致） */
 export const REVIEW_XP_PER_CORRECT = 5;
 
 // ============================================================
-// 🏆 联赛工具
+// 🏆 聯賽工具
 // ============================================================
 
-/** 生成一次性的 leagueSalt（16 字节随机 hex；无 crypto 时退化到 Math.random） */
+/** 生成一次性的 leagueSalt（16 位元組隨機 hex；無 crypto 時退化到 Math.random） */
 function generateLeagueSalt(): string {
   try {
     if (typeof crypto !== "undefined" && crypto.getRandomValues) {
@@ -618,8 +618,8 @@ function generateLeagueSalt(): string {
 }
 
 /**
- * 某一周（weekKey = 周一 YYYY-MM-DD）的用户周 XP：
- * xpHistory 该周 7 天求和。历史保留天数不足一周时按可得数据尽力求和。
+ * 某一週（weekKey = 週一 YYYY-MM-DD）的使用者周 XP：
+ * xpHistory 該周 7 天求和。歷史保留天數不足一週時按可得資料盡力求和。
  */
 export function weekXpFromHistory(
   xpHistory: Record<string, number>,
@@ -660,7 +660,7 @@ export const useProgressStore = create<ProgressState>()(
       lastXpDate: "",
 
       streakFreezes: INITIAL_FREEZES,
-      // 新装的 app 一开始就拿到 INITIAL_FREEZES，不需要再被"补发"一次
+      // 新裝的 app 一開始就拿到 INITIAL_FREEZES，不需要再被"補發"一次
       freezesMigrated: true,
 
       activeLesson: null,
@@ -670,7 +670,7 @@ export const useProgressStore = create<ProgressState>()(
       claimedChests: {},
       perfectedLessons: {},
 
-      // 美妆系统初值（首次启动 = 仅持有 starter 道具）
+      // 美妝系統初值（首次啟動 = 僅持有 starter 道具）
       ownedCosmetics: Object.fromEntries(
         getStarterCosmetics().map(c => [c.id, true as const]),
       ),
@@ -679,7 +679,7 @@ export const useProgressStore = create<ProgressState>()(
       equippedBackdrop: DEFAULT_EQUIPPED.lessonBackdrop,
       claimedStreakRewards: {},
 
-      // 时间关怀（默认全部关闭，家长在 profile 里手动开）
+      // 時間關懷（預設全部關閉，家長在 profile 裡手動開）
       todayTimeMs: 0,
       dailyTimeLimitMs: 0,
       sessionTimeLimitMs: 0,
@@ -702,7 +702,7 @@ export const useProgressStore = create<ProgressState>()(
       unlockedAchievements: {},
       pendingStreakMilestone: null,
 
-      // v9：每日任务计数 + 时长独立换日 + 首页教材
+      // v9：每日任務計數 + 時長獨立換日 + 首頁教材
       dailyQuestDate: "",
       dailyLessons: 0,
       dailyReviews: 0,
@@ -712,44 +712,44 @@ export const useProgressStore = create<ProgressState>()(
       activeBookId: null,
       setActiveBookId: bookId => set({ activeBookId: bookId }),
 
-      // v10：本地模拟联赛
+      // v10：本地模擬聯賽
       leagueSalt: "",
       leagueTier: "bronze",
       leagueWeekKey: "",
       pendingLeagueResult: null,
 
-      // v11：题目报错
+      // v11：題目報錯
       reports: [],
 
       leagueUnlocked: () =>
         Object.keys(get().completedLessons).length >= UNLOCK_LESSONS,
 
       settleLeagueIfNeeded: () => {
-        // salt 一次性生成（首次调用；此后终生稳定，保证联赛确定性）
+        // salt 一次性生成（首次呼叫；此後終生穩定，保證聯賽確定性）
         if (!get().leagueSalt) {
           set({ leagueSalt: generateLeagueSalt() });
         }
         const state = get();
         const currentWeek = weekKeyFor();
 
-        // 首次入场：记录本周周键，不结算
+        // 首次入場：記錄本週週鍵，不結算
         if (state.leagueWeekKey === "") {
           set({ leagueWeekKey: currentWeek });
           return;
         }
-        // 同一周：无事发生
+        // 同一周：無事發生
         if (state.leagueWeekKey === currentWeek) return;
 
         const prevWeekKey = state.leagueWeekKey;
 
-        // 未解锁（<10 课）期间不真正参赛：静默滚动周键
+        // 未解鎖（<10 課）期間不真正參賽：靜默滾動周鍵
         if (!state.leagueUnlocked()) {
           set({ leagueWeekKey: currentWeek });
           return;
         }
 
-        // === 按上周末终值结算 ===
-        // bot 终值 = 周目标全额（过周后 botXpAt 收敛到 botWeeklyGoal）
+        // === 按上週末終值結算 ===
+        // bot 終值 = 周目標全額（過周後 botXpAt 收斂到 botWeeklyGoal）
         const tier = state.leagueTier;
         const salt = state.leagueSalt || get().leagueSalt;
         const botXps: number[] = [];
@@ -758,7 +758,7 @@ export const useProgressStore = create<ProgressState>()(
             botWeeklyGoal({ weekKey: prevWeekKey, tier, salt, botIndex: i }),
           );
         }
-        // 用户终值 = 上周 xpHistory 求和（保留天数不足按可得数据尽力）
+        // 使用者終值 = 上週 xpHistory 求和（保留天數不足按可得資料盡力）
         const userXp = weekXpFromHistory(state.xpHistory, prevWeekKey);
         const rank = userRank({ userXp, botXps });
         const result = settleRank(rank, tier);
@@ -790,12 +790,12 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // ⚡ 跳级（jump ahead）
+      // ⚡ 跳級（jump ahead）
       // --------------------------------------------------------
 
       jumpAheadComplete: lessonIds => {
-        // 跳级口径（E2 拍板）：批量 completed{stars:1, accuracy:0.8}，
-        // 不发 XP / 宝石 / 连胜 / 每日任务计数（防刷）；已完成的不动。
+        // 跳級口徑（E2 拍板）：批次 completed{stars:1, accuracy:0.8}，
+        // 不發 XP / 寶石 / 連勝 / 每日任務計數（防刷）；已完成的不動。
         const now = new Date().toISOString();
         let added = 0;
         set(state => {
@@ -816,12 +816,12 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // 💾 存档备份（BackupEnvelope v1）
+      // 💾 存檔備份（BackupEnvelope v1）
       // --------------------------------------------------------
 
       exportBackup: () => {
         const s = get();
-        // Record<number,true> → JSON 键天然是字符串，这里显式转一遍
+        // Record<number,true> → JSON 鍵天然是字串，這裡顯式轉一遍
         const claimedStreakRewards: Record<string, true> = {};
         for (const k of Object.keys(s.claimedStreakRewards)) {
           claimedStreakRewards[String(k)] = true;
@@ -841,22 +841,22 @@ export const useProgressStore = create<ProgressState>()(
           correctCount: m.correctCount,
           nextReviewDate: m.nextReviewDate,
           graduated: m.graduated,
-          // 题面快照：跨端导入时可直接展示（iOS 题库齐全时会忽略）
+          // 題面快照：跨端匯入時可直接展示（iOS 題庫齊全時會忽略）
           question: m.question,
         }));
-        // 🏆 成就两个字段语义不同，如实分别导出：
-        //   unlockedAchievements = 「已达成」= 实时判定 ∪ 账本（账本只进不出，
-        //     所以并集才是真实的已达成集）；
-        //   claimedAchievements  = 「已领取（已发过宝石）」= web 的 unlockedAchievements 账本。
-        // web 上 AchievementWatcher 会在解锁的同一瞬间发钱，所以两者通常相等；
-        // 相等时对端（iOS）算出的「已解锁未领取」差集为空，不会重复发奖，语义依然正确。
+        // 🏆 成就兩個欄位語義不同，如實分別匯出：
+        //   unlockedAchievements = 「已達成」= 實時判定 ∪ 賬本（賬本只進不出，
+        //     所以並集才是真實的已達成集）；
+        //   claimedAchievements  = 「已領取（已發過寶石）」= web 的 unlockedAchievements 賬本。
+        // web 上 AchievementWatcher 會在解鎖的同一瞬間發錢，所以兩者通常相等；
+        // 相等時對端（iOS）算出的「已解鎖未領取」差集為空，不會重複發獎，語義依然正確。
         let unlockedForBackup: Record<string, true> = { ...s.unlockedAchievements };
         try {
           for (const id of computeUnlockedAchievementIds(s)) {
             unlockedForBackup[id] = true;
           }
         } catch {
-          // 快照字段异常时保守回退到账本本身（宁可少报"已达成"，也不谎报）
+          // 快照欄位異常時保守回退到賬本本身（寧可少報"已達成"，也不謊報）
           unlockedForBackup = { ...s.unlockedAchievements };
         }
         return buildBackup({
@@ -876,9 +876,9 @@ export const useProgressStore = create<ProgressState>()(
             mistakesBank,
             claimedChests: s.claimedChests,
             claimedStreakRewards,
-            // 每日任务领取账本必须随档走：不带的话导入端把它当瞬态清空，
-            // 又从 xpHistory 复原了今日 XP，今天领过的任务立刻回到"可领取"，
-            // 「导出→导入」就能无限刷宝石。
+            // 每日任務領取賬本必須隨檔走：不帶的話匯入端把它當瞬態清空，
+            // 又從 xpHistory 復原了今日 XP，今天領過的任務立刻回到"可領取"，
+            // 「匯出→匯入」就能無限刷寶石。
             claimedQuests: s.claimedQuests,
             lastDailyRewardDate: s.lastDailyRewardDate,
             unlockedAchievements: unlockedForBackup,
@@ -922,7 +922,7 @@ export const useProgressStore = create<ProgressState>()(
           mistakesBank.push({
             lessonId: m.lessonId,
             question: m.question ? {...m.question,id:m.questionId} : {
-              id:m.questionId,type:"choice",question:"进入复习后同步这道旧题",answer:"",options:[],
+              id:m.questionId,type:"choice",question:"進入複習後同步這道舊題",answer:"",options:[],
               explanation:"",knowledge_point:"",score:1,difficulty:1,
             },
             addedAt: new Date().toISOString(),
@@ -939,30 +939,30 @@ export const useProgressStore = create<ProgressState>()(
           if (Number.isFinite(n) && n > 0) claimedStreakRewards[n] = true;
         }
 
-        // 🏆 web 的 unlockedAchievements 是「已发钱账本」（进账本 = 宝石已到手）。
-        // 所以导入时只能吸收对端的**已领取**集：iOS 上「已解锁但还没领」的成就
-        // 不进账本，导入后 AchievementWatcher 重算时会把它当新解锁正常补发宝石。
-        // 若对端根本没有 claimedAchievements 字段，说明是"解锁即发钱"语义的老档，
-        // 这时才回退用 unlockedAchievements（否则会把老档的奖励重复发一遍）。
+        // 🏆 web 的 unlockedAchievements 是「已發錢賬本」（進賬本 = 寶石已到手）。
+        // 所以匯入時只能吸收對端的**已領取**集：iOS 上「已解鎖但還沒領」的成就
+        // 不進賬本，匯入後 AchievementWatcher 重算時會把它當新解鎖正常補發寶石。
+        // 若對端根本沒有 claimedAchievements 欄位，說明是"解鎖即發錢"語義的老檔，
+        // 這時才回退用 unlockedAchievements（否則會把老檔的獎勵重複發一遍）。
         const unlockedAchievements: Record<string, true> = {
           ...(d.claimedAchievements ?? d.unlockedAchievements),
         };
 
-        // 🗓️ 每日任务领取账本：key 是 "YYYY-MM-DD:questId"，只有**今天**的键
-        // 还会被 claimQuest / claimableQuestCount 查到（更早的日期永远查不到，
-        // 留着只会白占存储），所以按今天裁剪后写回，保证「导出→导入」之后
-        // 今天已经领过的任务不能再领一次。
+        // 🗓️ 每日任務領取賬本：key 是 "YYYY-MM-DD:questId"，只有**今天**的鍵
+        // 還會被 claimQuest / claimableQuestCount 查到（更早的日期永遠查不到，
+        // 留著只會白佔儲存），所以按今天裁剪後寫回，保證「匯出→匯入」之後
+        // 今天已經領過的任務不能再領一次。
         const claimedQuests: Record<string, true> = {};
         for (const k of Object.keys(d.claimedQuests ?? {})) {
           if (k.startsWith(`${today}:`)) claimedQuests[k] = true;
         }
 
-        // ❤️ 红心：缺心的存档必须带着回复计时进来，否则 refreshHearts 无表可走
-        //（自愈守卫也会补种，这里显式设置是为了不白白浪费一个回复周期）。
+        // ❤️ 紅心：缺心的存檔必須帶著回覆計時進來，否則 refreshHearts 無表可走
+        //（自愈守衛也會補種，這裡顯式設定是為了不白白浪費一個回覆週期）。
         const hearts = Math.max(0, Math.min(d.hearts, MAX_HEARTS));
         const nextHeartAt = hearts >= MAX_HEARTS ? null : Date.now() + HEART_RECHARGE_MS;
 
-        // 装扮：starter 永远保底；未知装扮 id 回退默认（跨版本 / 跨端容错）
+        // 裝扮：starter 永遠保底；未知裝扮 id 回退預設（跨版本 / 跨端容錯）
         const ownedCosmetics: Record<string, true> = {
           ...Object.fromEntries(getStarterCosmetics().map(c => [c.id, true as const])),
           ...d.ownedCosmetics,
@@ -970,7 +970,7 @@ export const useProgressStore = create<ProgressState>()(
         const safeEquip = (id: string, fallback: string) =>
           getCosmeticById(id) ? id : fallback;
 
-        // 联赛段位：未知段位降级 bronze；leagueSalt 保留本机值（设备指纹）
+        // 聯賽段位：未知段位降級 bronze；leagueSalt 保留本機值（裝置指紋）
         const leagueTier: LeagueTierId = LEAGUE_TIERS.some(t => t.id === d.leagueTier)
           ? (d.leagueTier as LeagueTierId)
           : "bronze";
@@ -986,8 +986,8 @@ export const useProgressStore = create<ProgressState>()(
           nextHeartAt,
           dailyGoal: Math.max(10, Math.min(500, d.dailyGoal || DEFAULT_DAILY_GOAL)),
           completedLessons,
-          // 阅读 key 归一化（core validateBackup 已经归一过，这里幂等兜底，
-          // 防止调用方绕过校验直接塞信封）
+          // 閱讀 key 歸一化（core validateBackup 已經歸一過，這裡冪等兜底，
+          // 防止呼叫方繞過校驗直接塞信封）
           completedReadings: normalizeReadingMap(d.completedReadings),
           perfectedLessons: d.perfectedLessons ?? {},
           mistakesBank,
@@ -1002,12 +1002,12 @@ export const useProgressStore = create<ProgressState>()(
           xpHistory: d.xpHistory,
           studyDays: d.studyDays ?? {},
           numberSenseProgress: normalizeNumberProgress(d.numberSenseProgress),
-          // 今日 XP 从 xpHistory 复原（跨端同日互导也不丢当日目标进度）
+          // 今日 XP 從 xpHistory 復原（跨端同日互導也不丟當日目標進度）
           todayXp: d.xpHistory[today] ?? 0,
           lastXpDate: d.xpHistory[today] !== undefined ? today : "",
           leagueTier,
           leagueWeekKey: d.leagueWeekKey ?? "",
-          // === 瞬态全部复位（不随存档迁移）===
+          // === 瞬態全部復位（不隨存檔遷移）===
           activeLesson: null,
           pendingStreakMilestone: null,
           pendingLeagueResult: null,
@@ -1018,17 +1018,17 @@ export const useProgressStore = create<ProgressState>()(
           dailyReadings: 0,
           todayTimeMs: 0,
           lastTimeDate: "",
-          // ⚠️ 不是瞬态、也不进信封：
-          //   claimedQuests —— 见上，按今天裁剪后随档恢复（防重复领任务宝石）；
-          //   lastReviewHeartDate —— 故意不写（保持本机当前值），
-          //     否则「导出→导入」就能清掉补心账本，每天刷无数颗红心；
-          //   freezesMigrated —— 保持本机 true，导入不该触发护盾补发。
+          // ⚠️ 不是瞬態、也不進信封：
+          //   claimedQuests —— 見上，按今天裁剪後隨檔恢復（防重複領任務寶石）；
+          //   lastReviewHeartDate —— 故意不寫（保持本機當前值），
+          //     否則「匯出→匯入」就能清掉補心賬本，每天刷無數顆紅心；
+          //   freezesMigrated —— 保持本機 true，匯入不該觸發護盾補發。
           claimedQuests,
         });
       },
 
       // --------------------------------------------------------
-      // 🚩 题目报错（本地列表，不上传）
+      // 🚩 題目報錯（本地列表，不上傳）
       // --------------------------------------------------------
 
       addReport: input => {
@@ -1043,10 +1043,10 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       recordLessonComplete: (lessonId, lessonTitle, accuracy, xpGained, evidence) => {
-        // ⚠️ XP 公式（含周末 ×2）由调用方经 @cstf/core xpForLesson 算好传入，
-        //    这里不再二次翻倍 —— 保证「结算展示值 == 入账值」。
-        // 整个通关记账（XP/宝石/连胜/里程碑/每日任务计数）在一个 set 里
-        // 原子完成，返回结算单 —— 对齐 iOS ProgressStore.completeLesson。
+        // ⚠️ XP 公式（含週末 ×2）由呼叫方經 @cstf/core xpForLesson 算好傳入，
+        //    這裡不再二次翻倍 —— 保證「結算展示值 == 入賬值」。
+        // 整個通關記賬（XP/寶石/連勝/里程碑/每日任務計數）在一個 set 裡
+        // 原子完成，返回結算單 —— 對齊 iOS ProgressStore.completeLesson。
         const stars = evidence && evidence.questionCount < 3 ? 1 : starsFromAccuracy(accuracy);
         const today = todayStr();
 
@@ -1065,25 +1065,25 @@ export const useProgressStore = create<ProgressState>()(
         set(state => {
           const isFirstPerfect = stars === 3 && !state.perfectedLessons[lessonId];
 
-          // 每日任务计数：跨日清零 + 今日课程数 +1
+          // 每日任務計數：跨日清零 + 今日課程數 +1
           const roll = questDayRollover(state, today);
           const dailyLessons = (roll.dailyLessons ?? state.dailyLessons) + 1;
 
-          // XP / todayXp / xpHistory 记账 + 每日目标首次达成判定
+          // XP / todayXp / xpHistory 記賬 + 每日目標首次達成判定
           const xpAccount = applyXpGain(state, xpGained, today);
           const newLessonHistory = pruneHistory({
             ...state.lessonHistory,
             [today]: (state.lessonHistory[today] ?? 0) + 1,
           });
-          // 💎 每课宝石 drip —— 单一事实源 @cstf/core lessonGemDrip
-          //（含每日目标 +20，不再叠加 goalBonusGems）
+          // 💎 每課寶石 drip —— 單一事實源 @cstf/core lessonGemDrip
+          //（含每日目標 +20，不再疊加 goalBonusGems）
           const dripGems = lessonGemDrip({
             stars,
             isFirstPerfect,
             crossedDailyGoal: xpAccount.goalBonusGems > 0,
           });
 
-          // === 🔥 连胜推进（core advanceStreak，含护盾消耗与周一补给）===
+          // === 🔥 連勝推進（core advanceStreak，含護盾消耗與週一補給）===
           const streakBefore = state.streak;
           let streakAfter = streakBefore;
           let streakFreezes = state.streakFreezes;
@@ -1103,7 +1103,7 @@ export const useProgressStore = create<ProgressState>()(
             }
           }
 
-          // === 💎 连胜里程碑：3/7/14/30/60/100（每档一次，账本防重发）===
+          // === 💎 連勝里程碑：3/7/14/30/60/100（每檔一次，賬本防重發）===
           let milestoneGems = 0;
           let claimedStreakRewards = state.claimedStreakRewards;
           let pendingStreakMilestone = state.pendingStreakMilestone;
@@ -1111,12 +1111,12 @@ export const useProgressStore = create<ProgressState>()(
           if (isNewDay && milestone && !state.claimedStreakRewards[streakAfter]) {
             milestoneGems = milestone;
             claimedStreakRewards = { ...state.claimedStreakRewards, [streakAfter]: true };
-            // 留给 DailyRewardWatcher 弹「连续 N 天！+M💎」庆祝
+            // 留給 DailyRewardWatcher 彈「連續 N 天！+M💎」慶祝
             pendingStreakMilestone = { streak: streakAfter, gems: milestone };
           }
 
-          // === 只保留最好成绩：重玩得低星不回退（对齐 iOS ProgressStore）===
-          // 仅当新星级 >= 旧星级时才覆盖；accuracy 取更优，completedAt 用最新
+          // === 只保留最好成績：重玩得低星不回退（對齊 iOS ProgressStore）===
+          // 僅當新星級 >= 舊星級時才覆蓋；accuracy 取更優，completedAt 用最新
           const prior = state.completedLessons[lessonId];
           const result: LessonResult =
             prior && stars < prior.stars
@@ -1168,28 +1168,28 @@ export const useProgressStore = create<ProgressState>()(
           };
         });
 
-        // 通关后：如当前课程的错题都已掌握（用户通过），自动移除该课的错题
-        // 保守起见：准确率 100% 才清理，否则保留待复习
+        // 通關後：如當前課程的錯題都已掌握（使用者透過），自動移除該課的錯題
+        // 保守起見：準確率 100% 才清理，否則保留待複習
         if (accuracy >= 0.999) {
           get().clearMistakesForLesson(lessonId);
         }
-        // 记录 lessonTitle 到最近结果（未使用但便于未来）
+        // 記錄 lessonTitle 到最近結果（未使用但便於未來）
         void lessonTitle;
         return outcome;
       },
 
-      // 📖 阅读完成（课文听读/跟读、故事）——对齐 iOS completeReading：
-      // 纯 XP，不发通关宝石、不写 completedLessons/lessonHistory，重复完成不再奖励
+      // 📖 閱讀完成（課文聽讀/跟讀、故事）——對齊 iOS completeReading：
+      // 純 XP，不發通關寶石、不寫 completedLessons/lessonHistory，重複完成不再獎勵
       completeReading: (id, xp) => {
-        // key 一律归一化成 core 的规范阅读 id：即使某个调用点还在传历史格式
-        // （`passage-x-listen` / `story-x` / 裸 id），也不会在表里另开一个键
-        // 导致重复发 XP、或与导入的存档对不上。normalizeReadingId 幂等。
+        // key 一律歸一化成 core 的規範閱讀 id：即使某個呼叫點還在傳歷史格式
+        // （`passage-x-listen` / `story-x` / 裸 id），也不會在表裡另開一個鍵
+        // 導致重複發 XP、或與匯入的存檔對不上。normalizeReadingId 冪等。
         const key = normalizeReadingId(id);
-        if (key === "") return; // 认不出来的残缺 id：不记账，避免污染 key 空间
-        // 幂等判断只看**键是否存在**，与 isReadingDone / UI 同一口径。
-        // 不能写成 `if (map[key])`：值是完成日期，老档（或另一端导出的档）里
-        // 可能是空串，真值判断会把"读过但日期不详"误判成没读过 → 每次进来都能再领一次 XP。
-        if (get().completedReadings[key] != null) return; // 已完成过，幂等
+        if (key === "") return; // 認不出來的殘缺 id：不記賬，避免汙染 key 空間
+        // 冪等判斷只看**鍵是否存在**，與 isReadingDone / UI 同一口徑。
+        // 不能寫成 `if (map[key])`：值是完成日期，老檔（或另一端匯出的檔）裡
+        // 可能是空串，真值判斷會把"讀過但日期不詳"誤判成沒讀過 → 每次進來都能再領一次 XP。
+        if (get().completedReadings[key] != null) return; // 已完成過，冪等
         const today = todayStr();
         set(state => {
           const roll = questDayRollover(state, today);
@@ -1245,7 +1245,7 @@ export const useProgressStore = create<ProgressState>()(
               lessonTitle,
               question,
               addedAt: new Date().toISOString(),
-              // SRS 初值：box 1，今天就该复习
+              // SRS 初值：box 1，今天就該複習
               box: 1,
               correctCount: 0,
               nextReviewDate: today,
@@ -1279,7 +1279,7 @@ export const useProgressStore = create<ProgressState>()(
         } else {
           const gap = daysBetween(lastActiveDate, today);
           if (gap === 1) {
-            // 正常连续
+            // 正常連續
             newStreak = streak + 1;
             const newFreezes =
               isMonday() && streakFreezes < MAX_FREEZES ? streakFreezes + 1 : streakFreezes;
@@ -1300,7 +1300,7 @@ export const useProgressStore = create<ProgressState>()(
           }
         }
 
-        // === 💎 连胜里程碑奖励：3/7/14/30/60/100 天（每档一次） ===
+        // === 💎 連勝里程碑獎勵：3/7/14/30/60/100 天（每檔一次） ===
         const reward = STREAK_MILESTONE_REWARDS[newStreak];
         if (reward && !get().claimedStreakRewards[newStreak]) {
           set(state => ({
@@ -1310,7 +1310,7 @@ export const useProgressStore = create<ProgressState>()(
               ...state.claimedStreakRewards,
               [newStreak]: true,
             },
-            // 留给 DailyRewardWatcher 弹「连续 N 天！+M💎」庆祝
+            // 留給 DailyRewardWatcher 彈「連續 N 天！+M💎」慶祝
             pendingStreakMilestone: { streak: newStreak, gems: reward },
           }));
         }
@@ -1325,14 +1325,14 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // 心数
+      // 心數
       // --------------------------------------------------------
 
       loseHeart: () => {
         const { hearts, nextHeartAt } = get();
         if (hearts <= 0) return;
         const newHearts = hearts - 1;
-        // 只有原本是满心时才开始充能；否则保留已有 nextHeartAt
+        // 只有原本是滿心時才開始充能；否則保留已有 nextHeartAt
         const newNext = nextHeartAt ?? Date.now() + HEART_RECHARGE_MS;
         set({ hearts: newHearts, nextHeartAt: newNext });
       },
@@ -1340,16 +1340,16 @@ export const useProgressStore = create<ProgressState>()(
       refreshHearts: () => {
         let { hearts, nextHeartAt } = get();
         if (hearts >= MAX_HEARTS) {
-          // 确保满心时 nextHeartAt 为空
+          // 確保滿心時 nextHeartAt 為空
           if (nextHeartAt !== null) set({ nextHeartAt: null });
           return;
         }
         if (!nextHeartAt) {
-          // 🩹 自愈守卫：缺心却没有回复计时 —— 这是个「死状态」，
-          // 因为回心只发生在这里（要有表才走），而 loseHeart 在 hearts<=0 时
-          // 直接 return 也够不着补种。任何路径（导入存档、老档迁移、
-          // 手改 localStorage）写出这个组合，都会让小朋友的红心永远停在 0、
-          // 一节课都点不开，刷新也救不回来。发现即补种一个回复周期。
+          // 🩹 自愈守衛：缺心卻沒有回覆計時 —— 這是個「死狀態」，
+          // 因為迴心只發生在這裡（要有表才走），而 loseHeart 在 hearts<=0 時
+          // 直接 return 也夠不著補種。任何路徑（匯入存檔、老檔遷移、
+          // 手改 localStorage）寫出這個組合，都會讓小朋友的紅心永遠停在 0、
+          // 一節課都點不開，重新整理也救不回來。發現即補種一個回覆週期。
           set({ nextHeartAt: Date.now() + HEART_RECHARGE_MS });
           return;
         }
@@ -1369,12 +1369,12 @@ export const useProgressStore = create<ProgressState>()(
 
       addHeart: (n = REVIEW_HEART_REWARD) => {
         if (n <= 0) return;
-        // 先结算自然回复，封顶才是按"真实心数"来的（否则会吞掉一次回心）
+        // 先結算自然回覆，封頂才是按"真實心數"來的（否則會吞掉一次迴心）
         get().refreshHearts();
         const { hearts } = get();
         if (hearts >= MAX_HEARTS) return;
         const next = Math.min(MAX_HEARTS, hearts + n);
-        // 补满了就停表；没补满保留原计时（不重置，否则等于惩罚玩家）
+        // 補滿了就停表；沒補滿保留原計時（不重置，否則等於懲罰玩家）
         set(state => ({
           hearts: next,
           nextHeartAt: next >= MAX_HEARTS ? null : state.nextHeartAt,
@@ -1383,11 +1383,11 @@ export const useProgressStore = create<ProgressState>()(
 
       awardReviewHeart: (correctCount, availableCount) => {
         const today = todayStr();
-        // 每天一次的账本：不然反复进出同一批错题就能把红心刷成无限
+        // 每天一次的賬本：不然反覆進出同一批錯題就能把紅心刷成無限
         if (get().lastReviewHeartDate === today) return 0;
         get().refreshHearts();
         const granted = reviewHeartReward(correctCount, get().hearts, availableCount);
-        // 没到门槛 / 已经满心 → 不记账本，今天晚点真赚到了还能补
+        // 沒到門檻 / 已經滿心 → 不記賬本，今天晚點真賺到了還能補
         if (granted <= 0) return 0;
         get().addHeart(granted);
         set({ lastReviewHeartDate: today });
@@ -1395,7 +1395,7 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       buyHeartRefill: () => {
-        // 先结算自然回复，避免"已经回满还扣费"
+        // 先結算自然回覆，避免"已經回滿還扣費"
         get().refreshHearts();
         const { gems, hearts } = get();
         if (hearts >= MAX_HEARTS) return false;
@@ -1432,7 +1432,7 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // 💎 宝石 / 宝箱 / 首次完美
+      // 💎 寶石 / 寶箱 / 首次完美
       // --------------------------------------------------------
 
       addGems: n => {
@@ -1466,7 +1466,7 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // 🎨 美妆系统
+      // 🎨 美妝系統
       // --------------------------------------------------------
 
       unlockCosmetic: id => {
@@ -1481,13 +1481,13 @@ export const useProgressStore = create<ProgressState>()(
         const item = getCosmeticById(id);
         if (!item) return { ok: false, reason: "未找到道具" };
         const { ownedCosmetics, gems } = get();
-        if (ownedCosmetics[id]) return { ok: false, reason: "已经拥有了" };
-        if (gems < item.cost) return { ok: false, reason: "宝石不够" };
+        if (ownedCosmetics[id]) return { ok: false, reason: "已經擁有了" };
+        if (gems < item.cost) return { ok: false, reason: "寶石不夠" };
         set(state => ({
           gems: state.gems - item.cost,
           ownedCosmetics: { ...state.ownedCosmetics, [id]: true },
         }));
-        // 自动装备购买的道具
+        // 自動裝備購買的道具
         get().equipCosmetic(id);
         return { ok: true };
       },
@@ -1504,7 +1504,7 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // ⏱️ 时间关怀
+      // ⏱️ 時間關懷
       // --------------------------------------------------------
 
       setDailyTimeLimit: ms => {
@@ -1517,8 +1517,8 @@ export const useProgressStore = create<ProgressState>()(
 
       addLearningTimeMs: ms => {
         if (ms <= 0) return;
-        // 独立 lastTimeDate 换日：不再触碰 lastXpDate（修复「计时把 todayXp
-        // 的换日基准污染」的老 bug）
+        // 獨立 lastTimeDate 換日：不再觸碰 lastXpDate（修復「計時把 todayXp
+        // 的換日基準汙染」的老 bug）
         const today = todayStr();
         set(state => {
           const prev = state.lastTimeDate === today ? state.todayTimeMs : 0;
@@ -1536,16 +1536,16 @@ export const useProgressStore = create<ProgressState>()(
 
       dailyTimeLimitReached: () => {
         const { dailyTimeLimitMs } = get();
-        if (dailyTimeLimitMs <= 0) return false; // 0 = 家长未设上限
+        if (dailyTimeLimitMs <= 0) return false; // 0 = 家長未設上限
         return get().todayLearningTimeMs() >= dailyTimeLimitMs;
       },
 
       // --------------------------------------------------------
-      // 🔁 连胜补卡（消耗 50 gems 找回昨天的 streak）
+      // 🔁 連勝補卡（消耗 50 gems 找回昨天的 streak）
       // --------------------------------------------------------
 
       // --------------------------------------------------------
-      // 📚 SRS：复习答题后更新错题状态
+      // 📚 SRS：複習答題後更新錯題狀態
       // --------------------------------------------------------
 
       refreshMistakeContent: lessons => {
@@ -1553,8 +1553,8 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       reviewMistake: (lessonId, questionId, isCorrect) => {
-        // core reviewSrsEntry 单一事实源（box3 答对 → 7 天后），消灭内联 fork。
-        // 毕业语义：box3 + 答对≥2 → 打 graduated 标记（保留展示，不再进 due 队列）。
+        // core reviewSrsEntry 單一事實源（box3 答對 → 7 天后），消滅內聯 fork。
+        // 畢業語義：box3 + 答對≥2 → 打 graduated 標記（保留展示，不再進 due 佇列）。
         let newlyGraduated = false;
         set(state => ({
           mistakesBank: state.mistakesBank.map(m => {
@@ -1562,7 +1562,7 @@ export const useProgressStore = create<ProgressState>()(
             const wasGraduated = m.graduated === true;
             const updated: MistakeEntry = { ...reviewSrsEntry(m, isCorrect) };
             if (!isCorrect) {
-              // 防御性：答错回炉（毕业条目理论上不会再进队列）
+              // 防禦性：答錯回爐（畢業條目理論上不會再進佇列）
               updated.graduated = false;
             } else if (isSrsGraduated(updated)) {
               updated.graduated = true;
@@ -1575,8 +1575,8 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       awardReviewXP: (correctCount, reviewedCount) => {
-        // 对齐 iOS ProgressStore.awardReviewXP：0 对也算复习活动（计数+连胜），
-        // 但没有任何复习量时不做事。
+        // 對齊 iOS ProgressStore.awardReviewXP：0 對也算複習活動（計數+連勝），
+        // 但沒有任何複習量時不做事。
         const xpGained = Math.max(0, correctCount) * REVIEW_XP_PER_CORRECT;
         const reviewed = Math.max(0, reviewedCount);
         if (xpGained <= 0 && reviewed <= 0) return 0;
@@ -1602,15 +1602,15 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       // --------------------------------------------------------
-      // 🗓️ 每日任务
+      // 🗓️ 每日任務
       // --------------------------------------------------------
 
-      todayQuests: () => dailyQuests(todayStr()).map(q => q.kind === "reviewMistakes" ? { ...q, title: `巩固 ${q.target} 次练习或错题` } : q),
+      todayQuests: () => dailyQuests(todayStr()).map(q => q.kind === "reviewMistakes" ? { ...q, title: `鞏固 ${q.target} 次練習或錯題` } : q),
 
       questProgress: kind => {
         const state = get();
         const today = todayStr();
-        // earnXP 有独立的 lastXpDate 口径；其余用每日任务计数
+        // earnXP 有獨立的 lastXpDate 口徑；其餘用每日任務計數
         if (kind === "earnXP") return state.lastXpDate === today ? state.todayXp : 0;
         if (state.dailyQuestDate !== today) return 0;
         switch (kind) {
@@ -1622,7 +1622,7 @@ export const useProgressStore = create<ProgressState>()(
       },
 
       claimQuest: (questId, reward) => {
-        void reward; // 实发以任务池为准，入参仅作接口对齐
+        void reward; // 實發以任務池為準，入參僅作介面對齊
         const today = todayStr();
         const quest = dailyQuests(today).find(q => q.id === questId);
         if (!quest) return false;
@@ -1631,7 +1631,7 @@ export const useProgressStore = create<ProgressState>()(
         if (get().questProgress(quest.kind) < quest.target) return false;
         set(state => {
           let claimed: Record<string, true> = { ...state.claimedQuests, [key]: true };
-          // 账本裁剪：key 以日期开头，字典序即时间序，只留最近 60 条
+          // 賬本裁剪：key 以日期開頭，字典序即時間序，只留最近 60 條
           const keys = Object.keys(claimed).sort();
           if (keys.length > 60) {
             claimed = {};
@@ -1660,7 +1660,7 @@ export const useProgressStore = create<ProgressState>()(
         const today = todayStr();
         const { lastDailyRewardDate, streak, lastActiveDate, streakFreezes } = get();
         if (lastDailyRewardDate === today) return { gems: 0, effectiveStreak: 0 };
-        // 数额按「有效连胜」折算：断签且护盾兜不住 → 按 0 档发（不谎报连续天数）
+        // 數額按「有效連勝」折算：斷籤且護盾兜不住 → 按 0 檔發（不謊報連續天數）
         const effectiveStreak = effectiveStreakOf(streak, lastActiveDate, streakFreezes);
         const reward = dailyRewardForStreak(effectiveStreak);
         set(state => ({
@@ -1692,14 +1692,14 @@ export const useProgressStore = create<ProgressState>()(
         const { gems, streak, lastActiveDate } = get();
         if (gems < STREAK_MAKEUP_COST) return false;
         const today = todayStr();
-        // 必须是今天没活动过 + 昨天断了
+        // 必須是今天沒活動過 + 昨天斷了
         if (lastActiveDate === today) return false;
         const gap = daysBetween(lastActiveDate, today);
         if (gap < 2) return false;
-        // 扣 gems + 把 lastActiveDate 设回昨天，下次 bumpStreakIfNeeded 会顺延
+        // 扣 gems + 把 lastActiveDate 設回昨天，下次 bumpStreakIfNeeded 會順延
         set({
           gems: gems - STREAK_MAKEUP_COST,
-          // 假装"昨天有学过" → 让 bumpStreakIfNeeded 看到 gap=1
+          // 假裝"昨天有學過" → 讓 bumpStreakIfNeeded 看到 gap=1
           lastActiveDate: (() => {
             const d = new Date();
             d.setDate(d.getDate() - 1);
@@ -1713,26 +1713,26 @@ export const useProgressStore = create<ProgressState>()(
     {
       name: "csf-progress-v1",
       storage: createJSONStorage(() => learnerLocalStorage),
-      // 版本迁移：
+      // 版本遷移：
       //   v1 → v2：新增 hearts / dailyGoal / freezes / activeLesson
       //   v2 → v3：新增 gems / lifetimeGems / claimedChests / perfectedLessons + autoNarrate
-      //   v3 → v4：新增美妆系统 ownedCosmetics / equippedXxx + claimedStreakRewards + 时间关怀
+      //   v3 → v4：新增美妝系統 ownedCosmetics / equippedXxx + claimedStreakRewards + 時間關懷
       //   v4 → v5：新增 xpHistory / lessonHistory / lastDailyRewardDate
-      //   v5 → v6：新增 selectedGrade（首次进入引导选择年级）
-      //   v6 → v7：阅读奖励从"伪课程"迁出 —— completedLessons/perfectedLessons 里
-      //            passage-/story- 前缀的条目移入 completedReadings，课时统计尽力回退
-      //   v7 → v8：成就永久解锁账本 unlockedAchievements（当前实时解锁集一次性写入，
-      //            不补发奖励）+ pendingStreakMilestone + 护盾一次性迁移 max(现值, 2)
-      //   v8 → v9：每日任务计数 dailyQuestDate/dailyLessons/dailyReviews/dailyReadings
-      //            + claimedQuests 领取账本 + lastTimeDate（时长独立换日）
-      //            + activeBookId（首页当前教材）
-      //   v9 → v10：本地模拟联赛 leagueSalt/leagueTier/leagueWeekKey
+      //   v5 → v6：新增 selectedGrade（首次進入引導選擇年級）
+      //   v6 → v7：閱讀獎勵從"偽課程"遷出 —— completedLessons/perfectedLessons 裡
+      //            passage-/story- 字首的條目移入 completedReadings，課時統計盡力回退
+      //   v7 → v8：成就永久解鎖賬本 unlockedAchievements（當前實時解鎖集一次性寫入，
+      //            不補發獎勵）+ pendingStreakMilestone + 護盾一次性遷移 max(現值, 2)
+      //   v8 → v9：每日任務計數 dailyQuestDate/dailyLessons/dailyReviews/dailyReadings
+      //            + claimedQuests 領取賬本 + lastTimeDate（時長獨立換日）
+      //            + activeBookId（首頁當前教材）
+      //   v9 → v10：本地模擬聯賽 leagueSalt/leagueTier/leagueWeekKey
       //            + pendingLeagueResult（salt 由首次 settleLeagueIfNeeded 生成）
-      //   v10 → v11：题目报错本地列表 reports（🚩 小旗子）
-      //   v11 → v12：completedReadings 的 key 升级为 core 规范阅读 id
-      //            （reading:{kind}:{rawId}，双端同一 key 空间）
-      //            + freezesMigrated（护盾补发一次性开关）
-      //            + lastReviewHeartDate（复习补心按天账本）
+      //   v10 → v11：題目報錯本地列表 reports（🚩 小旗子）
+      //   v11 → v12：completedReadings 的 key 升級為 core 規範閱讀 id
+      //            （reading:{kind}:{rawId}，雙端同一 key 空間）
+      //            + freezesMigrated（護盾補發一次性開關）
+      //            + lastReviewHeartDate（複習補心按天賬本）
       // v13: reward-independent study days.
       version: 13,
       migrate: (persistedState: unknown, fromVersion: number) => {
@@ -1741,8 +1741,8 @@ export const useProgressStore = create<ProgressState>()(
           getStarterCosmetics().map(c => [c.id, true as const]),
         );
 
-        // === v7：把历史上以 recordLessonComplete 记录的阅读（passage-/story- 伪 id）
-        //     移入 completedReadings，不再污染课程记录与成就统计 ===
+        // === v7：把歷史上以 recordLessonComplete 記錄的閱讀（passage-/story- 偽 id）
+        //     移入 completedReadings，不再汙染課程記錄與成就統計 ===
         const isReadingId = (id: string) =>
           id.startsWith("passage-") || id.startsWith("story-");
         const completedLessons: Record<string, LessonResult> = {};
@@ -1756,7 +1756,7 @@ export const useProgressStore = create<ProgressState>()(
           if (isReadingId(id)) {
             completedReadings[id] =
               completedReadings[id] ?? (result.completedAt || new Date().toISOString());
-            // 课时统计尽力回退：按完成日期 -1（阅读不该算课时）
+            // 課時統計盡力回退：按完成日期 -1（閱讀不該算課時）
             const dayKey = (result.completedAt ?? "").slice(0, 10);
             if (dayKey && lessonHistory[dayKey]) {
               lessonHistory[dayKey] = Math.max(0, lessonHistory[dayKey] - 1);
@@ -1765,10 +1765,10 @@ export const useProgressStore = create<ProgressState>()(
             completedLessons[id] = result;
           }
         }
-        // === v12：阅读 key 归一化 —— 上面刚并进来的 `passage-*` / `story-*` 伪 id
-        //     和 iOS 老档的裸 id 一起升级到规范 `reading:{kind}:{rawId}`。
-        //     normalizeReadingMap 幂等，重复迁移不会出问题；同一篇被多个历史键
-        //     记过时保留较早的完成日期。 ===
+        // === v12：閱讀 key 歸一化 —— 上面剛並進來的 `passage-*` / `story-*` 偽 id
+        //     和 iOS 老檔的裸 id 一起升級到規範 `reading:{kind}:{rawId}`。
+        //     normalizeReadingMap 冪等，重複遷移不會出問題；同一篇被多個歷史鍵
+        //     記過時保留較早的完成日期。 ===
         const normalizedReadings = normalizeReadingMap(completedReadings);
 
         const perfectedLessons = Object.fromEntries(
@@ -1777,8 +1777,8 @@ export const useProgressStore = create<ProgressState>()(
           ),
         ) as Record<string, true>;
 
-        // === v8：成就账本 —— 把当前按进度算出来的解锁集一次性写入（不补发奖励，
-        //     这些是历史解锁；此后只有真正新解锁的成就才发宝石） ===
+        // === v8：成就賬本 —— 把當前按進度算出來的解鎖集一次性寫入（不補發獎勵，
+        //     這些是歷史解鎖；此後只有真正新解鎖的成就才發寶石） ===
         const unlockedAchievements: Record<string, true> = {
           ...(state.unlockedAchievements ?? {}),
         };
@@ -1795,19 +1795,19 @@ export const useProgressStore = create<ProgressState>()(
             unlockedAchievements[id] = true;
           }
         } catch {
-          /* 快照字段异常时保守跳过，账本从空开始 */
+          /* 快照欄位異常時保守跳過，賬本從空開始 */
         }
 
-        // === v8 的「护盾一次性补发」——现在有了持久开关，最多再跑这一次 ===
-        // 判定「已经补发过」：显式标记，或者存档版本 ≥ 8（那次迁移当年就跑过了）。
-        // 没有这个开关时，每提升一次 persist version 都会重跑 max(现值, 2)，
-        // 用护盾用到 0 的小朋友每次发版都白捡 2 个。
+        // === v8 的「護盾一次性補發」——現在有了持久開關，最多再跑這一次 ===
+        // 判定「已經補發過」：顯式標記，或者存檔版本 ≥ 8（那次遷移當年就跑過了）。
+        // 沒有這個開關時，每提升一次 persist version 都會重跑 max(現值, 2)，
+        // 用護盾用到 0 的小朋友每次發版都白撿 2 個。
         const freezesAlreadyToppedUp =
           state.freezesMigrated === true || fromVersion >= 8;
         const rawFreezes = state.streakFreezes ?? INITIAL_FREEZES;
         const streakFreezes = freezesAlreadyToppedUp
           ? rawFreezes
-          : Math.max(rawFreezes, INITIAL_FREEZES); // 超过 2 的不没收（只封新购）
+          : Math.max(rawFreezes, INITIAL_FREEZES); // 超過 2 的不沒收（只封新購）
 
         return {
           ...state,
@@ -1826,7 +1826,7 @@ export const useProgressStore = create<ProgressState>()(
           claimedChests: state.claimedChests ?? {},
           completedLessons,
           perfectedLessons,
-          // v4 新字段
+          // v4 新欄位
           ownedCosmetics: { ...starterOwned, ...(state.ownedCosmetics ?? {}) },
           equippedMascotSkin: state.equippedMascotSkin ?? DEFAULT_EQUIPPED.mascotSkin,
           equippedTheme: state.equippedTheme ?? DEFAULT_EQUIPPED.uiTheme,
@@ -1842,26 +1842,26 @@ export const useProgressStore = create<ProgressState>()(
           lastDailyRewardDate: state.lastDailyRewardDate ?? "",
           // v6
           selectedGrade: state.selectedGrade ?? null,
-          // v7 + v12（key 已升级为规范阅读 id）
+          // v7 + v12（key 已升級為規範閱讀 id）
           completedReadings: normalizedReadings,
           // v8
           unlockedAchievements,
           pendingStreakMilestone: state.pendingStreakMilestone ?? null,
-          // v9：每日任务计数默认零值（老档从今天起重新计数）+ 独立时长换日
+          // v9：每日任務計數預設零值（老檔從今天起重新計數）+ 獨立時長換日
           dailyQuestDate: state.dailyQuestDate ?? "",
           dailyLessons: state.dailyLessons ?? 0,
           dailyReviews: state.dailyReviews ?? 0,
           dailyReadings: state.dailyReadings ?? 0,
           claimedQuests: state.claimedQuests ?? {},
-          // 时长换日基准：沿用旧档的 lastXpDate 口径起步（老实现用它换日）
+          // 時長換日基準：沿用舊檔的 lastXpDate 口徑起步（老實現用它換日）
           lastTimeDate: state.lastTimeDate ?? state.lastXpDate ?? "",
           activeBookId: state.activeBookId ?? null,
-          // v10：联赛（salt 留空，由首次 settleLeagueIfNeeded 生成）
+          // v10：聯賽（salt 留空，由首次 settleLeagueIfNeeded 生成）
           leagueSalt: state.leagueSalt ?? "",
           leagueTier: state.leagueTier ?? "bronze",
           leagueWeekKey: state.leagueWeekKey ?? "",
           pendingLeagueResult: state.pendingLeagueResult ?? null,
-          // v11：题目报错列表
+          // v11：題目報錯列表
           reports: state.reports ?? [],
         } as ProgressState;
       },

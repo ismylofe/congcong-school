@@ -17,7 +17,7 @@ export function HeartsBar({ total, remaining }: HeartsBarProps) {
 
   useEffect(() => {
     if (remaining < prevRemaining.current) {
-      // 最近丢失的那颗在索引 = remaining（因为 i < remaining 是活的）
+      // 最近丟失的那顆在索引 = remaining（因為 i < remaining 是活的）
       setLostIndex(remaining);
       const t = setTimeout(() => setLostIndex(null), 900);
       return () => clearTimeout(t);
@@ -56,7 +56,7 @@ export function HeartsBar({ total, remaining }: HeartsBarProps) {
               />
             </motion.div>
 
-            {/* 心碎动画 */}
+            {/* 心碎動畫 */}
             <AnimatePresence>
               {isBreaking && (
                 <>
@@ -80,7 +80,7 @@ export function HeartsBar({ total, remaining }: HeartsBarProps) {
                   >
                     <Heart className="w-6 h-6 fill-danger text-danger" style={{ clipPath: "inset(0 0 0 50%)" }} />
                   </motion.div>
-                  {/* 红色闪光 */}
+                  {/* 紅色閃光 */}
                   <motion.div
                     className="absolute inset-[-6px] rounded-full pointer-events-none"
                     initial={{ opacity: 0.6, scale: 0.6 }}

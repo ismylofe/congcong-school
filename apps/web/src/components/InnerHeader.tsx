@@ -3,30 +3,30 @@ import { SoundLink } from "@/components/SoundLink";
 import { cn } from "@/lib/cn";
 
 /**
- * InnerHeader — 统一内页顶栏
+ * InnerHeader — 統一內頁頂欄
  *
- * 用于所有二级页面（课文列表、故事列表、阅读器、答题等），
- * 确保返回按钮、标题、副标题、右侧插槽风格一致。
+ * 用於所有二級頁面（課文列表、故事列表、閱讀器、答題等），
+ * 確保返回按鈕、標題、副標題、右側插槽風格一致。
  *
- * 结构：  ← 返回  |  标题 + [badge]  |  右侧插槽
- *                  |  副标题          |
+ * 結構：  ← 返回  |  標題 + [badge]  |  右側插槽
+ *                  |  副標題          |
  *
- * flatOnDesktop：列表页入 AppShell 壳后传 true —— lg+ 退化为中央列内的
- * 普通标题行（去白底/边框/sticky/返回键，标题放大）；阅读器等沉浸页
- * 不传，保持原全宽 sticky 顶栏。
+ * flatOnDesktop：列表頁入 AppShell 殼後傳 true —— lg+ 退化為中央列內的
+ * 普通標題行（去白底/邊框/sticky/返回鍵，標題放大）；閱讀器等沉浸頁
+ * 不傳，保持原全寬 sticky 頂欄。
  */
 
 interface InnerHeaderProps {
   backHref: string;
   title: string;
   subtitle?: string;
-  /** 标题旁的小徽章 */
+  /** 標題旁的小徽章 */
   badge?: React.ReactNode;
-  /** 右侧插槽（进度、按钮等） */
+  /** 右側插槽（進度、按鈕等） */
   right?: React.ReactNode;
-  /** 顶栏下方附加内容（进度条等） */
+  /** 頂欄下方附加內容（進度條等） */
   bottom?: React.ReactNode;
-  /** lg+ 退化为中央列内标题行（AppShell 壳内的列表页用） */
+  /** lg+ 退化為中央列內標題行（AppShell 殼內的列表頁用） */
   flatOnDesktop?: boolean;
 }
 

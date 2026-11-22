@@ -1,13 +1,13 @@
 /**
- * srs.ts —— 简化的 Leitner 3-box 间隔重复算法
+ * srs.ts —— 簡化的 Leitner 3-box 間隔重複演算法
  *
- * 设计原则：
- *   - 3 个盒子（box 1/2/3），分别对应今天 / 明天 / 3天后 / 7天后的复习节奏
- *   - 答错 → 降级回 box 1
- *   - 答对 → 升级到下一个 box
- *   - 已经在 box 3 且连续答对 N 次 → 暂时"毕业"，不再频繁出现
+ * 設計原則：
+ *   - 3 個盒子（box 1/2/3），分別對應今天 / 明天 / 3天后 / 7天后的複習節奏
+ *   - 答錯 → 降級回 box 1
+ *   - 答對 → 升級到下一個 box
+ *   - 已經在 box 3 且連續答對 N 次 → 暫時"畢業"，不再頻繁出現
  *
- * 算法极简，纯前端 + 零依赖，符合公益项目"低成本高效果"的目标。
+ * 演算法極簡，純前端 + 零依賴，符合公益專案"低成本高效果"的目標。
  */
 
 import type { Question } from "./types";
@@ -18,31 +18,31 @@ export interface SrsMistakeEntry {
   lessonId: string;
   lessonTitle?: string;
   question: Question;
-  /** 首次加入错题本的时间 */
+  /** 首次加入錯題本的時間 */
   addedAt: string;
-  /** 当前所在 box */
+  /** 當前所在 box */
   box?: SrsBox;
-  /** 总答对次数 */
+  /** 總答對次數 */
   correctCount?: number;
-  /** 上次复习时间（ISO） */
+  /** 上次複習時間（ISO） */
   lastReviewedAt?: string;
-  /** 下次应当复习的日期（YYYY-MM-DD）。空 = 立即可复习 */
+  /** 下次應當複習的日期（YYYY-MM-DD）。空 = 立即可複習 */
   nextReviewDate?: string;
   /**
-   * 已毕业：box 3 且累计答对 ≥ SRS_GRADUATE_MIN_CORRECT。
-   * 毕业条目保留在错题本里展示「已掌握」，但不再进入 due 队列。
+   * 已畢業：box 3 且累計答對 ≥ SRS_GRADUATE_MIN_CORRECT。
+   * 畢業條目保留在錯題本里展示「已掌握」，但不再進入 due 佇列。
    */
   graduated?: boolean;
 }
 
-/** 毕业线（盒子）：至少升到 box 3。 */
+/** 畢業線（盒子）：至少升到 box 3。 */
 export const SRS_GRADUATE_MIN_BOX = 3;
-/** 毕业线（答对次数）：累计答对达到该值（与 iOS reviewMistake 移除条件一致）。 */
+/** 畢業線（答對次數）：累計答對達到該值（與 iOS reviewMistake 移除條件一致）。 */
 export const SRS_GRADUATE_MIN_CORRECT = 2;
 
 /**
- * 毕业判定只需要这三个字段——刻意收窄成最小输入，
- * 让错题本条目、备份里的 BackupMistake、iOS 的 MistakeEntry 都能直接喂进来。
+ * 畢業判定只需要這三個欄位——刻意收窄成最小輸入，
+ * 讓錯題本條目、備份裡的 BackupMistake、iOS 的 MistakeEntry 都能直接喂進來。
  */
 export interface SrsGraduationState {
   graduated?: boolean;
@@ -51,15 +51,15 @@ export interface SrsGraduationState {
 }
 
 /**
- * 条目是否达到毕业语义：**显式 graduated 标记，或 box ≥ 3 且累计答对 ≥ 2**。
+ * 條目是否達到畢業語義：**顯式 graduated 標記，或 box ≥ 3 且累計答對 ≥ 2**。
  *
- * ⚠️ 这是派生判定，不是"只认显式标记"：老档 / 另一端导入的条目常常只有
- * box + correctCount 而没有 graduated 字段，只认标记会让它们永远留在
- * due 队列里反复出现。
+ * ⚠️ 這是派生判定，不是"只認顯式標記"：老檔 / 另一端匯入的條目常常只有
+ * box + correctCount 而沒有 graduated 欄位，只認標記會讓它們永遠留在
+ * due 佇列裡反覆出現。
  *
- * ⚠️ iOS `Domain/SRS.swift` 必须逐行镜像本判定（due 过滤也必须用它，
+ * ⚠️ iOS `Domain/SRS.swift` 必須逐行鏡像本判定（due 過濾也必須用它，
  * 不能只判 `graduated != true`）。spec/golden-vectors.json 的 `srsGraduation`
- * 组是双端对照的黄金向量，任何一端改判定都会让两端测试同时飘红。
+ * 組是雙端對照的黃金向量，任何一端改判定都會讓兩端測試同時飄紅。
  */
 export function isSrsGraduated(entry: SrsGraduationState): boolean {
   if (entry.graduated === true) return true;
@@ -81,7 +81,7 @@ function dateNDaysFromNow(n: number): string {
 }
 
 /**
- * 给 SRS 条目应用一次复习结果，返回新的快照（不可变）。
+ * 給 SRS 條目應用一次複習結果，返回新的快照（不可變）。
  */
 export function reviewSrsEntry(
   entry: SrsMistakeEntry,
@@ -91,14 +91,14 @@ export function reviewSrsEntry(
   next.lastReviewedAt = new Date().toISOString();
 
   if (!isCorrect) {
-    // 答错 → 重置回 box 1，今天就再练
+    // 答錯 → 重置回 box 1，今天就再練
     next.box = 1;
     next.correctCount = 0;
     next.nextReviewDate = todayStr();
     return next;
   }
 
-  // 答对：根据当前 box 升级
+  // 答對：根據當前 box 升級
   next.correctCount = (next.correctCount ?? 0) + 1;
   const currentBox = (entry.box ?? 1) as SrsBox;
 
@@ -120,19 +120,19 @@ export function reviewSrsEntry(
 }
 
 /**
- * 从错题集筛出"今天应该复习"的题目，并按优先级排序：
- *   1. box 等级低的优先（box 1 > box 2 > box 3）
- *   2. 同 box 内按 lastReviewedAt 旧的优先
- *   3. 没有 nextReviewDate 的视作立即可复习
+ * 從錯題集篩出"今天應該複習"的題目，並按優先順序排序：
+ *   1. box 等級低的優先（box 1 > box 2 > box 3）
+ *   2. 同 box 內按 lastReviewedAt 舊的優先
+ *   3. 沒有 nextReviewDate 的視作立即可複習
  *
- * 毕业过滤必须走 isSrsGraduated（派生判定），iOS 侧同名过滤要逐行镜像。
+ * 畢業過濾必須走 isSrsGraduated（派生判定），iOS 側同名過濾要逐行鏡像。
  */
 export function getDueSrsEntries(
   entries: SrsMistakeEntry[],
 ): SrsMistakeEntry[] {
   const today = todayStr();
   const due = entries.filter(e => {
-    if (isSrsGraduated(e)) return false; // 毕业条目不再进入复习队列
+    if (isSrsGraduated(e)) return false; // 畢業條目不再進入複習佇列
     if (!e.nextReviewDate) return true;
     return e.nextReviewDate <= today;
   });
@@ -147,7 +147,7 @@ export function getDueSrsEntries(
 }
 
 /**
- * 给一条新错题（首次加入）填充 SRS 默认字段。
+ * 給一條新錯題（首次加入）填充 SRS 預設欄位。
  */
 export function newSrsEntry(
   partial: Pick<SrsMistakeEntry, "lessonId" | "lessonTitle" | "question">,

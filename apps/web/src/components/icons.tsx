@@ -1,12 +1,12 @@
 /**
- * icons.tsx — 自绘 SVG 图标库
+ * icons.tsx — 自繪 SVG 圖示庫
  *
  * Utility icons: consistent rounded strokes for actions and controls.
- *   - 统一 24×24 viewBox
- *   - line 图标：stroke="currentColor"，strokeWidth 2.25（默认），linecap/linejoin = round
- *   - 实体图标（Heart / Flame / Volume 喇叭体）：fill="currentColor"
+ *   - 統一 24×24 viewBox
+ *   - line 圖示：stroke="currentColor"，strokeWidth 2.25（預設），linecap/linejoin = round
+ *   - 實體圖示（Heart / Flame / Volume 喇叭體）：fill="currentColor"
  *   - Navigation and learning illustrations live in LearningIcon.tsx.
- *   - 所有图标都通过 className 接收 text-* / w-* / h-* / fill-* Tailwind 类
+ *   - 所有圖示都透過 className 接收 text-* / w-* / h-* / fill-* Tailwind 類
  *
  * 使用：
  *   import { Heart, ArrowLeft } from "@/components/icons";
@@ -25,7 +25,7 @@ const COMMON = {
 };
 
 // ============================================================
-// 线性图标（fill="none" stroke="currentColor"）
+// 線性圖示（fill="none" stroke="currentColor"）
 // ============================================================
 
 export function ArrowLeft({ size = 24, ...props }: IconProps) {
@@ -45,7 +45,7 @@ export function ArrowLeft({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 关闭按钮：细斜十字 */
+/** 關閉按鈕：細斜十字 */
 export function Close({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -63,7 +63,7 @@ export function Close({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 勾：纯粹一笔，强调肯定 */
+/** 勾：純粹一筆，強調肯定 */
 export function Check({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -80,7 +80,7 @@ export function Check({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 错：粗一点的十字（用作"错"题强调） */
+/** 錯：粗一點的十字（用作"錯"題強調） */
 export function XMark({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -133,7 +133,7 @@ export function XCircle({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 锁：圆角锁体 + 半圆锁梁 */
+/** 鎖：圓角鎖體 + 半圓鎖梁 */
 export function Lock({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -151,7 +151,7 @@ export function Lock({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 书：打开的书本（两页对称） */
+/** 書：開啟的書本（兩頁對稱） */
 export function BookOpen({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -171,10 +171,10 @@ export function BookOpen({ size = 24, ...props }: IconProps) {
 }
 
 // ============================================================
-// 实体图标（fill="currentColor"）
+// 實體圖示（fill="currentColor"）
 // ============================================================
 
-/** 心：单一贝塞尔填充，端庄 */
+/** 心：單一貝塞爾填充，端莊 */
 export function Heart({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -190,14 +190,14 @@ export function Heart({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 连胜火焰：分明的焰尖与内焰，避免缩小时读成水滴。 */
+/** 連勝火焰：分明的焰尖與內焰，避免縮小時讀成水滴。 */
 export function Flame({ size = 24, ...props }: IconProps) {
   return <svg {...COMMON} width={size} height={size} fill="currentColor" {...props}>
     <path fillRule="evenodd" d="M13 2c1.1 3.6-.4 5.7-2.2 7.8-1.3-1.1-2-2.3-1.7-4.1C6 8.1 4 10.7 4 14a8 8 0 0 0 16 0c0-3.1-1.6-6-4.3-8.2.1 2.1-.5 3.6-1.6 4.4C15.1 6.8 14.9 4.3 13 2Zm-.8 10.4c-.5 2-2.7 2.8-2.7 4.8a2.5 2.5 0 0 0 5 0c0-1.7-1-3.3-2.3-4.8Z" clipRule="evenodd" />
   </svg>;
 }
 
-/** 星：标准 5 角星，端正，几何精确 */
+/** 星：標準 5 角星，端正，幾何精確 */
 export function Star({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -214,7 +214,7 @@ export function Star({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 王冠：三峰剪影，简洁庄重 */
+/** 王冠：三峰剪影，簡潔莊重 */
 export function Crown({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -233,10 +233,10 @@ export function Crown({ size = 24, ...props }: IconProps) {
 }
 
 // ============================================================
-// 音频图标
+// 音訊圖示
 // ============================================================
 
-/** 有声：喇叭体 + 两道弧形声波 */
+/** 有聲：喇叭體 + 兩道弧形聲波 */
 export function Volume({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -256,11 +256,11 @@ export function Volume({ size = 24, ...props }: IconProps) {
 }
 
 // ============================================================
-// 年级主题图标（生长旅程：苹果 → 萌芽 → 树 → 蝴蝶 → 火箭 → 奖杯）
-// 全部线性，stroke 1.75，统一风格，默认 currentColor
+// 年級主題圖示（生長旅程：蘋果 → 萌芽 → 樹 → 蝴蝶 → 火箭 → 獎盃）
+// 全部線性，stroke 1.75，統一風格，預設 currentColor
 // ============================================================
 
-/** 苹果 — 一年级 */
+/** 蘋果 — 一年級 */
 export function Apple({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -279,7 +279,7 @@ export function Apple({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 萌芽 — 二年级 */
+/** 萌芽 — 二年級 */
 export function Sprout({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -299,7 +299,7 @@ export function Sprout({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 树 — 三年级 */
+/** 樹 — 三年級 */
 export function Tree({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -317,7 +317,7 @@ export function Tree({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 蝴蝶 — 四年级 */
+/** 蝴蝶 — 四年級 */
 export function Butterfly({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -338,7 +338,7 @@ export function Butterfly({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 火箭 — 五年级 */
+/** 火箭 — 五年級 */
 export function Rocket({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -361,7 +361,7 @@ export function Rocket({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 奖杯 — 六年级 */
+/** 獎盃 — 六年級 */
 export function Trophy({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -383,7 +383,7 @@ export function Trophy({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 用户 — 个人主页 */
+/** 使用者 — 個人主頁 */
 export function User({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -401,7 +401,7 @@ export function User({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 书签 — 错题本 */
+/** 書籤 — 錯題本 */
 export function Bookmark({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -418,7 +418,7 @@ export function Bookmark({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 目标 — 每日目标 */
+/** 目標 — 每日目標 */
 export function Target({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -437,7 +437,7 @@ export function Target({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 雪花 — 连胜护盾 */
+/** 雪花 — 連勝護盾 */
 export function Snowflake({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -461,7 +461,7 @@ export function Snowflake({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 垃圾桶 — 删除错题 */
+/** 垃圾桶 — 刪除錯題 */
 export function Trash({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -482,7 +482,7 @@ export function Trash({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 闪电 — 经验值 XP */
+/** 閃電 — 經驗值 XP */
 export function Lightning({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -498,7 +498,7 @@ export function Lightning({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 书 — 统一的教材图标（上册/下册共用） */
+/** 書 — 統一的教材圖示（上冊/下冊共用） */
 export function Book({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -516,7 +516,7 @@ export function Book({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 静音：喇叭体 + 斜十字 */
+/** 靜音：喇叭體 + 斜十字 */
 export function VolumeMute({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -535,7 +535,7 @@ export function VolumeMute({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 宝石：清楚的切面，减少小尺寸下交错的细线。 */
+/** 寶石：清楚的切面，減少小尺寸下交錯的細線。 */
 export function Gem({ size = 24, ...props }: IconProps) {
   return <svg {...COMMON} width={size} height={size} fill="currentColor" {...props}>
     <path d="M6.5 3.5h11L22 9 12 21 2 9l4.5-5.5Z" />
@@ -544,7 +544,7 @@ export function Gem({ size = 24, ...props }: IconProps) {
   </svg>;
 }
 
-/** 导航中的商店使用购物袋，与宝石余额区分。 */
+/** 導航中的商店使用購物袋，與寶石餘額區分。 */
 export function ShoppingBag({ size = 24, ...props }: IconProps) {
   return <svg {...COMMON} width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
     <path d="M5 7.5h14l1 12a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5l1-12Z" />
@@ -552,7 +552,7 @@ export function ShoppingBag({ size = 24, ...props }: IconProps) {
   </svg>;
 }
 
-/** Chest —— 封闭宝箱（未开） */
+/** Chest —— 封閉寶箱（未開） */
 export function Chest({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" {...props}>
@@ -565,7 +565,7 @@ export function Chest({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** ChestOpen —— 打开的宝箱，盖子掀起 */
+/** ChestOpen —— 開啟的寶箱，蓋子掀起 */
 export function ChestOpen({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" {...props}>
@@ -577,7 +577,7 @@ export function ChestOpen({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** Sparkle —— 四角闪光，用于"首次完美"等亮点提示 */
+/** Sparkle —— 四角閃光，用於"首次完美"等亮點提示 */
 export function Sparkle({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -595,7 +595,7 @@ export function Sparkle({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** Palette —— 调色盘（用于"界面主题"商店分类） */
+/** Palette —— 調色盤（用於"介面主題"商店分類） */
 export function Palette({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -617,7 +617,7 @@ export function Palette({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** Picture —— 风景图（山 + 太阳，用于"课堂背景"商店分类） */
+/** Picture —— 風景圖（山 + 太陽，用於"課堂背景"商店分類） */
 export function Picture({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -637,7 +637,7 @@ export function Picture({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 小尺寸分类图标，使用统一线条；大幅角色由 Mascot 渲染。 */
+/** 小尺寸分類圖示，使用統一線條；大幅角色由 Mascot 渲染。 */
 export function Panda({ size = 24, ...props }: IconProps) {
   return <svg {...COMMON} width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.7" {...props}>
     <path d="M5.1 7.1a3 3 0 1 1 4-3.4M14.9 3.7a3 3 0 1 1 4 3.4" />
@@ -648,7 +648,7 @@ export function Panda({ size = 24, ...props }: IconProps) {
   </svg>;
 }
 
-/** Confetti —— 庆祝彩带（替代 🎉 emoji） */
+/** Confetti —— 慶祝綵帶（替代 🎉 emoji） */
 export function Home({ size = 24, ...props }: IconProps) {
   return (
     <svg
@@ -762,7 +762,7 @@ export function Moon({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** 屏幕/自动 —— 三态主题「跟随系统」档 */
+/** 螢幕/自動 —— 三態主題「跟隨系統」檔 */
 export function MonitorIcon({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="none" stroke="currentColor" strokeWidth={2.25} {...props}>
@@ -773,11 +773,11 @@ export function MonitorIcon({ size = 24, ...props }: IconProps) {
 }
 
 // ============================================================
-// 粗填充变体（web-shell-19）—— 导航/HUD 激活态使用，
-// 视觉重量对齐 iOS 的 SF Symbols .fill 图标
+// 粗填充變體（web-shell-19）—— 導航/HUD 啟用態使用，
+// 視覺重量對齊 iOS 的 SF Symbols .fill 圖示
 // ============================================================
 
-/** Home 填充版 —— 导航「学习」激活态 */
+/** Home 填充版 —— 導航「學習」啟用態 */
 export function HomeFill({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" stroke="none" {...props}>
@@ -786,7 +786,7 @@ export function HomeFill({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** Trophy 填充版 —— 导航「排行榜」激活态 */
+/** Trophy 填充版 —— 導航「排行榜」啟用態 */
 export function TrophyFill({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" stroke="none" {...props}>
@@ -795,7 +795,7 @@ export function TrophyFill({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** Bookmark 填充版 —— 导航「错题本」激活态 */
+/** Bookmark 填充版 —— 導航「錯題本」啟用態 */
 export function BookmarkFill({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" stroke="none" {...props}>
@@ -804,7 +804,7 @@ export function BookmarkFill({ size = 24, ...props }: IconProps) {
   );
 }
 
-/** User 填充版 —— 导航「我的」激活态 */
+/** User 填充版 —— 導航「我的」啟用態 */
 export function UserFill({ size = 24, ...props }: IconProps) {
   return (
     <svg {...COMMON} width={size} height={size} fill="currentColor" stroke="none" {...props}>

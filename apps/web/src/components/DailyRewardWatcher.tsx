@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * DailyRewardWatcher —— 回访奖励的统一入口（每日登录 / 连胜补卡 / 里程碑庆祝）
+ * DailyRewardWatcher —— 回訪獎勵的統一入口（每日登入 / 連勝補卡 / 里程碑慶祝）
  *
- * 行为：
- *   - 每日登录奖励：每天首次打开时自动发放，数额按「有效连胜」走 core
- *     dailyRewardForStreak（断签未救回按 0 档，文案不再谎报连续天数）
- *   - 连胜补卡：检测到「今天未学 + gap≥2 + 护盾兜不住 + 宝石够 50」时
- *     弹出「花 50💎 补回昨天」弹窗；拒绝后本次断签不再弹（localStorage 记账）
- *   - 连胜里程碑庆祝：store 发放里程碑宝石后留下 pendingStreakMilestone，
- *     这里消费并弹「连续 N 天！+M💎」
- *   - 周末双倍 XP 提示（每天一次）
- *   - 在 lesson runner 等沉浸页面不打扰（里程碑庆祝除外，它就发生在结算时）
+ * 行為：
+ *   - 每日登入獎勵：每天首次開啟時自動發放，數額按「有效連勝」走 core
+ *     dailyRewardForStreak（斷籤未救回按 0 檔，文案不再謊報連續天數）
+ *   - 連勝補卡：檢測到「今天未學 + gap≥2 + 護盾兜不住 + 寶石夠 50」時
+ *     彈出「花 50💎 補回昨天」彈窗；拒絕後本次斷籤不再彈（localStorage 記賬）
+ *   - 連勝里程碑慶祝：store 發放里程碑寶石後留下 pendingStreakMilestone，
+ *     這裡消費並彈「連續 N 天！+M💎」
+ *   - 週末雙倍 XP 提示（每天一次）
+ *   - 在 lesson runner 等沉浸頁面不打擾（里程碑慶祝除外，它就發生在結算時）
  */
 
 import { learnerLocalStorage } from "@/lib/learnerProfiles";
@@ -30,7 +30,7 @@ import { playSfx } from "@/lib/sfx";
 import { haptic } from "@/lib/haptic";
 import { isImmersivePath } from "@/lib/immersiveRoutes";
 
-/** 本地时区 YYYY-MM-DD（与 store 同实现） */
+/** 本地時區 YYYY-MM-DD（與 store 同實現） */
 function todayStr(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -47,30 +47,30 @@ export function DailyRewardWatcher() {
   const pathname = usePathname() ?? "/";
   const toast = useToast();
   const fired = useRef(false);
-  // 连胜补卡弹窗（null = 不显示；数字 = 可保住的连胜天数）
+  // 連勝補卡彈窗（null = 不顯示；數字 = 可保住的連勝天數）
   const [makeupStreak, setMakeupStreak] = useState<number | null>(null);
-  // 「本次断签」的记账 key（按断签前最后学习日区分）
+  // 「本次斷籤」的記賬 key（按斷籤前最後學習日區分）
   const makeupKeyRef = useRef<string | null>(null);
 
-  /** 发放今日登录奖励 + 周末提示（补卡决定之后再调用，避免按 0 档误发） */
+  /** 發放今日登入獎勵 + 週末提示（補卡決定之後再呼叫，避免按 0 檔誤發） */
   function claimDailyAndHint() {
     const { gems, effectiveStreak } = useProgressStore.getState().claimDailyReward();
     if (gems > 0) {
       if (effectiveStreak >= 1) {
-        toast.success(`💎 每日登录奖励 +${gems}（连续 ${effectiveStreak} 天）`, 3200);
+        toast.success(`💎 每日登入獎勵 +${gems}（連續 ${effectiveStreak} 天）`, 3200);
       } else {
-        toast.success(`💎 每日登录奖励 +${gems}`, 3200);
+        toast.success(`💎 每日登入獎勵 +${gems}`, 3200);
       }
       playSfx("star");
       haptic("success");
     }
 
-    // 周末 XP 双倍提示（每天只提一次）
+    // 週末 XP 雙倍提示（每天只提一次）
     if (isWeekendBonusActive()) {
       const seenKey = `csf-weekend-bonus-seen-${todayStr()}`;
       if (typeof window !== "undefined" && !learnerLocalStorage.getItem(seenKey)) {
         window.setTimeout(() => {
-          toast.info("🎉 周末双倍 XP 已开启！", 3200);
+          toast.info("🎉 週末雙倍 XP 已開啟！", 3200);
         }, 800);
         try {
           learnerLocalStorage.setItem(seenKey, "1");
@@ -83,10 +83,10 @@ export function DailyRewardWatcher() {
 
   useEffect(() => {
     if (fired.current) return;
-    // 沉浸页（课程 / 跳级 / 复习 runner / 阅读器）不打扰，回到普通页面再发
+    // 沉浸頁（課程 / 跳級 / 複習 runner / 閱讀器）不打擾，回到普通頁面再發
     if (isImmersivePath(pathname)) return;
 
-    // 等待 store hydrate；用一帧延迟确保 persist 已加载
+    // 等待 store hydrate；用一幀延遲確保 persist 已載入
     const t = window.setTimeout(() => {
       if (fired.current) return;
       fired.current = true;
@@ -94,7 +94,7 @@ export function DailyRewardWatcher() {
       const s = useProgressStore.getState();
       const today = todayStr();
       const gap = daysBetween(s.lastActiveDate, today);
-      // 连胜补卡入口：今天未学 + gap≥2 + 护盾兜不住（连胜真的会断）+ 宝石够
+      // 連勝補卡入口：今天未學 + gap≥2 + 護盾兜不住（連勝真的會斷）+ 寶石夠
       const shieldsCanSave = gap - 1 <= s.streakFreezes;
       const declinedKey = `csf-makeup-declined-${s.lastActiveDate}`;
       const alreadyDeclined =
@@ -109,7 +109,7 @@ export function DailyRewardWatcher() {
       ) {
         makeupKeyRef.current = declinedKey;
         setMakeupStreak(s.streak);
-        // 登录奖励等用户做完补卡决定再发（避免按 0 档误发）
+        // 登入獎勵等使用者做完補卡決定再發（避免按 0 檔誤發）
         return;
       }
 
@@ -117,20 +117,20 @@ export function DailyRewardWatcher() {
     }, 600);
 
     return () => window.clearTimeout(t);
-    // 仅依赖 pathname 变化触发再判定（首次进入时执行一次）
+    // 僅依賴 pathname 變化觸發再判定（首次進入時執行一次）
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, toast]);
 
-  // === 连胜里程碑庆祝：消费 store 的 pendingStreakMilestone ===
+  // === 連勝里程碑慶祝：消費 store 的 pendingStreakMilestone ===
   useEffect(() => {
     const celebrate = (pending: { streak: number; gems: number } | null) => {
       if (!pending) return;
       useProgressStore.getState().clearPendingStreakMilestone();
-      toast.success(`🔥 连续 ${pending.streak} 天！+${pending.gems}💎`, 4000);
+      toast.success(`🔥 連續 ${pending.streak} 天！+${pending.gems}💎`, 4000);
       playSfx("unlock");
       haptic("success");
     };
-    // hydrate 后可能已有未庆祝的里程碑（比如上次在结算页直接关了页面）
+    // hydrate 後可能已有未慶祝的里程碑（比如上次在結算頁直接關了頁面）
     const t = window.setTimeout(
       () => celebrate(useProgressStore.getState().pendingStreakMilestone),
       900,
@@ -152,18 +152,18 @@ export function DailyRewardWatcher() {
     if (ok) {
       playSfx("unlock");
       haptic("success");
-      toast.success("🔥 补回昨天成功，连胜保住了！", 3600);
+      toast.success("🔥 補回昨天成功，連勝保住了！", 3600);
     } else {
-      toast.error("补卡没有成功，再试试吧");
+      toast.error("補卡沒有成功，再試試吧");
     }
-    // 补卡决定之后再发今日登录奖励
+    // 補卡決定之後再發今日登入獎勵
     window.setTimeout(claimDailyAndHint, 400);
   }
 
   function handleMakeupDecline() {
     playSfx("tap");
     haptic("light");
-    // 本次断签不再弹（按断签前最后学习日记账）
+    // 本次斷籤不再彈（按斷籤前最後學習日記賬）
     if (makeupKeyRef.current) {
       try {
         learnerLocalStorage.setItem(makeupKeyRef.current, "1");
@@ -176,22 +176,22 @@ export function DailyRewardWatcher() {
   }
 
   return (
-    <Modal ariaLabel="连胜补签" open={makeupStreak !== null} onClose={handleMakeupDecline}>
+    <Modal ariaLabel="連勝補籤" open={makeupStreak !== null} onClose={handleMakeupDecline}>
       <div className="flex flex-col items-center text-center">
         <Mascot mood="sad" size={96} />
-        <h2 className="text-2xl font-extrabold text-ink mt-3">连胜要断啦！</h2>
+        <h2 className="text-2xl font-extrabold text-ink mt-3">連勝要斷啦！</h2>
         <p className="text-ink-light mt-2">
-          昨天忘了学习。花{" "}
+          昨天忘了學習。花{" "}
           <span className="inline-flex items-center gap-0.5 font-extrabold text-secondary-dark">
             <Gem className="w-4 h-4" />
             {STREAK_MAKEUP_COST}
           </span>{" "}
-          补回昨天，保住{" "}
+          補回昨天，保住{" "}
           <span className="inline-flex items-center gap-0.5 font-extrabold text-fox">
             <Flame className="w-4 h-4" />
             {makeupStreak ?? 0} 天
           </span>{" "}
-          连胜？
+          連勝？
         </p>
         <div className="flex flex-col gap-3 w-full mt-5">
           <button
@@ -199,14 +199,14 @@ export function DailyRewardWatcher() {
             onClick={handleMakeupConfirm}
             className="btn-chunky-primary w-full"
           >
-            花 {STREAK_MAKEUP_COST} 宝石保住连胜
+            花 {STREAK_MAKEUP_COST} 寶石保住連勝
           </button>
           <button
             type="button"
             onClick={handleMakeupDecline}
             className="btn-chunky-ghost w-full"
           >
-            算了，重新开始
+            算了，重新開始
           </button>
         </div>
       </div>

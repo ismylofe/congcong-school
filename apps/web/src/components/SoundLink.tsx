@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * SoundLink — Next.js Link 的有声版本
+ * SoundLink — Next.js Link 的有聲版本
  *
- * 与 <Link> API 完全一致，多了一层"点击时播放 tap 音效 + 触感反馈"。
- * 用于所有需要导航的卡片/按钮型链接，避免每个组件都重复写 onClick + playSfx + haptic。
+ * 與 <Link> API 完全一致，多了一層"點選時播放 tap 音效 + 觸感反饋"。
+ * 用於所有需要導航的卡片/按鈕型連結，避免每個元件都重複寫 onClick + playSfx + haptic。
  */
 
 import Link, { type LinkProps } from "next/link";
@@ -16,9 +16,9 @@ type AnchorProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps
 
 interface SoundLinkProps extends LinkProps, AnchorProps {
   children: ReactNode;
-  /** 音效名，默认 "tap" */
+  /** 音效名，預設 "tap" */
   sfx?: SfxName;
-  /** 触感强度，默认 "light" */
+  /** 觸感強度，預設 "light" */
   hapticIntensity?: HapticKind;
 }
 

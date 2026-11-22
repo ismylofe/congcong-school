@@ -39,10 +39,10 @@ export default async function BookPage({ params }: { params: Promise<{ book: str
   return (
     <AppShell centerMaxWidth={720}>
     <main className="min-h-screen bg-bg lg:bg-transparent">
-      {/* 访问即成为「当前教材」（首页据此直达本页） */}
+      {/* 訪問即成為「當前教材」（首頁據此直達本頁） */}
       <ActiveBookSync bookId={bookId} grade={book.grade} />
 
-      {/* 移动端顶栏：当前教材徽章（可换书） + stats */}
+      {/* 移動端頂欄：當前教材徽章（可換書） + stats */}
       <div className="shell-page-toolbar bg-white border-b border-bg-softer relative z-10">
         <div className="book-toolbar max-w-md mx-auto px-4 py-3 flex items-center justify-between gap-2">
           <CurrentBookBadge book={book} gradeBooks={gradeBooks} />
@@ -50,23 +50,23 @@ export default async function BookPage({ params }: { params: Promise<{ book: str
         </div>
       </div>
 
-      {/* 桌面端：当前教材徽章行 */}
+      {/* 桌面端：當前教材徽章行 */}
       <div className="hidden xl:flex items-center mb-3">
         <CurrentBookBadge book={book} gradeBooks={gradeBooks} />
       </div>
 
-      {/* 续学 CTA —— 有未完成课程会话时出现 */}
+      {/* 續學 CTA —— 有未完成課程會話時出現 */}
       <div className="max-w-md lg:max-w-none mx-auto px-4 lg:px-0 pt-3 lg:pt-0 empty:hidden">
         <ContinueLearningCard compact />
       </div>
 
-      {/* 听读与故事入口统一由路径顶栏承载。 */}
+      {/* 聽讀與故事入口統一由路徑頂欄承載。 */}
       {book.schoolSystem === "5-4" && <p className="px-4 py-3 text-sm text-ink-light">
-        五四制（小学五年） · {book.publisherLabel} · {book.sourceEdition}
+        五四制（小學五年） · {book.publisherLabel} · {book.sourceEdition}
       </p>}
       {book.supersededBy && <p className="p-4 text-sm text-ink-light">
-        当前为旧版教材，原学习记录保留。
-        <SoundLink href={`/book/${book.supersededBy}/`} className="ml-2 font-bold text-primary">进入新版教材 →</SoundLink>
+        當前為舊版教材，原學習記錄保留。
+        <SoundLink href={`/book/${book.supersededBy}/`} className="ml-2 font-bold text-primary">進入新版教材 →</SoundLink>
       </p>}
       <BookPathSection bookId={bookId} outline={outline} book={book} />
     </main>

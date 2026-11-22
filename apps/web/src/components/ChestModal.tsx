@@ -1,21 +1,21 @@
 "use client";
 
 /**
- * ChestModal —— 宝箱开箱弹窗。
+ * ChestModal —— 寶箱開箱彈窗。
  *
  * 流程：
- *   1. 弹入（盖子还是合着的 Chest 图标）
- *   2. 用户点"打开"按钮 → 盖子动画 + 音效 + 触觉 + 宝石飞出
- *   3. 展示 "+N 宝石" 卡片
- *   4. 底部按钮关闭弹窗
+ *   1. 彈入（蓋子還是合著的 Chest 圖示）
+ *   2. 使用者點"開啟"按鈕 → 蓋子動畫 + 音效 + 觸覺 + 寶石飛出
+ *   3. 展示 "+N 寶石" 卡片
+ *   4. 底部按鈕關閉彈窗
  *
- * 分层演出（web-economy-13）—— tier 由 chestLogic.rollChestReward 透传：
- *   - common：金色脉冲 + 8 颗宝石粒子
- *   - rare  ：蓝色光环 + 12 颗粒子 + 中等触觉
- *   - epic  ：紫金光环 + 18 颗粒子 + 更长的彩带线 + 重触觉
+ * 分層演出（web-economy-13）—— tier 由 chestLogic.rollChestReward 透傳：
+ *   - common：金色脈衝 + 8 顆寶石粒子
+ *   - rare  ：藍色光環 + 12 顆粒子 + 中等觸覺
+ *   - epic  ：紫金光環 + 18 顆粒子 + 更長的綵帶線 + 重觸覺
  *
- * 奖励已经在外层组件里 addGems 过了，这里只负责动画演出。
- * 已领取过的宝箱不会再进入这里（外层直接弹轻提示）。
+ * 獎勵已經在外層元件裡 addGems 過了，這裡只負責動畫演出。
+ * 已領取過的寶箱不會再進入這裡（外層直接彈輕提示）。
  */
 
 import { useEffect, useState } from "react";
@@ -29,12 +29,12 @@ import { haptic } from "@/lib/haptic";
 interface ChestModalProps {
   open: boolean;
   gems: number;
-  /** 奖励档位，决定开箱演出强度（缺省 common） */
+  /** 獎勵檔位，決定開箱演出強度（預設 common） */
   tier?: ChestRewardTier;
   onClose: () => void;
 }
 
-/** 每档的演出参数 */
+/** 每檔的演出參數 */
 const TIER_FX: Record<
   ChestRewardTier,
   {
@@ -63,7 +63,7 @@ const TIER_FX: Record<
     ribbons: 0,
   },
   rare: {
-    label: "稀有宝箱！",
+    label: "稀有寶箱！",
     labelColor: "#1CB0F6",
     glow: "rgba(28, 176, 246, 0.4)",
     ringShadow: "0 0 0 8px rgba(28, 176, 246, 0.4), 0 0 28px rgba(28, 176, 246, 0.5)",
@@ -75,7 +75,7 @@ const TIER_FX: Record<
     ribbons: 8,
   },
   epic: {
-    label: "超级惊喜！",
+    label: "超級驚喜！",
     labelColor: "#CE82FF",
     glow: "rgba(206, 130, 255, 0.45)",
     ringShadow:
@@ -96,7 +96,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
   const prefersReduced = useReducedMotion();
   const fx = TIER_FX[tier];
 
-  // 弹窗关闭后重置内部状态，下次弹开重新从"合着"开始
+  // 彈窗關閉後重置內部狀態，下次彈開重新從"合著"開始
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => setOpened(false), 300);
@@ -112,13 +112,13 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
   }
 
   return (
-    <Modal ariaLabel="学习宝箱" open={open} onClose={onClose}>
+    <Modal ariaLabel="學習寶箱" open={open} onClose={onClose}>
       <div className="flex flex-col items-center text-center">
-        <h2 className="text-2xl font-extrabold text-ink mb-1">宝箱来啦！</h2>
-        <p className="text-ink-light text-sm mb-4">点击打开，领取奖励</p>
+        <h2 className="text-2xl font-extrabold text-ink mb-1">寶箱來啦！</h2>
+        <p className="text-ink-light text-sm mb-4">點選開啟，領取獎勵</p>
 
         <div className="relative w-36 h-36 flex items-center justify-center">
-          {/* 脉冲光圈（未开时；rare/epic 颜色更亮） */}
+          {/* 脈衝光圈（未開時；rare/epic 顏色更亮） */}
           {!opened && !prefersReduced && (
             <motion.div
               aria-hidden
@@ -142,7 +142,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
                 whileHover={{ y: -4, scale: 1.05 }}
                 whileTap={{ scale: 0.92 }}
                 className="relative text-warning"
-                aria-label="打开宝箱"
+                aria-label="開啟寶箱"
               >
                 <motion.div
                   animate={prefersReduced ? undefined : { y: [0, -4, 0] }}
@@ -159,7 +159,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
                 transition={{ type: "spring", damping: 10, stiffness: 220 }}
                 className="text-warning"
               >
-                {/* 开箱后按档位挂一圈光环 */}
+                {/* 開箱後按檔位掛一圈光環 */}
                 <motion.div
                   aria-hidden
                   initial={{ opacity: 0 }}
@@ -173,7 +173,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
             )}
           </AnimatePresence>
 
-          {/* 开箱后飞出的宝石粒子 */}
+          {/* 開箱後飛出的寶石粒子 */}
           <AnimatePresence>
             {opened &&
               Array.from({ length: fx.particles }).map((_, i) => {
@@ -206,7 +206,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
               })}
           </AnimatePresence>
 
-          {/* rare/epic：更长的彩带雨 */}
+          {/* rare/epic：更長的綵帶雨 */}
           <AnimatePresence>
             {opened &&
               !prefersReduced &&
@@ -242,7 +242,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
           </AnimatePresence>
         </div>
 
-        {/* 档位标签（rare/epic） */}
+        {/* 檔位標籤（rare/epic） */}
         <AnimatePresence>
           {opened && fx.label && (
             <motion.div
@@ -257,7 +257,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
           )}
         </AnimatePresence>
 
-        {/* 奖励数字 */}
+        {/* 獎勵數字 */}
         <AnimatePresence>
           {opened && (
             <motion.div
@@ -286,7 +286,7 @@ export function ChestModal({ open, gems, tier = "common", onClose }: ChestModalP
           className={`mt-6 w-full ${opened ? "btn-chunky-primary" : "btn-chunky-disabled"}`}
           disabled={!opened}
         >
-          {opened ? "收下" : "先点开宝箱"}
+          {opened ? "收下" : "先點開寶箱"}
         </button>
       </div>
     </Modal>

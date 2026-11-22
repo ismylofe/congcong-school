@@ -496,10 +496,10 @@ interface SubjectMeta {
 }
 
 const SUBJECTS: SubjectMeta[] = [
-  { id: "math", name: "数学", publisherLabel: "人教版" },
-  { id: "chinese", name: "语文", publisherLabel: "统编版" },
-  { id: "english", name: "英语", publisherLabel: "人教版PEP" },
-  { id: "science", name: "科学", publisherLabel: "教科版" },
+  { id: "math", name: "數學", publisherLabel: "人教版" },
+  { id: "chinese", name: "國語", publisherLabel: "統編版" },
+  { id: "english", name: "英語", publisherLabel: "人教版PEP" },
+  { id: "science", name: "自然", publisherLabel: "教科版" },
 ];
 
 // ============================================================
@@ -669,7 +669,7 @@ async function processTextbook(
         const practice: Lesson = {
           ...original,
           id: `${bookId}-u${unit.unit_number}-kp${nextPracticeKp++}`,
-          title: `${original.title}（巩固练习）`,
+          title: `${original.title}（鞏固練習）`,
           restoresLessonId: original.id,
         };
         practiceLessons.push(practice);
@@ -694,7 +694,7 @@ async function processTextbook(
       const examLessonId = `${bookId}-u${unit.unit_number}-exam`;
       examLessons.push({
         id: examLessonId,
-        title: unit.label ? `${unit.title}挑战` : `第 ${unit.unit_number} 单元挑战`,
+        title: unit.label ? `${unit.title}挑戰` : `第 ${unit.unit_number} 單元挑戰`,
         bookId,
         unitNumber: unit.unit_number,
         unitTitle: unit.title,
@@ -746,8 +746,8 @@ async function processTextbook(
     "utf-8",
   );
 
-  const semesterName = semester === "up" ? "上册" : "下册";
-  const gradeName = `${GRADE_NAMES[grade]}年级`;
+  const semesterName = semester === "up" ? "上冊" : "下冊";
+  const gradeName = `${GRADE_NAMES[grade]}年級`;
   const book: Book = {
     id: bookId,
     grade,
@@ -757,7 +757,7 @@ async function processTextbook(
     semesterName,
     subjectName: subject.name,
     textbookName: `${gradeName}${semesterName}${editionSuffix}`,
-    fullName: `${outline.publisherLabel ?? subject.publisherLabel}小学${subject.name}${gradeName}${semesterName}${editionSuffix}`,
+    fullName: `${outline.publisherLabel ?? subject.publisherLabel}小學${subject.name}${gradeName}${semesterName}${editionSuffix}`,
     ...(outline.schoolSystem ? { schoolSystem: outline.schoolSystem } : {}),
     ...(outline.publisherLabel ? { publisherLabel: outline.publisherLabel } : {}),
     ...(outline.sourceEdition ? { sourceEdition: outline.sourceEdition } : {}),
@@ -853,8 +853,8 @@ async function main() {
     const previous = books.find(b => b.id === book.supersedes);
     if (!previous || previous.supersededBy) throw new Error(`Invalid supersedes reference: ${book.id}`);
     previous.supersededBy = book.id;
-    previous.textbookName += "（旧版）";
-    previous.fullName += "（旧版）";
+    previous.textbookName += "（舊版）";
+    previous.fullName += "（舊版）";
   }
 
   // 排序：先按学科 (math 最前)，再按学期 (上 → 下)，再按年级

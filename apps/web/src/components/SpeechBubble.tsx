@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * SpeechBubble — 聪聪对话气泡
+ * SpeechBubble — 聰聰對話氣泡
  *
- * 白底圆角，带一个指向左下的小三角，spring 弹入，随后自然静止。
- * 父组件通过 key 变化触发重挂载 + 动画。
+ * 白底圓角，帶一個指向左下的小三角，spring 彈入，隨後自然靜止。
+ * 父元件透過 key 變化觸發重掛載 + 動畫。
  */
 
 import { motion } from "framer-motion";

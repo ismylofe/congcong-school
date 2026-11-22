@@ -33,14 +33,14 @@ export function ChoiceQuestion({
   const [ripples, setRipples] = useState<Record<string, Ripple[]>>({});
   const idRef = useRef(0);
 
-  // 自动朗读题干（只在进入该题时一次；点选项立即打断）
+  // 自動朗讀題幹（只在進入該題時一次；點選項立即打斷）
   const cancelNarrate = useAutoNarrate([question.audio?.question], question.id);
 
-  /** 选中某个选项（点击 / 键盘共用）：朗读 + 音效 + 触感 + 写回 answer */
+  /** 選中某個選項（點選 / 鍵盤共用）：朗讀 + 音效 + 觸感 + 寫回 answer */
   function selectLetter(letter: string) {
     if (locked || phase === "checked") return;
     cancelNarrate();
-    // 选中选项时自动朗读该选项
+    // 選中選項時自動朗讀該選項
     const idx = letter.charCodeAt(0) - 65;
     const optAudio = question.audio?.options?.[idx];
     if (optAudio) void playTTS(optAudio);
@@ -65,9 +65,9 @@ export function ChoiceQuestion({
     selectLetter(letter);
   }
 
-  // 键盘快捷键（web-lesson-3）：数字 1-4 选选项
+  // 鍵盤快捷鍵（web-lesson-3）：數字 1-4 選選項
   useEffect(() => {
-    if (locked || phase !== "answering") return; // 遮罩打开时不接管键盘（webrunner-5）
+    if (locked || phase !== "answering") return; // 遮罩開啟時不接管鍵盤（webrunner-5）
     const onKeyDown = (e: KeyboardEvent) => {
       if (shouldIgnoreKey(e)) return;
       const n = Number(e.key);
@@ -100,7 +100,7 @@ export function ChoiceQuestion({
             cls = "option-card option-card-selected";
           }
 
-          // 答错时在正确选项上播放脉冲高亮，引导用户注意
+          // 答錯時在正確選項上播放脈衝高亮，引導使用者注意
           const shouldPulse = phase === "checked" && !isCorrect && isThisCorrect;
 
           const optionAudio = question.audio?.options?.[idx] ?? null;
@@ -128,8 +128,8 @@ export function ChoiceQuestion({
                 <span className="flex-1">
                   <MathText text={display} />
                 </span>
-                {/* Duolingo 风格：右下角数字角标（1/2/3/4）
-                    仅在有物理键盘的桌面端（pointer:fine）显示 —— 触屏上是噪音 */}
+                {/* Duolingo 風格：右下角數字角標（1/2/3/4）
+                    僅在有物理鍵盤的桌面端（pointer:fine）顯示 —— 觸屏上是噪音 */}
                 <motion.span
                   animate={
                     selected
@@ -157,7 +157,7 @@ export function ChoiceQuestion({
                     src={optionAudio}
                     size="sm"
                     disabled={locked}
-                    label={`朗读选项 ${letter}`}
+                    label={`朗讀選項 ${letter}`}
                   />
                 </div>
               )}

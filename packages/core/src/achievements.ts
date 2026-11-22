@@ -1,13 +1,13 @@
 /**
- * achievements.ts —— 成就 / 徽章定义与解锁判定（纯函数）
+ * achievements.ts —— 成就 / 徽章定義與解鎖判定（純函式）
  *
- * 拆分成两层：
- *   - **core/achievements**（本文件）：定义 ALL_ACHIEVEMENTS、computeUnlockedAchievementIds、
- *     diffNewlyUnlocked。零 DOM、零 store 依赖。所有 getProgress 函数接收一个
- *     结构化的 AchievementProgressSnapshot —— 实际的 ProgressState 通过 TS
- *     结构子类型自动满足这个接口。
- *   - **frontend/lib/achievements**（Web 端 shim）：在此基础上保留 hasUnseenAchievements /
- *     markAllSeen，依赖 localStorage + Zustand store。RN 端会有自己的 seen-tracking 实现。
+ * 拆分成兩層：
+ *   - **core/achievements**（本檔案）：定義 ALL_ACHIEVEMENTS、computeUnlockedAchievementIds、
+ *     diffNewlyUnlocked。零 DOM、零 store 依賴。所有 getProgress 函式接收一個
+ *     結構化的 AchievementProgressSnapshot —— 實際的 ProgressState 透過 TS
+ *     結構子型別自動滿足這個介面。
+ *   - **frontend/lib/achievements**（Web 端 shim）：在此基礎上保留 hasUnseenAchievements /
+ *     markAllSeen，依賴 localStorage + Zustand store。RN 端會有自己的 seen-tracking 實現。
  */
 
 import { getStarterCosmetics } from "./cosmetics";
@@ -15,22 +15,22 @@ import { getStarterCosmetics } from "./cosmetics";
 export type AchievementCategory = "milestone" | "streak" | "perfection" | "shop" | "review";
 
 /**
- * 新档白送的初始美妆 id 集合 —— "解锁第一件聪聪的装扮"要排除它们。
- * 用 cosmetics 的 starter 标记推导（而不是减一个魔法数），
- * 将来增删 starter 或用户只拥有部分 starter 都不会错档。
+ * 新檔白送的初始美妝 id 集合 —— "解鎖第一件聰聰的裝扮"要排除它們。
+ * 用 cosmetics 的 starter 標記推導（而不是減一個魔法數），
+ * 將來增刪 starter 或使用者只擁有部分 starter 都不會錯檔。
  */
 const STARTER_COSMETIC_IDS: ReadonlySet<string> = new Set(
   getStarterCosmetics().map(c => c.id),
 );
 
-/** 自己买/赚来的美妆件数（不含初始白送的）。 */
+/** 自己買/賺來的美妝件數（不含初始白送的）。 */
 function ownedNonStarterCount(ownedCosmetics: Record<string, unknown>): number {
   return Object.keys(ownedCosmetics).filter(id => !STARTER_COSMETIC_IDS.has(id)).length;
 }
 
 /**
- * 成就计算所需的进度快照——只声明 ALL_ACHIEVEMENTS 真正读到的字段。
- * 任何包含这些字段的更大对象（例如 Web 的 ProgressState）都自动兼容。
+ * 成就計算所需的進度快照——只宣告 ALL_ACHIEVEMENTS 真正讀到的欄位。
+ * 任何包含這些欄位的更大物件（例如 Web 的 ProgressState）都自動相容。
  */
 export interface AchievementProgressSnapshot {
   xp: number;
@@ -43,7 +43,7 @@ export interface AchievementProgressSnapshot {
 }
 
 /**
- * 成就奖励分量（宝石）：轻量 20 / 中量 50 / 重量 100。
+ * 成就獎勵分量（寶石）：輕量 20 / 中量 50 / 重量 100。
  */
 export type AchievementRewardGems = 20 | 50 | 100;
 
@@ -65,18 +65,18 @@ export interface Achievement {
     | "sparkle";
   color: string;
   goal: number;
-  /** 解锁奖励宝石（只发一次，解锁写入永久 unlockedAchievements 账本） */
+  /** 解鎖獎勵寶石（只發一次，解鎖寫入永久 unlockedAchievements 賬本） */
   reward: AchievementRewardGems;
   getProgress: (s: AchievementProgressSnapshot) => number;
 }
 
 const A: Achievement[] = [
-  // ===== Milestone：首次行动 =====
+  // ===== Milestone：首次行動 =====
   {
     id: "first-lesson",
     category: "milestone",
-    name: "出师告捷",
-    description: "完成你的第一节课",
+    name: "出師告捷",
+    description: "完成你的第一節課",
     iconKey: "rocket",
     color: "#1CB0F6",
     goal: 1,
@@ -86,8 +86,8 @@ const A: Achievement[] = [
   {
     id: "ten-lessons",
     category: "milestone",
-    name: "学海十里",
-    description: "累计完成 10 节课",
+    name: "學海十里",
+    description: "累計完成 10 節課",
     iconKey: "bookmark",
     color: "#1CB0F6",
     goal: 10,
@@ -97,8 +97,8 @@ const A: Achievement[] = [
   {
     id: "fifty-lessons",
     category: "milestone",
-    name: "百炼成钢",
-    description: "累计完成 50 节课",
+    name: "百鍊成鋼",
+    description: "累計完成 50 節課",
     iconKey: "trophy",
     color: "#A855F7",
     goal: 50,
@@ -110,8 +110,8 @@ const A: Achievement[] = [
   {
     id: "xp-100",
     category: "milestone",
-    name: "初露锋芒",
-    description: "累计 100 经验",
+    name: "初露鋒芒",
+    description: "累計 100 經驗",
     iconKey: "lightning",
     color: "#1CB0F6",
     goal: 100,
@@ -121,8 +121,8 @@ const A: Achievement[] = [
   {
     id: "xp-1000",
     category: "milestone",
-    name: "经验丰富",
-    description: "累计 1000 经验",
+    name: "經驗豐富",
+    description: "累計 1000 經驗",
     iconKey: "lightning",
     color: "#A855F7",
     goal: 1000,
@@ -132,8 +132,8 @@ const A: Achievement[] = [
   {
     id: "xp-5000",
     category: "milestone",
-    name: "学霸认证",
-    description: "累计 5000 经验",
+    name: "學霸認證",
+    description: "累計 5000 經驗",
     iconKey: "lightning",
     color: "#FFC800",
     goal: 5000,
@@ -145,8 +145,8 @@ const A: Achievement[] = [
   {
     id: "streak-3",
     category: "streak",
-    name: "三日不辍",
-    description: "连续学习 3 天",
+    name: "三日不輟",
+    description: "連續學習 3 天",
     iconKey: "flame",
     color: "#FF9600",
     goal: 3,
@@ -156,8 +156,8 @@ const A: Achievement[] = [
   {
     id: "streak-7",
     category: "streak",
-    name: "一周如一日",
-    description: "连续学习 7 天",
+    name: "一週如一日",
+    description: "連續學習 7 天",
     iconKey: "flame",
     color: "#FF9600",
     goal: 7,
@@ -167,8 +167,8 @@ const A: Achievement[] = [
   {
     id: "streak-30",
     category: "streak",
-    name: "月度坚持",
-    description: "连续学习 30 天",
+    name: "月度堅持",
+    description: "連續學習 30 天",
     iconKey: "flame",
     color: "#FF4B4B",
     goal: 30,
@@ -179,7 +179,7 @@ const A: Achievement[] = [
     id: "streak-100",
     category: "streak",
     name: "百日行者",
-    description: "连续学习 100 天",
+    description: "連續學習 100 天",
     iconKey: "flame",
     color: "#FFC800",
     goal: 100,
@@ -191,8 +191,8 @@ const A: Achievement[] = [
   {
     id: "perfect-1",
     category: "perfection",
-    name: "完美初体验",
-    description: "首次三星通关一节课",
+    name: "完美初體驗",
+    description: "首次三星通關一節課",
     iconKey: "star",
     color: "#FFC800",
     goal: 1,
@@ -202,8 +202,8 @@ const A: Achievement[] = [
   {
     id: "perfect-10",
     category: "perfection",
-    name: "完美十连",
-    description: "三星通关 10 节课",
+    name: "完美十連",
+    description: "三星通關 10 節課",
     iconKey: "star",
     color: "#FFC800",
     goal: 10,
@@ -213,8 +213,8 @@ const A: Achievement[] = [
   {
     id: "perfect-50",
     category: "perfection",
-    name: "无暇修行",
-    description: "三星通关 50 节课",
+    name: "無暇修行",
+    description: "三星通關 50 節課",
     iconKey: "crown",
     color: "#A855F7",
     goal: 50,
@@ -226,8 +226,8 @@ const A: Achievement[] = [
   {
     id: "first-cosmetic",
     category: "shop",
-    name: "时尚启航",
-    description: "解锁第一件聪聪的装扮",
+    name: "時尚啟航",
+    description: "解鎖第一件聰聰的裝扮",
     iconKey: "sparkle",
     color: "#A855F7",
     goal: 1,
@@ -237,8 +237,8 @@ const A: Achievement[] = [
   {
     id: "gem-collector",
     category: "shop",
-    name: "宝石收藏家",
-    description: "累计获得 500 颗宝石",
+    name: "寶石收藏家",
+    description: "累計獲得 500 顆寶石",
     iconKey: "gem",
     color: "#A855F7",
     goal: 500,
@@ -250,8 +250,8 @@ const A: Achievement[] = [
   {
     id: "first-review",
     category: "review",
-    name: "知错就改",
-    description: "在错题本中复习一道题",
+    name: "知錯就改",
+    description: "在錯題本中複習一道題",
     iconKey: "medal",
     color: "#58CC02",
     goal: 1,
@@ -267,7 +267,7 @@ export function computeUnlockedAchievementIds(s: AchievementProgressSnapshot): s
 }
 
 /**
- * 比较两次 store 快照，返回这次新解锁的成就。
+ * 比較兩次 store 快照，返回這次新解鎖的成就。
  */
 export function diffNewlyUnlocked(
   before: AchievementProgressSnapshot,
@@ -278,12 +278,12 @@ export function diffNewlyUnlocked(
 }
 
 /**
- * 永久解锁账本合并（只进不出）：把「当前按进度算出来的解锁集合」并进
- * 已持久化的 unlockedAchievements 账本。连胜回落等导致进度倒退时，
- * 已解锁的成就不会被「回锁」，奖励也因此只会发一次。
+ * 永久解鎖賬本合併（只進不出）：把「當前按進度算出來的解鎖集合」並進
+ * 已持久化的 unlockedAchievements 賬本。連勝回落等導致進度倒退時，
+ * 已解鎖的成就不會被「回鎖」，獎勵也因此只會發一次。
  *
- * 返回的数组保持 prevLedger 原有顺序，新解锁的按 currentUnlockedIds
- * 顺序追加；结果去重。入参不被修改。
+ * 返回的陣列保持 prevLedger 原有順序，新解鎖的按 currentUnlockedIds
+ * 順序追加；結果去重。入參不被修改。
  */
 export function latchUnlocked(
   prevLedger: ReadonlyArray<string>,

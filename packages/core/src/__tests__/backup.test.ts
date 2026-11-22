@@ -1,11 +1,11 @@
 /**
- * backup.test.ts —— BackupEnvelope v1 校验契约
+ * backup.test.ts —— BackupEnvelope v1 校驗契約
  *
- * 契约：
- *   - ok=false 仅限结构性损坏（非对象 / schema 错 / version 坏 / data 坏）；
- *   - ok=true 时 data 是补全默认后的完整信封，errors 是字段级修复日志；
- *   - 未知字段忽略、缺字段补默认、坏类型字段重置为默认并记日志；
- *   - version > 1 前向兼容（不拒收）。
+ * 契約：
+ *   - ok=false 僅限結構性損壞（非物件 / schema 錯 / version 壞 / data 壞）；
+ *   - ok=true 時 data 是補全預設後的完整信封，errors 是欄位級修復日誌；
+ *   - 未知欄位忽略、缺欄位補預設、壞型別欄位重置為預設並記日誌；
+ *   - version > 1 前向相容（不拒收）。
  */
 
 import { describe, expect, it } from "vitest";
@@ -25,15 +25,15 @@ const sampleQuestion: Question = {
   type: "choice",
   score: 5,
   difficulty: 2,
-  knowledge_point: "两位数加法",
+  knowledge_point: "兩位數加法",
   question: "12 + 25 = ?",
   options: ["36", "37", "38", "39"],
   answer: "37",
-  explanation: "个位 2+5=7，十位 1+2=3。",
+  explanation: "個位 2+5=7，十位 1+2=3。",
 };
 
 describe("buildBackup", () => {
-  it("缺省字段自动补默认，产出可回环校验的合法信封", () => {
+  it("預設欄位自動補預設，產出可迴環校驗的合法信封", () => {
     const env = buildBackup({ platform: "ios", data: { xp: 120, streak: 7 } });
     expect(env.schema).toBe(BACKUP_SCHEMA);
     expect(env.version).toBe(BACKUP_VERSION);
@@ -41,7 +41,7 @@ describe("buildBackup", () => {
     expect(env.exportedAt).toBeTruthy();
     expect(env.data.xp).toBe(120);
     expect(env.data.streak).toBe(7);
-    // 补默认
+    // 補預設
     expect(env.data.hearts).toBe(MAX_HEARTS);
     expect(env.data.dailyGoal).toBe(DEFAULT_DAILY_GOAL);
     expect(env.data.streakFreezes).toBe(INITIAL_FREEZES);
@@ -49,21 +49,21 @@ describe("buildBackup", () => {
     expect(env.data.completedLessons).toEqual({});
     expect(env.data.mistakesBank).toEqual([]);
 
-    // 回环：JSON 序列化后仍通过校验且无修复日志
+    // 迴環：JSON 序列化後仍透過校驗且無修復日誌
     const result = validateBackup(JSON.parse(JSON.stringify(env)));
     expect(result.ok).toBe(true);
     expect(result.errors).toEqual([]);
     expect(result.data).toEqual(env);
   });
 
-  it("显式 undefined 字段不覆盖默认值", () => {
+  it("顯式 undefined 欄位不覆蓋預設值", () => {
     const env = buildBackup({ platform: "web", data: { xp: undefined } });
     expect(env.data.xp).toBe(0);
   });
 });
 
 describe("validateBackup: 合法信封", () => {
-  it("完整字段全部保留", () => {
+  it("完整欄位全部保留", () => {
     const env = buildBackup({
       platform: "web",
       exportedAt: "2026-08-25T10:00:00.000Z",
@@ -113,8 +113,8 @@ describe("validateBackup: 合法信封", () => {
   });
 });
 
-describe("claimedQuests 随档携带（每日任务领取账本）", () => {
-  it("导出 → 导入后领取账本原样保留，不会重复领奖", () => {
+describe("claimedQuests 隨檔攜帶（每日任務領取賬本）", () => {
+  it("匯出 → 匯入後領取賬本原樣保留，不會重複領獎", () => {
     const claimed: Record<string, true> = {
       "2026-08-25:earnXP-60": true,
       "2026-08-25:readTexts-1": true,
@@ -125,7 +125,7 @@ describe("claimedQuests 随档携带（每日任务领取账本）", () => {
     expect(result.data!.data.claimedQuests).toEqual(claimed);
   });
 
-  it("老档（v1 早期无该字段）缺省为空对象，不报错", () => {
+  it("老檔（v1 早期無該欄位）預設為空物件，不報錯", () => {
     const result = validateBackup({
       schema: BACKUP_SCHEMA,
       version: 1,
@@ -138,7 +138,7 @@ describe("claimedQuests 随档携带（每日任务领取账本）", () => {
     expect(result.data!.data.claimedQuests).toEqual({});
   });
 
-  it("坏类型重置为空并记修复日志", () => {
+  it("壞型別重置為空並記修復日誌", () => {
     const result = validateBackup({
       schema: BACKUP_SCHEMA,
       version: 1,
@@ -151,11 +151,11 @@ describe("claimedQuests 随档携带（每日任务领取账本）", () => {
   });
 });
 
-describe("completedReadings 归一化（双端同一 key 空间）", () => {
+describe("completedReadings 歸一化（雙端同一 key 空間）", () => {
   const PASSAGE = "chinese-g1up-p3";
   const STORY = "chinese-g3up-s1";
 
-  it("导出端把 web 历史键升级成规范键", () => {
+  it("匯出端把 web 歷史鍵升級成規範鍵", () => {
     const env = buildBackup({
       platform: "web",
       data: {
@@ -173,7 +173,7 @@ describe("completedReadings 归一化（双端同一 key 空间）", () => {
     });
   });
 
-  it("导入端把 iOS 历史键升级成同一批规范键（互通）", () => {
+  it("匯入端把 iOS 歷史鍵升級成同一批規範鍵（互通）", () => {
     const iosEnv = {
       schema: BACKUP_SCHEMA,
       version: 1,
@@ -202,13 +202,13 @@ describe("completedReadings 归一化（双端同一 key 空间）", () => {
     );
   });
 
-  it("值为空串的老档导入后不再是空串（否则会被真值判断当成未读、重复领 XP）", () => {
+  it("值為空串的老檔匯入後不再是空串（否則會被真值判斷當成未讀、重複領 XP）", () => {
     const iosEnv = {
       schema: BACKUP_SCHEMA,
       version: 1,
       exportedAt: "2026-08-25T10:00:00.000Z",
       platform: "ios",
-      // iOS 早期只存"读过哪些"（Set），导出时值一律是空串
+      // iOS 早期只存"讀過哪些"（Set），匯出時值一律是空串
       data: { completedReadings: { [PASSAGE]: "", [STORY]: "" } },
     };
     const d = validateBackup(iosEnv).data!.data.completedReadings;
@@ -219,7 +219,7 @@ describe("completedReadings 归一化（双端同一 key 空间）", () => {
     for (const v of Object.values(d)) expect(v).not.toBe("");
   });
 
-  it("规范键回环稳定（幂等，不产生修复日志）", () => {
+  it("規範鍵迴環穩定（冪等，不產生修復日誌）", () => {
     const env = buildBackup({
       platform: "ios",
       data: { completedReadings: { [readingId("story", STORY)]: "2026-08-04" } },
@@ -230,8 +230,8 @@ describe("completedReadings 归一化（双端同一 key 空间）", () => {
   });
 });
 
-describe("validateBackup: 缺字段给默认", () => {
-  it("data 为空对象时全部补默认", () => {
+describe("validateBackup: 缺欄位給預設", () => {
+  it("data 為空物件時全部補預設", () => {
     const result = validateBackup({
       schema: "cstf-backup",
       version: 1,
@@ -251,7 +251,7 @@ describe("validateBackup: 缺字段给默认", () => {
     expect(d.completedReadings).toEqual({});
     expect(d.mistakesBank).toEqual([]);
     expect(d.equipped).toEqual(DEFAULT_EQUIPPED);
-    // 可选字段缺省时不出现
+    // 可選欄位預設時不出現
     expect(d.joinedDate).toBeUndefined();
     expect(d.perfectedLessons).toBeUndefined();
     expect(d.claimedAchievements).toBeUndefined();
@@ -267,8 +267,8 @@ describe("validateBackup: 缺字段给默认", () => {
   });
 });
 
-describe("validateBackup: 未知字段忽略（前向兼容）", () => {
-  it("信封层与 data 层的未知字段都被丢弃且不报错", () => {
+describe("validateBackup: 未知欄位忽略（前向相容）", () => {
+  it("信封層與 data 層的未知欄位都被丟棄且不報錯", () => {
     const result = validateBackup({
       schema: "cstf-backup",
       version: 1,
@@ -288,7 +288,7 @@ describe("validateBackup: 未知字段忽略（前向兼容）", () => {
     expect((result.data! as unknown as Record<string, unknown>)["futureTopLevel"]).toBeUndefined();
   });
 
-  it("version=2 的未来备份仍可导入（只读已知字段）", () => {
+  it("version=2 的未來備份仍可匯入（只讀已知欄位）", () => {
     const result = validateBackup({
       schema: "cstf-backup",
       version: 2,
@@ -302,8 +302,8 @@ describe("validateBackup: 未知字段忽略（前向兼容）", () => {
   });
 });
 
-describe("validateBackup: 坏类型", () => {
-  it("非对象输入直接拒收", () => {
+describe("validateBackup: 壞型別", () => {
+  it("非物件輸入直接拒收", () => {
     for (const bad of [null, undefined, 42, "not json", [1, 2]]) {
       const result = validateBackup(bad);
       expect(result.ok).toBe(false);
@@ -312,7 +312,7 @@ describe("validateBackup: 坏类型", () => {
     }
   });
 
-  it("schema / version / data 结构性损坏拒收", () => {
+  it("schema / version / data 結構性損壞拒收", () => {
     expect(validateBackup({ schema: "other-app", version: 1, data: {} }).ok).toBe(false);
     expect(validateBackup({ schema: "cstf-backup", version: 0, data: {} }).ok).toBe(false);
     expect(validateBackup({ schema: "cstf-backup", version: 1.5, data: {} }).ok).toBe(false);
@@ -321,29 +321,29 @@ describe("validateBackup: 坏类型", () => {
     expect(validateBackup({ schema: "cstf-backup", version: 1, data: [] }).ok).toBe(false);
   });
 
-  it("字段级坏类型重置为默认并记入修复日志，整体仍可导入", () => {
+  it("欄位級壞型別重置為預設並記入修復日誌，整體仍可匯入", () => {
     const result = validateBackup({
       schema: "cstf-backup",
       version: 1,
       exportedAt: "2026-08-25T10:00:00.000Z",
-      platform: "android", // 非法平台 → web
+      platform: "android", // 非法平臺 → web
       data: {
-        xp: "many", // 坏类型 → 0
-        streak: -5, // 负数 → 0
+        xp: "many", // 壞型別 → 0
+        streak: -5, // 負數 → 0
         gems: 100, // 合法保留
-        lastActiveDate: 20260825, // 坏类型 → ""
+        lastActiveDate: 20260825, // 壞型別 → ""
         completedLessons: {
           good: { stars: 2, accuracy: 0.9, completedAt: "2026-08-01T00:00:00Z" },
           badStars: { stars: 9, accuracy: 2, completedAt: "x" }, // stars→1, accuracy 截到 1
-          dropped: "not an object", // 丢弃
+          dropped: "not an object", // 丟棄
         },
         mistakesBank: [
           { lessonId: "l1", questionId: 1, box: 7 }, // box 非法 → 省略 box
-          { questionId: 2 }, // 缺 lessonId → 丢弃
-          "junk", // 丢弃
+          { questionId: 2 }, // 缺 lessonId → 丟棄
+          "junk", // 丟棄
         ],
-        xpHistory: { "2026-08-25": 60, "2026-08-24": "sixty" }, // 坏值丢弃
-        equipped: { mascotSkin: 42 }, // 坏类型分量回退默认
+        xpHistory: { "2026-08-25": 60, "2026-08-24": "sixty" }, // 壞值丟棄
+        equipped: { mascotSkin: 42 }, // 壞型別分量回退預設
       },
     });
     expect(result.ok).toBe(true);

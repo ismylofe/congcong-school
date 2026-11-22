@@ -68,7 +68,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
 
   const completeReading = useProgressStore(s => s.completeReading);
 
-  // 离开页面时停止
+  // 離開頁面時停止
   useEffect(() => {
     return () => { abortRef.current = true; playbackGenerationRef.current++; stopTTS(); };
   }, []);
@@ -85,7 +85,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
     setCurrentIndex(idx);
     const result = await playTTSResult(s.audio);
     if (generation !== playbackGenerationRef.current) return;
-    if (result !== "ended") setPlaybackError("声音未能完整播放，请确认声音已开启并重试。");
+    if (result !== "ended") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。");
     setCurrentIndex(null);
     setMode("idle");
   }, [story]);
@@ -108,7 +108,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
       onSentence: setCurrentIndex, wait: () => Promise.resolve(),
     });
     if (generation !== playbackGenerationRef.current) return;
-    if (result === "audio-unavailable") setPlaybackError("声音未能完整播放，请确认声音已开启并重试。");
+    if (result === "audio-unavailable") setPlaybackError("聲音未能完整播放，請確認聲音已開啟並重試。");
     setCurrentIndex(null);
     setMode("idle");
   }, [mode, story]);
@@ -152,7 +152,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
       <InnerHeader
         backHref={backHref}
         title={story.title}
-        subtitle={`第${story.unitNumber}单元 · ${story.unitTitle}`}
+        subtitle={`第${story.unitNumber}單元 · ${story.unitTitle}`}
         right={<div className="flex items-center gap-2"><MuteToggle />{phase === "quiz" ? (
           <span className="text-xs font-bold text-primary tabular-nums">
             {qIdx + 1}/{story.questions.length}
@@ -178,14 +178,14 @@ export default function StoryReaderClient({ story, backHref }: Props) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* 桌面双栏：配图(左) + 正文(右)；移动端顺序堆叠 */}
+            {/* 桌面雙欄：配圖(左) + 正文(右)；移動端順序堆疊 */}
             <div
               className={cn(
                 "max-w-md lg:max-w-6xl mx-auto",
                 story.image && "lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:items-start",
               )}
             >
-              {/* 配图 */}
+              {/* 配圖 */}
               {story.image && (
                 <div className="px-4 pt-4 lg:pt-5">
                   <div className="relative rounded-2xl overflow-hidden bg-white border border-bg-softer shadow-sm">
@@ -213,7 +213,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
                       >
                         <button
                           type="button"
-                          aria-label={`朗读第 ${i + 1} 句`}
+                          aria-label={`朗讀第 ${i + 1} 句`}
                           onClick={() => playSingle(i)}
                           disabled={!s.audio || mode !== "idle"}
                           className={cn(
@@ -253,7 +253,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
           >
             <aside className="hidden lg:block lg:sticky lg:top-24 max-h-[75dvh] overflow-y-auto ui-card rounded-2xl bg-white border-2 border-bg-softer p-5">{evidencePanel}</aside>
             <div className="min-w-0">
-            <button type="button" className="btn-chunky-ghost mb-4" onClick={() => { stopPlayback(); setPassageOpen(true); }}>查看原文 / 找证据</button>
+            <button type="button" className="btn-chunky-ghost mb-4" onClick={() => { stopPlayback(); setPassageOpen(true); }}>查看原文 / 找證據</button>
             {selectedEvidence.length > 0 && <p className="mb-3 text-sm text-ink-light" role="status">我找到了第 {selectedEvidence.join('、')} 句。</p>}
             <div className="ui-card bg-white border-2 border-bg-softer p-4 sm:p-5 mb-4">
               <QuestionRenderer
@@ -279,19 +279,19 @@ export default function StoryReaderClient({ story, backHref }: Props) {
                   {isCorrect ? (
                     <>
                       <Check className="w-5 h-5 text-primary-dark" />
-                      <span className="font-extrabold text-primary-dark">答对了!</span>
+                      <span className="font-extrabold text-primary-dark">答對了!</span>
                     </>
                   ) : (
                     <>
                       <XMark className="w-5 h-5 text-danger" />
                       <span className="font-extrabold text-danger">
-                        正确答案: {currentQ.answer}
+                        正確答案: {currentQ.answer}
                       </span>
                     </>
                   )}
                 </div>
                 <p className="text-sm text-ink-light">{currentQ.explanation}</p>
-                {referenceEvidence.length > 0 && <button type="button" className="min-h-11 mt-2 text-secondary-dark font-bold underline" onClick={() => { stopPlayback(); setPassageOpen(true); }}>看看第 {referenceEvidence.join('、')} 句的依据</button>}
+                {referenceEvidence.length > 0 && <button type="button" className="min-h-11 mt-2 text-secondary-dark font-bold underline" onClick={() => { stopPlayback(); setPassageOpen(true); }}>看看第 {referenceEvidence.join('、')} 句的依據</button>}
               </motion.div>
             )}
 
@@ -306,14 +306,14 @@ export default function StoryReaderClient({ story, backHref }: Props) {
                     : "btn-chunky-disabled",
                 )}
               >
-                检查答案
+                檢查答案
               </button>
             ) : (
               <button
                 onClick={nextQuestion}
                 className="btn-chunky-primary w-full"
               >
-                {qIdx + 1 < story.questions.length ? "下一题" : "查看结果"}
+                {qIdx + 1 < story.questions.length ? "下一題" : "查看結果"}
               </button>
             )}
             </div>
@@ -341,21 +341,21 @@ export default function StoryReaderClient({ story, backHref }: Props) {
                 ))}
               </div>
               <h2 className="text-2xl font-extrabold text-ink mb-2">
-                {stars === 3 ? "太棒了!" : stars === 2 ? "不错!" : "继续努力!"}
+                {stars === 3 ? "太棒了!" : stars === 2 ? "不錯!" : "繼續努力!"}
               </h2>
-              <p className="text-ink-light mb-4">「{story.title}」阅读理解</p>
+              <p className="text-ink-light mb-4">「{story.title}」閱讀理解</p>
               <div className="flex justify-center gap-6 text-sm">
                 <div>
                   <div className="text-2xl font-extrabold text-primary tabular-nums">
                     {correctCount}/{story.questions.length}
                   </div>
-                  <div className="text-ink-softer">答对</div>
+                  <div className="text-ink-softer">答對</div>
                 </div>
                 <div>
                   <div className="text-2xl font-extrabold text-gold tabular-nums">
                     {Math.round(accuracy * 100)}%
                   </div>
-                  <div className="text-ink-softer">正确率</div>
+                  <div className="text-ink-softer">正確率</div>
                 </div>
               </div>
             </div>
@@ -373,21 +373,21 @@ export default function StoryReaderClient({ story, backHref }: Props) {
                 }}
                 className="btn-chunky-ghost w-full"
               >
-                再读一遍
+                再讀一遍
               </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Modal open={passageOpen} size="reading" ariaLabel="查看原文与证据" onClose={() => { stopPlayback(); setPassageOpen(false); }}>
+      <Modal open={passageOpen} size="reading" ariaLabel="查看原文與證據" onClose={() => { stopPlayback(); setPassageOpen(false); }}>
         <div className="sticky top-0 z-10 bg-white pb-4">
-          <button type="button" className="btn-chunky-secondary w-full" onClick={() => { stopPlayback(); setPassageOpen(false); }}>回到题目</button>
+          <button type="button" className="btn-chunky-secondary w-full" onClick={() => { stopPlayback(); setPassageOpen(false); }}>回到題目</button>
         </div>
         {evidencePanel}
         {playbackError && <p role="alert" className="text-danger mt-3">{playbackError}</p>}
       </Modal>
-      {/* 底部操作栏 — 仅阅读阶段 */}
+      {/* 底部操作欄 — 僅閱讀階段 */}
       {phase === "reading" && (
         <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t border-bg-softer shadow-[0_-4px_12px_rgba(0,0,0,0.04)]" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
           <div className="max-w-md lg:max-w-6xl mx-auto px-4 py-3 flex gap-3">
@@ -409,7 +409,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
               ) : (
                 <>
                   <Play className="w-5 h-5" />
-                  听全文
+                  聽全文
                 </>
               )}
             </motion.button>
@@ -420,7 +420,7 @@ export default function StoryReaderClient({ story, backHref }: Props) {
               className="flex-1 gap-2 btn-chunky-secondary"
             >
               <Lightning className="w-5 h-5" />
-              开始答题
+              開始答題
             </motion.button>
           </div>
           {playbackError && <p role="alert" className="max-w-md lg:max-w-6xl mx-auto px-4 pb-3 text-sm text-danger">{playbackError}</p>}

@@ -8,9 +8,9 @@ import { playTTS, preloadTTS, stopTTS } from "@/lib/tts";
 
 interface TTSButtonProps {
   src?: string | null;
-  /** 进入视图时自动预加载 */
+  /** 進入查看時自動預載入 */
   preload?: boolean;
-  /** 进入视图时自动播放一次（每次 src 变化触发） */
+  /** 進入查看時自動播放一次（每次 src 變化觸發） */
   autoPlay?: boolean;
   size?: "sm" | "md";
   className?: string;
@@ -21,7 +21,7 @@ interface TTSButtonProps {
 }
 
 /**
- * 点击播放预生成的 TTS mp3。无 src 时不渲染。
+ * 點選播放預生成的 TTS mp3。無 src 時不渲染。
  */
 export function TTSButton({
   src,
@@ -29,7 +29,7 @@ export function TTSButton({
   autoPlay = false,
   size = "md",
   className,
-  label = "朗读",
+  label = "朗讀",
   disabled = false,
   onPlay,
 }: TTSButtonProps) {

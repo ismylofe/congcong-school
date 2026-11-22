@@ -1,23 +1,23 @@
 /**
- * lessonSession —— 「未完成课程会话」的判定口径单一事实源（webrunner-7）。
+ * lessonSession —— 「未完成課程會話」的判定口徑單一事實源（webrunner-7）。
  *
- * 之前三处各写各的：
- *   - LessonStartModal 用 `index > 0`（index 其实是"答对数"，全答错时恒为 0 → 不提示、也没有重开入口）
- *   - LessonRunner 恢复只看 lessonId（一题未答的空会话也会被当成"有进度"，从而跳过课前知识讲解）
+ * 之前三處各寫各的：
+ *   - LessonStartModal 用 `index > 0`（index 其實是"答對數"，全答錯時恆為 0 → 不提示、也沒有重開入口）
+ *   - LessonRunner 恢復只看 lessonId（一題未答的空會話也會被當成"有進度"，從而跳過課前知識講解）
  *   - ContinueLearningCard 用 correctCount + mistakeCount
- * 统一为：**同一课程 + 已保存学习阶段或实际作答** 才算可续会话；剩余题数一律看持久化队列长度。
+ * 統一為：**同一課程 + 已儲存學習階段或實際作答** 才算可續會話；剩餘題數一律看持久化佇列長度。
  */
 
 import type { ActiveLessonSession } from "@/store/progress";
 
-/** 本次会话已经首答过的题数（答对 + 答错）—— 全答错也算作答过 */
+/** 本次會話已經首答過的題數（答對 + 答錯）—— 全答錯也算作答過 */
 export function sessionAnsweredCount(session: ActiveLessonSession): number {
   return session.correctCount + session.mistakeCount;
 }
 
 /**
- * 会话是否有可恢复的学习阶段或实际作答。
- * solvedIds / index 只是兜底：老版本会话（无 queueIds/solvedIds）也能正确判定。
+ * 會話是否有可恢復的學習階段或實際作答。
+ * solvedIds / index 只是兜底：老版本會話（無 queueIds/solvedIds）也能正確判定。
  */
 export function hasLessonProgress(
   session: ActiveLessonSession | null | undefined,
@@ -29,7 +29,7 @@ export function hasLessonProgress(
   return session.index > 0;
 }
 
-/** 该课程是否有可续的会话；有则返回它，否则 null */
+/** 該課程是否有可續的會話；有則返回它，否則 null */
 export function resumableSession(
   session: ActiveLessonSession | null | undefined,
   lessonId: string,
@@ -39,9 +39,9 @@ export function resumableSession(
 }
 
 /**
- * 还剩多少题要做。
- * 优先用持久化队列长度（含错题重排回队尾的题，口径与课内进度一致）；
- * 老会话没有 queueIds 时退回 total - index。
+ * 還剩多少題要做。
+ * 優先用持久化佇列長度（含錯題重排回隊尾的題，口徑與課內進度一致）；
+ * 老會話沒有 queueIds 時退回 total - index。
  */
 export function remainingQuestionCount(
   session: ActiveLessonSession,

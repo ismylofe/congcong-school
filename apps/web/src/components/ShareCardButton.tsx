@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * ShareCardButton —— 分享卡通用按钮（E2）
+ * ShareCardButton —— 分享卡通用按鈕（E2）
  *
- * 点击 → 本地 canvas 渲染分享卡 → navigator.share（降级下载 PNG）。
- * 渲染/分享全程本地完成，不上传任何服务器。
+ * 點選 → 本地 canvas 渲染分享卡 → navigator.share（降級下載 PNG）。
+ * 渲染/分享全程本地完成，不上傳任何伺服器。
  */
 
 import { useState, type ReactNode } from "react";
@@ -14,10 +14,10 @@ import { haptic } from "@/lib/haptic";
 import { shareCardBlob } from "@/lib/shareCard";
 
 interface ShareCardButtonProps {
-  /** 生成分享卡 PNG 的懒回调（点击时才渲染） */
+  /** 生成分享卡 PNG 的懶回呼（點選時才渲染） */
   makeBlob: () => Promise<Blob>;
   filename: string;
-  /** 系统分享面板附带的文字 */
+  /** 系統分享面板附帶的文字 */
   shareText: string;
   className?: string;
   children?: ReactNode;
@@ -42,10 +42,10 @@ export function ShareCardButton({
       const blob = await makeBlob();
       const outcome = await shareCardBlob(blob, filename, shareText);
       if (outcome === "downloaded") {
-        toast.success("图片已保存，快去分享吧！", 3200);
+        toast.success("圖片已儲存，快去分享吧！", 3200);
       }
     } catch {
-      toast.error("分享卡没做出来，再试一次吧");
+      toast.error("分享卡沒做出來，再試一次吧");
     } finally {
       setBusy(false);
     }
@@ -58,7 +58,7 @@ export function ShareCardButton({
       disabled={busy}
       className={className ?? "btn-chunky-secondary px-8 mx-auto block"}
     >
-      {children ?? <span>{busy ? "制作中…" : "分享 📤"}</span>}
+      {children ?? <span>{busy ? "製作中…" : "分享 📤"}</span>}
     </button>
   );
 }

@@ -39,7 +39,7 @@ export function useIntroNarration(sources: Array<string | null | undefined>, key
       if (alreadyHeard || !event.isTrusted || !autoNarrate || muted || playbackStatus !== "ready" || list.length === 0) return;
       const target = event.target instanceof Element ? event.target : null;
       // Explicit speaker and navigation controls own their click handlers.
-      if (target?.closest('a, [role="button"], [aria-label="退出课程"], [aria-label="上一步"]')) return;
+      if (target?.closest('a, [role="button"], [aria-label="退出課程"], [aria-label="上一步"]')) return;
       if (event instanceof KeyboardEvent && event.key !== "Enter" && event.key !== " ") return;
       playbackStatus = "loading";
       stopTTS();

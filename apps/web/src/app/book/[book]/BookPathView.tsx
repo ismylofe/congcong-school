@@ -37,10 +37,10 @@ export function BookPathView({
   const completedLessons = useProgressStore(s => s.completedLessons);
   const [hydrated, setHydrated] = useState(false);
 
-  // 防 SSR/CSR 不一致：localStorage 只在挂载后可用
+  // 防 SSR/CSR 不一致：localStorage 只在掛載後可用
   useEffect(() => setHydrated(true), []);
 
-  // 从课程页返回时播放解锁音效
+  // 從課程頁返回時播放解鎖音效
   useEffect(() => {
     if (!hydrated) return;
     if (typeof document === "undefined") return;
@@ -50,7 +50,7 @@ export function BookPathView({
     }
   }, [hydrated]);
 
-  // 计算每节课状态：第一节始终解锁，后续节点需要前一节完成
+  // 計算每節課狀態：第一節始終解鎖，後續節點需要前一節完成
   const statuses: Record<string, LessonStatus> = {};
   const stars: Record<string, number> = {};
   let foundCurrent = false;
@@ -69,8 +69,8 @@ export function BookPathView({
     }
   }
 
-  // ⚔️ 单元挑战节点：该单元全部普通课完成后解锁；accuracy ≥ 0.8 = 征服（金色）。
-  // 挑战不阻塞普通课程推进（独立于蛇形路径的顺序解锁规则）。
+  // ⚔️ 單元挑戰節點：該單元全部普通課完成後解鎖；accuracy ≥ 0.8 = 征服（金色）。
+  // 挑戰不阻塞普通課程推進（獨立於蛇形路徑的順序解鎖規則）。
   const exams: Record<number, ExamNodeMeta> = {};
   for (const unit of outline.units) {
     if (!unit.examLessonId || !unit.examQuestionCount) continue;
@@ -108,7 +108,7 @@ export function BookPathView({
             style={{ boxShadow: "0 2px 0 0 var(--shadow-card-color)" }}
           >
             <BookOpen className="w-4 h-4" />
-            课文听读
+            課文聽讀
           </SoundLink>
         )}
         {book.hasStories && (
@@ -118,7 +118,7 @@ export function BookPathView({
             style={{ boxShadow: "0 2px 0 0 var(--shadow-card-color)" }}
           >
             <BookOpen className="w-4 h-4" />
-            故事阅读
+            故事閱讀
           </SoundLink>
         )}
       </div>

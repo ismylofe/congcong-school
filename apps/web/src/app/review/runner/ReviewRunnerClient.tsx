@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * ReviewRunnerClient —— 错题复习 runner（/review/runner/）
+ * ReviewRunnerClient —— 錯題複習 runner（/review/runner/）
  *
- * 多邻国式「真实作答」复习流程：
- *   - 普通队列为今日到期错题；回心入口可补充额外巩固，额外题不推进SRS
- *   - 复用 QuestionRenderer + core gradeAnswer 真实判分，答完才亮对错与解析
- *   - 首次作答的结果驱动 SRS（store reviewMistake）；答错的题重排队尾再练
- *   - 完成页：正确数 + XP（store awardReviewXP，每答对 +5）+ 毕业庆祝
- *   - 完成整轮：首答正确达五题；可用题不足五题则整轮正确 → 补 1 颗红心
- *     （store awardReviewHeart，每天一次的账本在 store 里）
+ * 多鄰國式「真實作答」複習流程：
+ *   - 普通佇列為今日到期錯題；迴心入口可補充額外鞏固，額外題不推進SRS
+ *   - 複用 QuestionRenderer + core gradeAnswer 真實判分，答完才亮對錯與解析
+ *   - 首次作答的結果驅動 SRS（store reviewMistake）；答錯的題重排隊尾再練
+ *   - 完成頁：正確數 + XP（store awardReviewXP，每答對 +5）+ 畢業慶祝
+ *   - 完成整輪：首答正確達五題；可用題不足五題則整輪正確 → 補 1 顆紅心
+ *     （store awardReviewHeart，每天一次的賬本在 store 裡）
  *
- * 无红心消耗：复习是「安全区」，答错只会把题排回队尾，不扣心。
+ * 無紅心消耗：複習是「安全區」，答錯只會把題排回隊尾，不扣心。
  */
 
 import { uiMotion } from "@/lib/motion";
@@ -78,7 +78,7 @@ export function ReviewRunnerClient() {
   useSyncMute();
   const router = useRouter();
   const searchParams = useSearchParams();
-  // 断心跳转标记（?from=hearts）：完成页多给一句「红心会慢慢恢复」的安抚。
+  // 斷心跳轉標記（?from=hearts）：完成頁多給一句「紅心會慢慢恢復」的安撫。
   const fromHearts = searchParams.get("from") === "hearts";
   const fallbackLessonId =
     searchParams.get("lesson") ??
@@ -102,7 +102,7 @@ export function ReviewRunnerClient() {
   const awardReviewHeart = useProgressStore((s) => s.awardReviewHeart);
   const prefersReduced = useReducedMotion();
 
-  // ============ 队列：hydrate 后一次性快照（复习中 store 变化不打乱当前会话）============
+  // ============ 佇列：hydrate 後一次性快照（複習中 store 變化不打亂當前會話）============
   const [ready, setReady] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -177,13 +177,13 @@ export function ReviewRunnerClient() {
     };
   }, [context, fromHearts, fallbackLessonId, retry]);
 
-  // ============ 答题状态 ============
+  // ============ 答題狀態 ============
   const [answer, setAnswer] = useState("");
   const [phase, setPhase] = useState<QuestionPhase>("answering");
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [solvedCount, setSolvedCount] = useState(0);
   const [stats, setStats] = useState<ReviewStats | null>(null);
-  // 首答记录：key → 是否答对（SRS/XP 只认首答；重练不再记账）
+  // 首答記錄：key → 是否答對（SRS/XP 只認首答；重練不再記賬）
   const firstAttemptRef = useRef<Map<string, boolean>>(new Map());
   const graduatedRef = useRef(0);
   const settledRef = useRef(false);
@@ -217,7 +217,7 @@ export function ReviewRunnerClient() {
     setPhase("checked");
     currentGraduatedNow.current = false;
 
-    // 仅到期题的首答驱动SRS；额外巩固不提前升级或毕业
+    // 僅到期題的首答驅動SRS；額外鞏固不提前升級或畢業
     if (!firstAttemptRef.current.has(current.key)) {
       firstAttemptRef.current.set(current.key, ok);
       const newlyGraduated =
@@ -260,12 +260,12 @@ export function ReviewRunnerClient() {
     let nextQueue: ReviewItem[];
     let nextSolved = solvedCount;
     if (isCorrect) {
-      // 答对 → 离场
+      // 答對 → 離場
       nextQueue = queue.slice(1);
       nextSolved = solvedCount + 1;
       setSolvedCount(nextSolved);
     } else {
-      // 答错 → 重排队尾再练（本次会话内练到会为止）
+      // 答錯 → 重排隊尾再練（本次會話內練到會為止）
       nextQueue = [...queue.slice(1), queue[0]];
     }
     setQueue(nextQueue);
@@ -291,10 +291,10 @@ export function ReviewRunnerClient() {
     settledRef.current = true;
     const attempts = firstAttemptRef.current;
     const correct = [...attempts.values()].filter(Boolean).length;
-    // 统一记账：每首答答对 +5 XP、dailyReviews += 复习量、推进连胜
+    // 統一記賬：每首答答對 +5 XP、dailyReviews += 複習量、推進連勝
     const xpGained = awardReviewXP(correct, attempts.size);
-    // 走完一整轮才结算补心；首答至少五题正确，不足五题则整轮正确。
-    // 上限（不超过 MAX_HEARTS）、当天只领一次都由 store awardReviewHeart 裁决。
+    // 走完一整輪才結算補心；首答至少五題正確，不足五題則整輪正確。
+    // 上限（不超過 MAX_HEARTS）、當天只領一次都由 store awardReviewHeart 裁決。
     const heartsGained = awardReviewHeart(correct, attempts.size);
     const result: ReviewStats = {
       total: solved,
@@ -319,7 +319,7 @@ export function ReviewRunnerClient() {
   function handleExit() {
     playSfx("tap");
     haptic("light");
-    // 中途退出：把已完成的复习量结算掉（0 对也算活动），避免「白练」
+    // 中途退出：把已完成的複習量結算掉（0 對也算活動），避免「白練」
     if (!settledRef.current && firstAttemptRef.current.size > 0) {
       settledRef.current = true;
       const attempts = firstAttemptRef.current;
@@ -330,37 +330,37 @@ export function ReviewRunnerClient() {
     router.push("/review/");
   }
 
-  // ============ 加载占位 ============
+  // ============ 載入佔位 ============
   if (!ready) {
     return (
       <main className="min-h-screen bg-bg-soft flex flex-col items-center justify-center gap-5">
         <Mascot mood="think" size={100} />
-        <p className="text-ink-light">正在准备题目…</p>
+        <p className="text-ink-light">正在準備題目…</p>
         <SoundLink href="/review/" className="btn-chunky-ghost px-8">
-          回错题本
+          回錯題本
         </SoundLink>
       </main>
     );
   }
 
-  // ============ 完成页 ============
+  // ============ 完成頁 ============
   if (loadFailed) {
     return (
       <main className="min-h-screen bg-bg-soft flex items-center justify-center px-5">
         <EmptyState
           mood="think"
-          title="题目暂时没有加载好"
-          desc="先重新试试，你的错题进度还在。"
+          title="題目暫時沒有載入好"
+          desc="先重新試試，你的錯題進度還在。"
           action={
             <div className="flex flex-col gap-3">
               <button
                 className="btn-chunky-primary px-8"
                 onClick={() => setRetry((n) => n + 1)}
               >
-                重新加载
+                重新載入
               </button>
               <SoundLink href="/review/" className="btn-chunky-ghost px-8">
-                回错题本
+                回錯題本
               </SoundLink>
             </div>
           }
@@ -379,7 +379,7 @@ export function ReviewRunnerClient() {
     );
   }
 
-  // ============ 空队列（直接进入 / 今天没有到期错题）============
+  // ============ 空佇列（直接進入 / 今天沒有到期錯題）============
   if (!current) {
     return (
       <main className="min-h-screen bg-bg-soft flex items-center justify-center px-5">
@@ -387,17 +387,17 @@ export function ReviewRunnerClient() {
           mood="cheer"
           title={
             retiredCount
-              ? "这些旧题已经更新啦"
+              ? "這些舊題已經更新啦"
               : fromHearts
-                ? "先选一节小课来巩固"
-                : "今天没有要复习的错题！"
+                ? "先選一節小課來鞏固"
+                : "今天沒有要複習的錯題！"
           }
           desc={
             fromHearts
-              ? "这里暂时没有可用题目。可以先听读课文，红心会慢慢恢复。"
+              ? "這裡暫時沒有可用題目。可以先聽讀課文，紅心會慢慢恢復。"
               : retiredCount
-                ? "已移除题目已从错题本更新，可以回课程练习新题。"
-                : "错题都安排好了，明天再来看看吧～"
+                ? "已移除題目已從錯題本更新，可以回課程練習新題。"
+                : "錯題都安排好了，明天再來看看吧～"
           }
           action={
             <SoundLink
@@ -405,7 +405,7 @@ export function ReviewRunnerClient() {
               hapticIntensity="medium"
               className="btn-chunky-primary px-8"
             >
-              {fromHearts ? "返回学习选课" : "回错题本"}
+              {fromHearts ? "返回學習選課" : "回錯題本"}
             </SoundLink>
           }
         />
@@ -413,20 +413,20 @@ export function ReviewRunnerClient() {
     );
   }
 
-  // ============ 答题中 ============
+  // ============ 答題中 ============
   return (
     <motion.main
       animate={shakeControls}
       className="lesson-screen bg-bg-soft flex flex-col"
     >
-      {/* 顶栏：退出 + 进度条 + 静音 */}
+      {/* 頂欄：退出 + 進度條 + 靜音 */}
       <div className="lesson-toolbar bg-white border-b border-bg-softer">
         <div className="max-w-md lg:max-w-2xl mx-auto px-3 py-2.5 flex items-center gap-2">
           <button
             type="button"
             onClick={handleExit}
             className="ui-icon-button -ml-1 text-ink-light hover:text-ink hover:bg-bg-softer transition-colors shrink-0"
-            aria-label="退出复习"
+            aria-label="退出複習"
           >
             <Close className="w-5 h-5" />
           </button>
@@ -451,18 +451,18 @@ export function ReviewRunnerClient() {
           role="status"
           className="max-w-md mx-auto px-5 pt-3 text-sm text-ink-light"
         >
-          题目内容已更新，本轮已重新准备，不会沿用旧答案和判分。
+          題目內容已更新，本輪已重新準備，不會沿用舊答案和判分。
         </p>
       )}
-      {/* 来源课程胶囊 */}
+      {/* 來源課程膠囊 */}
       <div className="max-w-md lg:max-w-2xl mx-auto w-full px-5 pt-4">
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-danger/10 text-danger text-[11px] font-extrabold">
           <Bookmark className="w-3 h-3" />
-          {fromHearts ? "巩固练习" : "错题复习"} · {current.lessonTitle}
+          {fromHearts ? "鞏固練習" : "錯題複習"} · {current.lessonTitle}
         </span>
       </div>
 
-      {/* 题目区 */}
+      {/* 題目區 */}
       <div className="lesson-body flex flex-col items-center justify-start">
         <div className="w-full max-w-md lg:max-w-2xl">
           {/* Mount the next question immediately. Nested option animations can
@@ -485,17 +485,17 @@ export function ReviewRunnerClient() {
       </div>
 
       </div>
-      {/* a11y：实时播报判分结果 */}
+      {/* a11y：實時播報判分結果 */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {phase === "checked" &&
           isCorrect === true &&
-          `回答正确。${current.question.explanation ?? ""}`}
+          `回答正確。${current.question.explanation ?? ""}`}
         {phase === "checked" &&
           isCorrect === false &&
-          `回答错误。正确答案是：${current.question.answer}。${current.question.explanation ?? ""}`}
+          `回答錯誤。正確答案是：${current.question.answer}。${current.question.explanation ?? ""}`}
       </div>
 
-      {/* 底部：检查按钮（答题中） */}
+      {/* 底部：檢查按鈕（答題中） */}
       {phase === "answering" && (
         <div className="lesson-actions bg-white border-t-2 border-bg-softer">
           <div className="max-w-md lg:max-w-2xl mx-auto px-4 py-4">
@@ -508,13 +508,13 @@ export function ReviewRunnerClient() {
                   : "w-full btn-chunky-disabled"
               }
             >
-              检查
+              檢查
             </button>
           </div>
         </div>
       )}
 
-      {/* 判分后反馈：对错 + 正确答案（答错时）+ 解析（MathText） */}
+      {/* 判分後反饋：對錯 + 正確答案（答錯時）+ 解析（MathText） */}
       {phase === "checked" && (
         <ReviewFeedbackPanel
           isCorrect={isCorrect ?? false}
@@ -547,7 +547,7 @@ function ReviewFeedbackPanel({
   const titleColor = isCorrect ? "text-primary-dark" : "text-danger-dark";
   const btnCls = isCorrect ? "btn-chunky-primary" : "btn-chunky-danger";
 
-  // z-50：必须压过移动端固定底栏（z-40），否则「继续」按钮会被盖住点不到
+  // z-50：必須壓過移動端固定底欄（z-40），否則「繼續」按鈕會被蓋住點不到
   return (
     <motion.div
       initial={{ y: 110, opacity: 0 }}
@@ -578,7 +578,7 @@ function ReviewFeedbackPanel({
               <XCircle className="w-8 h-8" />
             )}
           </motion.span>
-          <span>{isCorrect ? "答对啦！" : "先看看正确答案"}</span>
+          <span>{isCorrect ? "答對啦！" : "先看看正確答案"}</span>
           {graduatedNow && (
             <motion.span
               initial={{ scale: 0 }}
@@ -586,7 +586,7 @@ function ReviewFeedbackPanel({
               transition={{ type: "spring", damping: 10, delay: 0.25 }}
               className="ml-auto text-sm font-extrabold text-primary-dark bg-primary/15 rounded-full px-2.5 py-1"
             >
-              这题毕业了！🎓
+              這題畢業了！🎓
             </motion.span>
           )}
         </div>
@@ -594,7 +594,7 @@ function ReviewFeedbackPanel({
         {!isCorrect && (
           <div className="flex items-start gap-2 text-sm mb-2">
             <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-            <span className="text-ink-light shrink-0">正确答案：</span>
+            <span className="text-ink-light shrink-0">正確答案：</span>
             <span className="font-extrabold text-primary-dark">
               <MathText text={correctAnswer} />
             </span>
@@ -606,7 +606,7 @@ function ReviewFeedbackPanel({
         </div>
 
         <button onClick={onContinue} className={`w-full ${btnCls}`}>
-          {isCorrect ? "继续" : "记住了，待会再练"}
+          {isCorrect ? "繼續" : "記住了，待會再練"}
         </button>
       </div>
     </motion.div>
@@ -652,10 +652,10 @@ function ReviewCompletionScreen({
         className="text-center relative z-10 w-full max-w-sm"
       >
         <Mascot mood="cheer" size={140} reactTo="levelup" reactKey={1} />
-        <h1 className="text-4xl font-extrabold text-primary mt-4">复习完成!</h1>
-        <p className="text-ink-light mt-2">今天又巩固了一步，继续加油～</p>
+        <h1 className="text-4xl font-extrabold text-primary mt-4">複習完成!</h1>
+        <p className="text-ink-light mt-2">今天又鞏固了一步，繼續加油～</p>
 
-        {/* 🎓 毕业庆祝 */}
+        {/* 🎓 畢業慶祝 */}
         <AnimatePresence>
           {stats.graduated > 0 && (
             <motion.div
@@ -664,7 +664,7 @@ function ReviewCompletionScreen({
               transition={{ delay: 0.5, type: "spring", damping: 12 }}
               className="inline-flex items-center gap-1.5 min-h-8 px-4 mt-4 rounded-full font-extrabold text-sm bg-primary/10 text-primary-dark border border-primary/30"
             >
-              <span>{stats.graduated} 道题毕业了！🎓</span>
+              <span>{stats.graduated} 道題畢業了！🎓</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -675,7 +675,7 @@ function ReviewCompletionScreen({
             style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
           >
             <div className="text-[10px] uppercase tracking-wider text-ink-softer font-extrabold">
-              一次就对
+              一次就對
             </div>
             <div className="text-xl font-extrabold text-primary tabular-nums mt-1">
               {stats.correct}/{stats.total}
@@ -686,7 +686,7 @@ function ReviewCompletionScreen({
             style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
           >
             <div className="text-[10px] uppercase tracking-wider text-ink-softer font-extrabold">
-              经验值
+              經驗值
             </div>
             <div className="text-xl font-extrabold text-secondary flex items-center justify-center gap-1 mt-1 tabular-nums">
               <Lightning className="w-4 h-4" />+{stats.xpGained}
@@ -695,11 +695,11 @@ function ReviewCompletionScreen({
         </div>
         {stats.correct > 0 && (
           <div className="mt-2 text-[11px] text-ink-softer">
-            每答对一题 +{REVIEW_XP_PER_CORRECT} 经验
+            每答對一題 +{REVIEW_XP_PER_CORRECT} 經驗
           </div>
         )}
 
-        {/* ❤️ 复习补心（parity-5）：答对够多，红心补回来 */}
+        {/* ❤️ 複習補心（parity-5）：答對夠多，紅心補回來 */}
         <AnimatePresence>
           {stats.heartsGained > 0 && (
             <motion.div
@@ -710,22 +710,22 @@ function ReviewCompletionScreen({
             >
               <Heart className="w-4 h-4" />
               <span className="tabular-nums">+{stats.heartsGained}</span>
-              <span className="text-sm">红心补回来啦！</span>
+              <span className="text-sm">紅心補回來啦！</span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 断心跳转而来：没拿到补心时给一句安抚 + 告诉孩子怎么才能拿到 */}
+        {/* 斷心跳轉而來：沒拿到補心時給一句安撫 + 告訴孩子怎麼才能拿到 */}
         {fromHearts && hearts === 0 && (
           <div className="mt-5 flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-danger/10 border-2 border-danger/30 text-danger text-sm font-extrabold">
             <Heart className="w-4 h-4" />
             <span>
               {action === "retry"
-                ? `已经把题改对啦。再练一轮，首答正确 ${Math.min(REVIEW_HEART_MIN_CORRECT, stats.total)} 题可回心。`
-                : "今天的复习回心已经领取，先让眼睛休息一下。"}
+                ? `已經把題改對啦。再練一輪，首答正確 ${Math.min(REVIEW_HEART_MIN_CORRECT, stats.total)} 題可迴心。`
+                : "今天的複習迴心已經領取，先讓眼睛休息一下。"}
               {nextHeartAt
-                ? `下一颗红心还需 ${formatMsCountdown(Math.max(0, nextHeartAt - now))}。`
-                : "红心会慢慢恢复。"}
+                ? `下一顆紅心還需 ${formatMsCountdown(Math.max(0, nextHeartAt - now))}。`
+                : "紅心會慢慢恢復。"}
             </span>
           </div>
         )}
@@ -733,7 +733,7 @@ function ReviewCompletionScreen({
         <div className="flex flex-col gap-3 mt-8">
           {fromHearts && action === "retry" ? (
             <button onClick={onRestart} className="btn-chunky-primary w-full">
-              再练一轮回红心
+              再練一輪迴紅心
             </button>
           ) : (
             <SoundLink
@@ -743,12 +743,12 @@ function ReviewCompletionScreen({
               className="btn-chunky-primary w-full"
             >
               {fromHearts && action === "wait"
-                ? "返回课程查看红心恢复"
+                ? "返回課程查看紅心恢復"
                 : activeLesson
-                  ? "继续上次课程"
+                  ? "繼續上次課程"
                   : returnLessonId
-                    ? "返回这节课程"
-                    : "继续学习"}
+                    ? "返回這節課程"
+                    : "繼續學習"}
             </SoundLink>
           )}
           {fromHearts && action === "wait" && (
@@ -757,7 +757,7 @@ function ReviewCompletionScreen({
               onClick={() => saveReviewSession(null)}
               className="btn-chunky-secondary w-full"
             >
-              先去选课或听读
+              先去選課或聽讀
             </SoundLink>
           )}
           <SoundLink
@@ -766,7 +766,7 @@ function ReviewCompletionScreen({
             hapticIntensity="light"
             className="btn-chunky-ghost w-full"
           >
-            回错题本
+            回錯題本
           </SoundLink>
         </div>
       </motion.div>

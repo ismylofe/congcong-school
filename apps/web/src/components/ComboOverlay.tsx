@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * ComboOverlay — 连击里程碑居中大提示
+ * ComboOverlay — 連擊里程碑居中大提示
  *
- * 在连对达到 3 / 5 / 10 时，从屏幕中央喷出一个大号 "连击 xN" 徽章，
- * spring 弹入 + 旋转 + 缩放，800ms 后上浮淡出。
+ * 在連對達到 3 / 5 / 10 時，從螢幕中央噴出一個大號 "連擊 xN" 徽章，
+ * spring 彈入 + 旋轉 + 縮放，800ms 後上浮淡出。
  */
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame } from "@/components/icons";
 
 interface ComboOverlayProps {
-  /** 触发次数计数器（每次变化时播放一次动画） */
+  /** 觸發次數計數器（每次變化時播放一次動畫） */
   triggerKey: number;
   combo: number;
   visible: boolean;
@@ -43,7 +43,7 @@ export function ComboOverlay({ triggerKey, combo, visible }: ComboOverlayProps) 
             }}
           >
             <Flame className="w-10 h-10 drop-shadow" />
-            <span>连击 x{combo}</span>
+            <span>連擊 x{combo}</span>
           </div>
         </motion.div>
       )}

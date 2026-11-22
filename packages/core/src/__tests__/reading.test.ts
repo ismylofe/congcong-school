@@ -1,10 +1,10 @@
 /**
- * reading.test.ts —— 阅读完成 id 的双端归一化契约
+ * reading.test.ts —— 閱讀完成 id 的雙端歸一化契約
  *
- * 关键性质：
- *   - web 三种历史格式与 iOS 三种历史格式落到同一个规范键（key 空间交集 = 全集）；
- *   - normalizeReadingId 幂等；
- *   - 整表归一化冲突时保留较早完成日期，且与遍历顺序无关。
+ * 關鍵性質：
+ *   - web 三種歷史格式與 iOS 三種歷史格式落到同一個規範鍵（key 空間交集 = 全集）；
+ *   - normalizeReadingId 冪等；
+ *   - 整表歸一化衝突時保留較早完成日期，且與遍歷順序無關。
  */
 
 import { describe, expect, it } from "vitest";
@@ -20,7 +20,7 @@ const PASSAGE = "chinese-g1up-p3";
 const STORY = "chinese-g3up-s1";
 
 describe("readingId / parseReadingId", () => {
-  it("规范格式为 reading:{kind}:{rawId}", () => {
+  it("規範格式為 reading:{kind}:{rawId}", () => {
     expect(readingId("listen", PASSAGE)).toBe("reading:listen:chinese-g1up-p3");
     expect(readingId("followup", PASSAGE)).toBe("reading:followup:chinese-g1up-p3");
     expect(readingId("story", STORY)).toBe("reading:story:chinese-g3up-s1");
@@ -33,7 +33,7 @@ describe("readingId / parseReadingId", () => {
     });
   });
 
-  it("非规范/未知 kind 解析为 null", () => {
+  it("非規範/未知 kind 解析為 null", () => {
     expect(parseReadingId(PASSAGE)).toBeNull();
     expect(parseReadingId("reading:sing:x")).toBeNull();
     expect(parseReadingId("reading::x")).toBeNull();
@@ -41,14 +41,14 @@ describe("readingId / parseReadingId", () => {
   });
 });
 
-describe("normalizeReadingId：web 历史格式", () => {
+describe("normalizeReadingId：web 歷史格式", () => {
   it("passage-{id}-listen → listen", () => {
     expect(normalizeReadingId(`passage-${PASSAGE}-listen`)).toBe(
       readingId("listen", PASSAGE),
     );
   });
 
-  it("passage-{id}-followup → followup（不会被裸 -followup 规则吃掉前缀）", () => {
+  it("passage-{id}-followup → followup（不會被裸 -followup 規則吃掉字首）", () => {
     expect(normalizeReadingId(`passage-${PASSAGE}-followup`)).toBe(
       readingId("followup", PASSAGE),
     );
@@ -58,13 +58,13 @@ describe("normalizeReadingId：web 历史格式", () => {
     expect(normalizeReadingId(`story-${STORY}`)).toBe(readingId("story", STORY));
   });
 
-  it("passage-{id}（无后缀的早期写法）按听读处理", () => {
+  it("passage-{id}（無字尾的早期寫法）按聽讀處理", () => {
     expect(normalizeReadingId(`passage-${PASSAGE}`)).toBe(readingId("listen", PASSAGE));
   });
 });
 
-describe("normalizeReadingId：iOS 历史格式", () => {
-  it("裸课文 id → listen", () => {
+describe("normalizeReadingId：iOS 歷史格式", () => {
+  it("裸課文 id → listen", () => {
     expect(normalizeReadingId(PASSAGE)).toBe(readingId("listen", PASSAGE));
   });
 
@@ -74,7 +74,7 @@ describe("normalizeReadingId：iOS 历史格式", () => {
     );
   });
 
-  it("裸故事 id（-s\\d+ 形态）→ story，不会误判成听读", () => {
+  it("裸故事 id（-s\\d+ 形態）→ story，不會誤判成聽讀", () => {
     expect(normalizeReadingId(STORY)).toBe(readingId("story", STORY));
     expect(normalizeReadingId("english-g5up-s12")).toBe(
       readingId("story", "english-g5up-s12"),
@@ -82,24 +82,24 @@ describe("normalizeReadingId：iOS 历史格式", () => {
   });
 });
 
-describe("normalizeReadingId：双端交集与幂等", () => {
-  it("web / iOS 同一篇课文听读落到同一个键", () => {
+describe("normalizeReadingId：雙端交集與冪等", () => {
+  it("web / iOS 同一篇課文聽讀落到同一個鍵", () => {
     expect(normalizeReadingId(`passage-${PASSAGE}-listen`)).toBe(
       normalizeReadingId(PASSAGE),
     );
   });
 
-  it("web / iOS 同一篇课文跟读落到同一个键", () => {
+  it("web / iOS 同一篇課文跟讀落到同一個鍵", () => {
     expect(normalizeReadingId(`passage-${PASSAGE}-followup`)).toBe(
       normalizeReadingId(`${PASSAGE}-followup`),
     );
   });
 
-  it("web / iOS 同一个故事落到同一个键", () => {
+  it("web / iOS 同一個故事落到同一個鍵", () => {
     expect(normalizeReadingId(`story-${STORY}`)).toBe(normalizeReadingId(STORY));
   });
 
-  it("幂等：规范 id 再归一化仍是自己", () => {
+  it("冪等：規範 id 再歸一化仍是自己", () => {
     for (const id of [
       `passage-${PASSAGE}-listen`,
       `passage-${PASSAGE}-followup`,
@@ -113,7 +113,7 @@ describe("normalizeReadingId：双端交集与幂等", () => {
     }
   });
 
-  it("空串 / 只有前缀的残缺键返回空串", () => {
+  it("空串 / 只有字首的殘缺鍵返回空串", () => {
     expect(normalizeReadingId("")).toBe("");
     expect(normalizeReadingId("   ")).toBe("");
     expect(normalizeReadingId("story-")).toBe("");
@@ -123,7 +123,7 @@ describe("normalizeReadingId：双端交集与幂等", () => {
 });
 
 describe("normalizeReadingMap", () => {
-  it("整表归一化，两端老档合并后无重复条目", () => {
+  it("整表歸一化，兩端老檔合併後無重複條目", () => {
     const merged = normalizeReadingMap({
       [`passage-${PASSAGE}-listen`]: "2026-08-02",
       [PASSAGE]: "2026-08-05",
@@ -136,7 +136,7 @@ describe("normalizeReadingMap", () => {
     ]);
   });
 
-  it("冲突保留较早日期，且与遍历顺序无关", () => {
+  it("衝突保留較早日期，且與遍歷順序無關", () => {
     const a = normalizeReadingMap({
       [`passage-${PASSAGE}-listen`]: "2026-08-02",
       [PASSAGE]: "2026-08-05",
@@ -149,7 +149,7 @@ describe("normalizeReadingMap", () => {
     expect(a[readingId("listen", PASSAGE)]).toBe("2026-08-02");
   });
 
-  it("同日的 ISO 时间戳与纯日期共存时取纯日期（字典序较小）", () => {
+  it("同日的 ISO 時間戳與純日期共存時取純日期（字典序較小）", () => {
     const m = normalizeReadingMap({
       [`passage-${PASSAGE}-listen`]: "2026-08-02T09:30:00.000Z",
       [PASSAGE]: "2026-08-02",
@@ -157,7 +157,7 @@ describe("normalizeReadingMap", () => {
     expect(m[readingId("listen", PASSAGE)]).toBe("2026-08-02");
   });
 
-  it("空日期不覆盖真实日期", () => {
+  it("空日期不覆蓋真實日期", () => {
     expect(
       normalizeReadingMap({
         [`passage-${PASSAGE}-listen`]: "",
@@ -166,7 +166,7 @@ describe("normalizeReadingMap", () => {
     ).toBe("2026-08-02");
   });
 
-  it("非字符串值与空键被丢弃", () => {
+  it("非字串值與空鍵被丟棄", () => {
     const m = normalizeReadingMap({
       [PASSAGE]: "2026-08-02",
       "": "2026-08-02",
@@ -175,8 +175,8 @@ describe("normalizeReadingMap", () => {
     expect(m).toEqual({ [readingId("listen", PASSAGE)]: "2026-08-02" });
   });
 
-  it("值为空串的老档：条目保留，值换成占位符（结果里绝不出现空串）", () => {
-    // iOS 早期导出的 completedReadings 值就是空串（只有键有意义）
+  it("值為空串的老檔：條目保留，值換成佔位符（結果裡絕不出現空串）", () => {
+    // iOS 早期匯出的 completedReadings 值就是空串（只有鍵有意義）
     const m = normalizeReadingMap({
       [PASSAGE]: "",
       [`${PASSAGE}-followup`]: "   ",
@@ -187,19 +187,19 @@ describe("normalizeReadingMap", () => {
       [readingId("followup", PASSAGE)]: UNKNOWN_COMPLETION_DATE,
       [readingId("story", STORY)]: UNKNOWN_COMPLETION_DATE,
     });
-    // 真值口径与存在性口径必须得到同一个结论，否则会重复发 XP
+    // 真值口徑與存在性口徑必須得到同一個結論，否則會重複發 XP
     for (const v of Object.values(m)) {
       expect(Boolean(v)).toBe(true);
       expect(v != null).toBe(true);
     }
   });
 
-  it("占位符幂等：再归一化一次结果不变", () => {
+  it("佔位符冪等：再歸一化一次結果不變", () => {
     const once = normalizeReadingMap({ [PASSAGE]: "" });
     expect(normalizeReadingMap(once)).toEqual(once);
   });
 
-  it("占位符永远输给真实日期（两个方向都是）", () => {
+  it("佔位符永遠輸給真實日期（兩個方向都是）", () => {
     const key = readingId("listen", PASSAGE);
     expect(
       normalizeReadingMap({
@@ -215,7 +215,7 @@ describe("normalizeReadingMap", () => {
     ).toBe("2026-08-02");
   });
 
-  it("听读 / 跟读 / 故事互不串键", () => {
+  it("聽讀 / 跟讀 / 故事互不串鍵", () => {
     const m = normalizeReadingMap({
       [PASSAGE]: "2026-08-02",
       [`${PASSAGE}-followup`]: "2026-08-03",

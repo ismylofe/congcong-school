@@ -57,7 +57,7 @@ export function ProfileClient() {
   return (
     <AppShell right={null} centerMaxWidth={920}>
     <main className="min-h-screen bg-bg lg:bg-transparent relative">
-      {/* Header —— 移动端白底 sticky；桌面端简化为 标题 + compact HUD */}
+      {/* Header —— 移動端白底 sticky；桌面端簡化為 標題 + compact HUD */}
       <div className="bg-white border-b border-bg-softer lg:bg-transparent lg:border-0 lg:static lg:mb-2">
         <div className="max-w-2xl lg:max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-0 lg:py-2">
           <SoundLink
@@ -68,7 +68,7 @@ export function ProfileClient() {
             <ArrowLeft className="w-5 h-5" />
           </SoundLink>
           <div className="flex-1 min-w-0 text-center lg:hidden">
-            <div className="text-base font-extrabold text-ink truncate">我的主页</div>
+            <div className="text-base font-extrabold text-ink truncate">我的主頁</div>
           </div>
           <div className="hidden lg:block flex-1" />
           <div className="w-auto shrink-0 flex justify-end">
@@ -78,7 +78,7 @@ export function ProfileClient() {
       </div>
 
       <div className="max-w-2xl lg:max-w-4xl mx-auto px-4 py-5 sm:py-8">
-        {/* 顶部：聪聪 + 问候 + 每日目标环 */}
+        {/* 頂部：聰聰 + 問候 + 每日目標環 */}
         <div className="grid grid-cols-[72px_minmax(0,1fr)] items-center gap-3 mb-6 sm:flex sm:gap-6">
           <motion.div
             className="row-span-2"
@@ -89,53 +89,53 @@ export function ProfileClient() {
             <Mascot mood="wave" size={72} />
           </motion.div>
           <div className="flex-1">
-            <div className="text-sm text-ink-light">欢迎回来</div>
-            <h1 className="text-2xl font-extrabold text-ink">聪明的同学</h1>
+            <div className="text-sm text-ink-light">歡迎回來</div>
+            <h1 className="text-2xl font-extrabold text-ink">聰明的同學</h1>
             <div className="text-sm text-ink-light mt-1">
-              {hydrated && streak > 0 ? `已连续学习 ${streak} 天` : "开始你的学习之旅"}
+              {hydrated && streak > 0 ? `已連續學習 ${streak} 天` : "開始你的學習之旅"}
             </div>
           </div>
           <div className="col-start-2 sm:ml-auto shrink-0"><DailyGoalRing size={80} /></div>
         </div>
 
-        {/* 📋 本页未使用右栏，因此所有尺寸均提供每日任务入口 */}
+        {/* 📋 本頁未使用右欄，因此所有尺寸均提供每日任務入口 */}
         <div className="mb-6">
           <DailyQuestsPanel />
         </div>
 
         <LearnerProfiles />
 
-        {/* 统计卡片网格 */}
+        {/* 統計卡片網格 */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           <StatCard
             icon={<Lightning className="w-6 h-6" />}
-            label="总经验"
+            label="總經驗"
             value={hydrated ? xp.toString() : "0"}
             color="text-secondary"
           />
           <StatCard
             icon={<Flame className="w-6 h-6" />}
-            label="连续天数"
+            label="連續天數"
             value={hydrated ? streak.toString() : "0"}
             color="text-warning"
           />
           <StatCard
             icon={<Crown className="w-6 h-6" />}
-            label="完成课程"
+            label="完成課程"
             value={completedCount.toString()}
             color="text-primary"
           />
           <StatCard
             icon={<Star className="w-6 h-6 " />}
-            label="获得星星"
+            label="獲得星星"
             value={totalStars.toString()}
             color="text-gold"
           />
         </div>
 
-        {/* 桌面 2x2 网格：商店 / 成就 / 错题本 / 家长设置 */}
+        {/* 桌面 2x2 網格：商店 / 成就 / 錯題本 / 家長設定 */}
         <div className="lg:grid lg:grid-cols-2 lg:gap-5">
-        {/* 累计宝石 + 商店入口 */}
+        {/* 累計寶石 + 商店入口 */}
         <SoundLink
           href="/shop"
           hapticIntensity="medium"
@@ -146,9 +146,9 @@ export function ProfileClient() {
             <Gem className="w-6 h-6" />
           </div>
           <div className="flex-1">
-            <div className="text-base font-extrabold text-ink">聪聪衣橱</div>
+            <div className="text-base font-extrabold text-ink">聰聰衣櫥</div>
             <div className="text-sm text-ink-light">
-              累计获得 <span className="font-extrabold text-gem">{hydrated ? lifetimeGems : 0}</span> 颗宝石 · 去给聪聪换装吧
+              累計獲得 <span className="font-extrabold text-gem">{hydrated ? lifetimeGems : 0}</span> 顆寶石 · 去給聰聰換裝吧
             </div>
           </div>
           <div className="text-ink-softer text-xl">›</div>
@@ -165,78 +165,78 @@ export function ProfileClient() {
             <Bookmark className="w-6 h-6" />
           </div>
           <div className="flex-1">
-            <div className="text-base font-extrabold text-ink">错题本</div>
+            <div className="text-base font-extrabold text-ink">錯題本</div>
             <div className="text-sm text-ink-light">
-              {mistakesCount > 0 ? `${mistakesCount} 道题待复习` : "暂无错题"}
+              {mistakesCount > 0 ? `${mistakesCount} 道題待複習` : "暫無錯題"}
             </div>
           </div>
           <div className="text-ink-softer text-xl">›</div>
         </SoundLink>
 
-        {/* 连胜护盾小卡片 */}
+        {/* 連勝護盾小卡片 */}
         <section
           className="bg-white ui-card rounded-3xl border-2 border-bg-softer p-5 mb-6 lg:mb-0"
           style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
         >
-          <div className="text-base font-extrabold text-ink mb-3">连胜护盾</div>
+          <div className="text-base font-extrabold text-ink mb-3">連勝護盾</div>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center">
               <Snowflake className="w-6 h-6" />
             </div>
             <div className="flex-1">
               <div className="text-sm font-extrabold text-ink">
-                剩余 <span className="text-secondary tabular-nums">{hydrated ? freezes : 0}</span> 个
+                剩餘 <span className="text-secondary tabular-nums">{hydrated ? freezes : 0}</span> 個
               </div>
-              <div className="text-xs text-ink-light">周一自动补给一个 · 防止连胜中断</div>
+              <div className="text-xs text-ink-light">週一自動補給一個 · 防止連勝中斷</div>
             </div>
           </div>
         </section>
 
-        {/* 外观：免费深色模式三态开关（跟随系统 / 亮 / 暗） */}
+        {/* 外觀：免費深色模式三態開關（跟隨系統 / 亮 / 暗） */}
         <section
           className="bg-white ui-card rounded-3xl border-2 border-bg-softer p-5 mb-6 lg:mb-0"
           style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="text-base font-extrabold text-ink">外观 · 深色模式</div>
+            <div className="text-base font-extrabold text-ink">外觀 · 深色模式</div>
           </div>
           <div className="text-xs text-ink-light mb-3">
-            跟随系统自动切换，或手动选择亮色 / 暗色 · 免费使用
+            跟隨系統自動切換，或手動選擇亮色 / 暗色 · 免費使用
           </div>
           <ThemeModeToggle />
         </section>
 
-        {/* 本周报告 */}
+        {/* 本週報告 */}
         <div className="lg:col-span-2 mb-6 lg:mb-0">
           {hydrated && <WeeklyReportCard />}
         </div>
 
-        {/* 成就墙（占满整行） */}
+        {/* 成就牆（佔滿整行） */}
         <div className="lg:col-span-2 mb-6 lg:mb-0">
           {hydrated && <AchievementWall />}
         </div>
 
-        {/* 家长设置：每日学习时间上限（默认关闭，家长自愿启用） */}
+        {/* 家長設定：每日學習時間上限（預設關閉，家長自願啟用） */}
         <section
           className="bg-white ui-card rounded-3xl border-2 border-bg-softer p-5"
           style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
         >
           <div className="flex items-center justify-between mb-1">
-            <div className="text-base font-extrabold text-ink">家长设置 · 每日时间上限</div>
+            <div className="text-base font-extrabold text-ink">家長設定 · 每日時間上限</div>
             <span className="text-xs text-ink-light">
               防沉迷
             </span>
           </div>
           <div className="text-xs text-ink-light mb-3">
-            达到上限后会暂停新课程，鼓励休息眼睛 · 不影响已开始的课程
+            達到上限後會暫停新課程，鼓勵休息眼睛 · 不影響已開始的課程
           </div>
           <div className="flex flex-wrap gap-2">
             {([
               { label: "不限制", min: 0 },
-              { label: "20 分钟", min: 20 },
-              { label: "30 分钟", min: 30 },
-              { label: "45 分钟", min: 45 },
-              { label: "60 分钟", min: 60 },
+              { label: "20 分鐘", min: 20 },
+              { label: "30 分鐘", min: 30 },
+              { label: "45 分鐘", min: 45 },
+              { label: "60 分鐘", min: 60 },
             ] as const).map(opt => {
               const active = hydrated && dailyTimeLimitMs === opt.min * 60_000;
               return (
@@ -263,10 +263,10 @@ export function ProfileClient() {
           </div>
         </section>
 
-        {/* 💾 数据 · 存档备份（E2）：导出 / 导入，BackupEnvelope v1 双端互通 */}
+        {/* 💾 資料 · 存檔備份（E2）：匯出 / 匯入，BackupEnvelope v1 雙端互通 */}
         <BackupSection />
 
-        {/* 🚩 已报告的问题（E2）：本地列表 + 一键导出 */}
+        {/* 🚩 已報告的問題（E2）：本地列表 + 一鍵匯出 */}
         <div className="lg:col-span-2 mt-6 lg:mt-0">
           {hydrated && <ReportsSection />}
         </div>
@@ -278,7 +278,7 @@ export function ProfileClient() {
 }
 
 // ============================================================
-// 💾 数据 · 存档备份（E2）
+// 💾 資料 · 存檔備份（E2）
 // ============================================================
 
 function downloadJson(obj: unknown, filename: string) {
@@ -305,7 +305,7 @@ function BackupSection() {
   const exportBackup = useProgressStore(s => s.exportBackup);
   const importBackup = useProgressStore(s => s.importBackup);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // 待确认的导入信封（validateBackup 已通过）
+  // 待確認的匯入信封（validateBackup 已透過）
   const [pending, setPending] = useState<{
     envelope: BackupEnvelope;
     repairs: string[];
@@ -317,7 +317,7 @@ function BackupSection() {
     haptic("medium");
     const envelope = exportBackup();
     downloadJson(envelope, `cstf-backup-${todayFileStamp()}.json`);
-    toast.success("存档已导出，收好这个文件哦", 3200);
+    toast.success("存檔已匯出，收好這個檔案哦", 3200);
   }
 
   async function handleFilePicked(file: File | null) {
@@ -326,12 +326,12 @@ function BackupSection() {
     try {
       parsed = JSON.parse(await file.text());
     } catch {
-      toast.error("这个文件打不开，不是有效的存档文件");
+      toast.error("這個檔案打不開，不是有效的存檔檔案");
       return;
     }
     const result = validateBackup(parsed);
     if (!result.ok || !result.data) {
-      toast.error(`导入失败：${result.errors[0] ?? "存档内容损坏"}`);
+      toast.error(`匯入失敗：${result.errors[0] ?? "存檔內容損壞"}`);
       return;
     }
     playSfx("tap");
@@ -345,16 +345,16 @@ function BackupSection() {
     playSfx("unlock");
     haptic("success");
     importBackup(pending.envelope);
-    toast.success("存档导入成功，正在刷新…", 2400);
-    // 全量刷新：让所有页面 / watcher 基于新进度重算
+    toast.success("存檔匯入成功，正在重新整理…", 2400);
+    // 全量重新整理：讓所有頁面 / watcher 基於新進度重算
     window.setTimeout(() => window.location.reload(), 800);
   }
 
   const d = pending?.envelope.data;
   const pendingLessons = d ? Object.keys(d.completedLessons).length : 0;
   const exportedDate = pending?.envelope.exportedAt
-    ? new Date(pending.envelope.exportedAt).toLocaleDateString("zh-CN")
-    : "未知时间";
+    ? new Date(pending.envelope.exportedAt).toLocaleDateString("zh-TW")
+    : "未知時間";
 
   return (
     <section
@@ -362,13 +362,13 @@ function BackupSection() {
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
     >
       <div className="flex items-center justify-between mb-1">
-        <div className="text-base font-extrabold text-ink">数据 · 存档备份</div>
+        <div className="text-base font-extrabold text-ink">資料 · 存檔備份</div>
         <span className="text-xs text-ink-light">
-          手机电脑互通
+          手機電腦互通
         </span>
       </div>
       <div className="text-xs text-ink-light mb-3">
-        导出一个存档文件保存好；换设备或换到 iPhone 上，导入就能接着学
+        匯出一個存檔檔案儲存好；換裝置或換到 iPhone 上，匯入就能接著學
       </div>
       <div className="flex flex-wrap gap-2">
         <button
@@ -376,7 +376,7 @@ function BackupSection() {
           onClick={handleExport}
           className="btn-chunky-primary gap-2"
         >
-          <Download className="w-4 h-4" aria-hidden /> 导出存档
+          <Download className="w-4 h-4" aria-hidden /> 匯出存檔
         </button>
         <button
           type="button"
@@ -387,7 +387,7 @@ function BackupSection() {
           }}
           className="btn-chunky-ghost gap-2"
         >
-          <Upload className="w-4 h-4" aria-hidden /> 导入存档
+          <Upload className="w-4 h-4" aria-hidden /> 匯入存檔
         </button>
         <input
           ref={fileInputRef}
@@ -396,37 +396,37 @@ function BackupSection() {
           className="hidden"
           onChange={e => {
             void handleFilePicked(e.target.files?.[0] ?? null);
-            e.target.value = ""; // 同一文件可重复选择
+            e.target.value = ""; // 同一檔案可重複選擇
           }}
         />
       </div>
 
-      {/* 导入确认弹层：覆盖警告 + 存档摘要 */}
+      {/* 匯入確認彈層：覆蓋警告 + 存檔摘要 */}
       <Modal
         open={pending !== null}
         onClose={() => (importing ? undefined : setPending(null))}
-        ariaLabel="确认导入存档"
+        ariaLabel="確認匯入存檔"
       >
         <div className="flex flex-col items-center text-center">
           <Mascot mood="surprise" size={96} />
-          <h2 className="text-2xl font-extrabold text-ink mt-3">确认导入这个存档？</h2>
+          <h2 className="text-2xl font-extrabold text-ink mt-3">確認匯入這個存檔？</h2>
           <p className="text-ink-light mt-2 text-sm">
-            导入会<span className="font-extrabold text-danger">覆盖当前全部进度</span>
-            ，建议先点「导出存档」备份一份再导入。
+            匯入會<span className="font-extrabold text-danger">覆蓋當前全部進度</span>
+            ，建議先點「匯出存檔」備份一份再匯入。
           </p>
           {pending && (
             <div className="mt-4 w-full rounded-2xl bg-bg-soft border-2 border-bg-softer p-3 text-left text-xs text-ink-light space-y-1">
               <div>
-                来源：{pending.envelope.platform === "ios" ? "iPhone / iPad" : "网页版"} ·
-                导出于 {exportedDate}
+                來源：{pending.envelope.platform === "ios" ? "iPhone / iPad" : "網頁版"} ·
+                匯出於 {exportedDate}
               </div>
               <div>
-                进度：{pendingLessons} 节完成课程 · {d?.xp ?? 0} XP ·
-                连胜 {d?.streak ?? 0} 天 · {d?.gems ?? 0} 宝石
+                進度：{pendingLessons} 節完成課程 · {d?.xp ?? 0} XP ·
+                連勝 {d?.streak ?? 0} 天 · {d?.gems ?? 0} 寶石
               </div>
               {pending.repairs.length > 0 && (
                 <div className="text-warning">
-                  有 {pending.repairs.length} 个小问题已自动修复，不影响导入
+                  有 {pending.repairs.length} 個小問題已自動修復，不影響匯入
                 </div>
               )}
             </div>
@@ -438,7 +438,7 @@ function BackupSection() {
               disabled={importing}
               className={importing ? "btn-chunky-disabled w-full" : "btn-chunky-danger w-full"}
             >
-              {importing ? "导入中…" : "覆盖并导入"}
+              {importing ? "匯入中…" : "覆蓋並匯入"}
             </button>
             <button
               type="button"
@@ -459,7 +459,7 @@ function BackupSection() {
 }
 
 // ============================================================
-// 🚩 已报告的问题（E2）
+// 🚩 已報告的問題（E2）
 // ============================================================
 
 function ReportsSection() {
@@ -473,17 +473,17 @@ function ReportsSection() {
     playSfx("tap");
     haptic("medium");
     downloadJson(reports, `cstf-reports-${todayFileStamp()}.json`);
-    toast.success("反馈记录已导出", 2800);
+    toast.success("反饋記錄已匯出", 2800);
   }
 
   return (
     <section
       className="bg-white ui-card rounded-3xl border-2 border-bg-softer p-5"
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
-      aria-label="已报告的问题"
+      aria-label="已報告的問題"
     >
       <div className="flex items-center justify-between mb-1">
-        <div className="text-base font-extrabold text-ink">已报告的问题</div>
+        <div className="text-base font-extrabold text-ink">已報告的問題</div>
         {reports.length > 0 && (
           <button
             type="button"
@@ -491,17 +491,17 @@ function ReportsSection() {
             className="h-8 px-3 inline-flex items-center gap-1 rounded-xl text-xs font-extrabold border-2 bg-white text-ink-light border-bg-softer hover:border-primary/40 transition-colors"
             style={{ boxShadow: "0 2px 0 0 var(--shadow-card-color)" }}
           >
-            📤 导出
+            📤 匯出
           </button>
         )}
       </div>
       <div className="text-xs text-ink-light mb-3">
-        答题时报告的题目问题会记录在这里 · 只保存在本机，不会上传
+        答題時報告的題目問題會記錄在這裡 · 只儲存在本機，不會上傳
       </div>
 
       {reports.length === 0 ? (
         <div className="text-sm text-ink-softer py-4 text-center">
-          还没有报告过问题
+          還沒有報告過問題
         </div>
       ) : (
         <ul className="space-y-2">
@@ -515,15 +515,15 @@ function ReportsSection() {
                   {REPORT_KIND_LABELS[r.kind]}
                 </span>
                 <span className="text-[10px] text-ink-softer ml-auto shrink-0 tabular-nums">
-                  {new Date(r.createdAt).toLocaleDateString("zh-CN")}
+                  {new Date(r.createdAt).toLocaleDateString("zh-TW")}
                 </span>
               </div>
               <div className="text-xs text-ink mt-1.5 line-clamp-2 leading-snug">
-                {r.questionText || "（无题干快照）"}
+                {r.questionText || "（無題幹快照）"}
               </div>
               <div className="text-[10px] text-ink-softer mt-1">
-                课程 {r.lessonId} · 题目 #{r.questionId}
-                {r.answerGiven ? ` · 当时作答：${r.answerGiven.slice(0, 24)}` : ""}
+                課程 {r.lessonId} · 題目 #{r.questionId}
+                {r.answerGiven ? ` · 當時作答：${r.answerGiven.slice(0, 24)}` : ""}
               </div>
             </li>
           ))}
@@ -531,7 +531,7 @@ function ReportsSection() {
       )}
       {sorted.length > shown.length && (
         <div className="text-[11px] text-ink-softer mt-2 text-center">
-          只显示最近 {shown.length} 条，导出可以看到全部 {reports.length} 条
+          只顯示最近 {shown.length} 條，匯出可以看到全部 {reports.length} 條
         </div>
       )}
     </section>

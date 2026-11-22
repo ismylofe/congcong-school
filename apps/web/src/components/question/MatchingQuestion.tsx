@@ -1,18 +1,18 @@
 "use client";
 
 /**
- * 连线题：左列 4 项、右列 4 项，点选配对（web-lesson-11：逐对即时判定）。
+ * 連線題：左列 4 項、右列 4 項，點選配對（web-lesson-11：逐對即時判定）。
  *
- * options: 8 项数组，前 4 是左列（A/B/C/D），后 4 是右列（1/2/3/4）
- * answer:  "A-1,B-2,C-3,D-4" 形式的字符串
+ * options: 8 項陣列，前 4 是左列（A/B/C/D），後 4 是右列（1/2/3/4）
+ * answer:  "A-1,B-2,C-3,D-4" 形式的字串
  *
- * 交互（与 iOS / 多邻国一致）：
- *   - 点左列某项 → 高亮，等待选右列
- *   - 点右列某项 → 立即判定该对：
- *       对 → 绿闪 + 双双消失（correct 触感）
- *       错 → 红抖 + 复位（不扣心）
- *   - 每对成功立即保存草稿；完整配对后父级才可判分
- *   - 键盘：1-4 选左列，5-8 选右列（桌面端角标提示）
+ * 互動（與 iOS / 多鄰國一致）：
+ *   - 點左列某項 → 高亮，等待選右列
+ *   - 點右列某項 → 立即判定該對：
+ *       對 → 綠閃 + 雙雙消失（correct 觸感）
+ *       錯 → 紅抖 + 復位（不扣心）
+ *   - 每對成功立即儲存草稿；完整配對後父級才可判分
+ *   - 鍵盤：1-4 選左列，5-8 選右列（桌面端角標提示）
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -61,15 +61,15 @@ export function MatchingQuestion({
     return m;
   }, [question.answer]);
 
-  /** 已配对成功（消失）的左键集合 */
+  /** 已配對成功（消失）的左鍵集合 */
   const matched = useMemo(() => matchingPairs(question, answer), [question, answer]);
-  /** 正在播「绿闪」即将消失的一对 */
+  /** 正在播「綠閃」即將消失的一對 */
   const [vanishing, setVanishing] = useState<{ l: LeftKey; r: RightKey } | null>(null);
-  /** 刚配错正在「红抖」的一对（key 用于重播动画） */
+  /** 剛配錯正在「紅抖」的一對（key 用於重播動畫） */
   const [wrongPair, setWrongPair] = useState<{ l: LeftKey; r: RightKey; key: number } | null>(null);
   const [activeLeft, setActiveLeft] = useState<LeftKey | null>(null);
 
-  // 题目切换重置
+  // 題目切換重置
   useEffect(() => {
     setVanishing(null);
     setWrongPair(null);
@@ -107,13 +107,13 @@ export function MatchingQuestion({
     setActiveLeft(null);
 
     if (answerMap[l] === rk) {
-      // ✅ 配对正确：绿闪 → 双双消失
+      // ✅ 配對正確：綠閃 → 雙雙消失
       playSfx("correct", { volume: 0.55 });
       haptic("light");
       setVanishing({ l, r: rk });
       onChange(Object.entries({ ...matched, [l]: rk }).map(([left, right]) => `${left}-${right}`).join(","));
     } else {
-      // ❌ 配对错误：红抖 + 复位（不扣心，与 iOS 一致）
+      // ❌ 配對錯誤：紅抖 + 復位（不扣心，與 iOS 一致）
       playSfx("wrong", { volume: 0.35 });
       haptic("medium");
       setWrongPair({ l, r: rk, key: Date.now() });
@@ -121,9 +121,9 @@ export function MatchingQuestion({
     }
   }
 
-  // 键盘快捷键（web-lesson-3）：左列 1-4，右列 5-8
+  // 鍵盤快捷鍵（web-lesson-3）：左列 1-4，右列 5-8
   useEffect(() => {
-    if (locked || phase !== "answering") return; // 遮罩打开时不接管键盘（webrunner-5）
+    if (locked || phase !== "answering") return; // 遮罩開啟時不接管鍵盤（webrunner-5）
     const onKeyDown = (e: KeyboardEvent) => {
       if (shouldIgnoreKey(e)) return;
       const n = Number(e.key);
@@ -143,7 +143,7 @@ export function MatchingQuestion({
 
   const shakeAnim = { x: [0, -7, 7, -5, 5, 0], transition: { duration: 0.42 } };
 
-  /** answerMap[k]（"1"~"4"）→ 右列文本 */
+  /** answerMap[k]（"1"~"4"）→ 右列文字 */
   function rightTextFor(k: LeftKey): string {
     const rk = answerMap[k];
     if (!rk) return "";
@@ -154,7 +154,7 @@ export function MatchingQuestion({
     <div className="w-full">
       <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} />
 
-      <p className="text-sm text-ink-light mb-4">先选左侧，再选右侧，找到对应的一对。</p>
+      <p className="text-sm text-ink-light mb-4">先選左側，再選右側，找到對應的一對。</p>
       <div className="grid grid-cols-2 gap-3">
         {/* 左列 */}
         <div className="flex flex-col gap-2">
@@ -189,7 +189,7 @@ export function MatchingQuestion({
                       {k}
                     </span>
                     <span className="flex-1 min-w-0 break-words">{txt}</span>
-                    {/* 桌面端键盘角标 1-4 */}
+                    {/* 桌面端鍵盤角標 1-4 */}
                     <span className="w-5 h-5 rounded border-2 border-bg-softer hidden lg:flex items-center justify-center font-extrabold text-ink-softer text-[10px] tabular-nums shrink-0">
                       {i + 1}
                     </span>
@@ -232,7 +232,7 @@ export function MatchingQuestion({
                       {k}
                     </span>
                     <span className="flex-1 min-w-0 break-words">{txt}</span>
-                    {/* 桌面端键盘角标 5-8 */}
+                    {/* 桌面端鍵盤角標 5-8 */}
                     <span className="w-5 h-5 rounded border-2 border-bg-softer hidden lg:flex items-center justify-center font-extrabold text-ink-softer text-[10px] tabular-nums shrink-0">
                       {i + 5}
                     </span>
@@ -244,14 +244,14 @@ export function MatchingQuestion({
         </div>
       </div>
 
-      {/* 进度提示（配到一半时给点正反馈） */}
+      {/* 進度提示（配到一半時給點正反饋） */}
       {!disabled && Object.keys(matched).length > 0 && Object.keys(matched).length < pairTotal && (
         <div className="mt-3 text-center text-xs font-bold text-ink-softer">
-          已配对 {Object.keys(matched).length}/{pairTotal}
+          已配對 {Object.keys(matched).length}/{pairTotal}
         </div>
       )}
 
-      {/* 错误兜底（如跳过）：展示左右文本配对列表，不再裸 A-1,B-2 */}
+      {/* 錯誤兜底（如跳過）：展示左右文字配對列表，不再裸 A-1,B-2 */}
       <AnimatePresence>
         {phase === "checked" && !isCorrect && (
           <motion.div
@@ -259,7 +259,7 @@ export function MatchingQuestion({
             animate={{ y: 0, opacity: 1 }}
             className="mt-4 space-y-2"
           >
-            <div className="text-center text-sm font-bold text-ink-light">正确配对：</div>
+            <div className="text-center text-sm font-bold text-ink-light">正確配對：</div>
             {LEFT_KEYS.slice(0, pairTotal).map((k, i) =>
               left[i] ? (
                 <div

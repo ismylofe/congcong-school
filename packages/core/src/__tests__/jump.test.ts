@@ -1,5 +1,5 @@
 /**
- * jump.test.ts —— 跳级测试抽题：均匀性 / 去重 / 不足全取 / 确定性
+ * jump.test.ts —— 跳級測試抽題：均勻性 / 去重 / 不足全取 / 確定性
  */
 
 import { describe, expect, it } from "vitest";
@@ -29,20 +29,20 @@ function makeSource(lessonId: string, count: number): JumpQuestionSource {
   return {
     lessonId,
     questions: Array.from({ length: count }, (_, i) =>
-      makeQuestion(i + 1, `${lessonId} 第 ${i + 1} 题`),
+      makeQuestion(i + 1, `${lessonId} 第 ${i + 1} 題`),
     ),
   };
 }
 
-describe("常量口径", () => {
-  it("15 题、0.80 通过线", () => {
+describe("常量口徑", () => {
+  it("15 題、0.80 透過線", () => {
     expect(JUMP_TEST_SIZE).toBe(15);
     expect(JUMP_PASS_ACCURACY).toBe(0.8);
   });
 });
 
-describe("sampleJumpQuestions: 均匀性", () => {
-  it("5 节课各 10 题抽 15 → 每节课恰好 3 题", () => {
+describe("sampleJumpQuestions: 均勻性", () => {
+  it("5 節課各 10 題抽 15 → 每節課恰好 3 題", () => {
     const sources = ["a", "b", "c", "d", "e"].map(id => makeSource(id, 10));
     const picked = sampleJumpQuestions(sources, 15, "seed-1");
     expect(picked).toHaveLength(15);
@@ -53,7 +53,7 @@ describe("sampleJumpQuestions: 均匀性", () => {
     expect([...byLesson.values()]).toEqual([3, 3, 3, 3, 3]);
   });
 
-  it("课程数不整除时各课程被抽数最多差 1", () => {
+  it("課程數不整除時各課程被抽數最多差 1", () => {
     const sources = ["a", "b", "c", "d"].map(id => makeSource(id, 10));
     const picked = sampleJumpQuestions(sources, 15, "seed-2");
     expect(picked).toHaveLength(15);
@@ -64,8 +64,8 @@ describe("sampleJumpQuestions: 均匀性", () => {
     expect(counts.reduce((s, n) => s + n, 0)).toBe(15);
   });
 
-  it("小课程取空后名额由大课程补足", () => {
-    // a 只有 1 题，b/c 很多 → 仍抽满 15
+  it("小課程取空後名額由大課程補足", () => {
+    // a 只有 1 題，b/c 很多 → 仍抽滿 15
     const sources = [makeSource("a", 1), makeSource("b", 20), makeSource("c", 20)];
     const picked = sampleJumpQuestions(sources, 15, "seed-3");
     expect(picked).toHaveLength(15);
@@ -78,14 +78,14 @@ describe("sampleJumpQuestions: 均匀性", () => {
 });
 
 describe("sampleJumpQuestions: 去重", () => {
-  it("同一课程内重复题目 id 只保留一次", () => {
+  it("同一課程內重複題目 id 只保留一次", () => {
     const dup: JumpQuestionSource = {
       lessonId: "dup",
       questions: [
         makeQuestion(1, "一"),
-        makeQuestion(1, "一（重复）"),
+        makeQuestion(1, "一（重複）"),
         makeQuestion(2, "二"),
-        makeQuestion(2, "二（重复）"),
+        makeQuestion(2, "二（重複）"),
         makeQuestion(3, "三"),
       ],
     };
@@ -94,7 +94,7 @@ describe("sampleJumpQuestions: 去重", () => {
     expect(picked.map(p => p.question.id).sort()).toEqual([1, 2, 3]);
   });
 
-  it("结果内无重复的 (lessonId, questionId) 组合", () => {
+  it("結果內無重複的 (lessonId, questionId) 組合", () => {
     const sources = ["a", "b", "c"].map(id => makeSource(id, 8));
     const picked = sampleJumpQuestions(sources, 15, "seed-5");
     const keys = picked.map(p => `${p.lessonId}#${p.question.id}`);
@@ -102,8 +102,8 @@ describe("sampleJumpQuestions: 去重", () => {
   });
 });
 
-describe("sampleJumpQuestions: 不足 15 题时全取", () => {
-  it("总题数少于 size → 全部返回", () => {
+describe("sampleJumpQuestions: 不足 15 題時全取", () => {
+  it("總題數少於 size → 全部返回", () => {
     const sources = [makeSource("a", 4), makeSource("b", 5)];
     const picked = sampleJumpQuestions(sources, 15, "seed-6");
     expect(picked).toHaveLength(9);
@@ -111,17 +111,17 @@ describe("sampleJumpQuestions: 不足 15 题时全取", () => {
     expect(picked.filter(p => p.lessonId === "b")).toHaveLength(5);
   });
 
-  it("空题库 / 空课程返回空数组", () => {
+  it("空題庫 / 空課程返回空陣列", () => {
     expect(sampleJumpQuestions([], 15)).toEqual([]);
     expect(sampleJumpQuestions([{ lessonId: "empty", questions: [] }], 15)).toEqual([]);
     expect(sampleJumpQuestions([makeSource("a", 3)], 0)).toEqual([]);
   });
 });
 
-describe("sampleJumpQuestions: 确定性", () => {
+describe("sampleJumpQuestions: 確定性", () => {
   const sources = ["a", "b", "c", "d", "e", "f"].map(id => makeSource(id, 12));
 
-  it("同 seed 结果逐项一致", () => {
+  it("同 seed 結果逐項一致", () => {
     const p1 = sampleJumpQuestions(sources, 15, "same-seed");
     const p2 = sampleJumpQuestions(sources, 15, "same-seed");
     expect(p1.map(p => `${p.lessonId}#${p.question.id}`)).toEqual(
@@ -129,7 +129,7 @@ describe("sampleJumpQuestions: 确定性", () => {
     );
   });
 
-  it("不同 seed（重试换题）结果不同", () => {
+  it("不同 seed（重試換題）結果不同", () => {
     const p1 = sampleJumpQuestions(sources, 15, "retry-1");
     const p2 = sampleJumpQuestions(sources, 15, "retry-2");
     expect(p1.map(p => `${p.lessonId}#${p.question.id}`)).not.toEqual(
@@ -137,7 +137,7 @@ describe("sampleJumpQuestions: 确定性", () => {
     );
   });
 
-  it("不改输入数组（纯函数）", () => {
+  it("不改輸入陣列（純函式）", () => {
     const src = makeSource("a", 10);
     const before = src.questions.map(q => q.id);
     sampleJumpQuestions([src], 5, "no-mutate");

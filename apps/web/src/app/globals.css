@@ -59,7 +59,7 @@
 
 
 :root {
-  --font-sans: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
   --font-ui: var(--font-display), var(--font-sans);
   --control-height: 50px;
   --control-depth: 4px;
@@ -77,23 +77,23 @@
   --ease-ui: cubic-bezier(.2, 0, 0, 1);
   --surface-hover: #f1f5f7;
 
-  /* 美妆主题色（ThemeProvider 会在 hydrate 后覆盖；这是 SSR 默认值） */
+  /* 美妝主題色（ThemeProvider 會在 hydrate 後覆蓋；這是 SSR 預設值） */
   --theme-primary: #58CC02;
   --theme-primary-dark: #58A700;
   --theme-accent: #1CB0F6;
   --theme-bg: #FFFFFF;
 
-  /* 卡片厚阴影颜色 —— 深色模式下由 .theme-dark 覆盖（替代旧的 [style*=...] 字符串匹配） */
+  /* 卡片厚陰影顏色 —— 深色模式下由 .theme-dark 覆蓋（替代舊的 [style*=...] 字串匹配） */
   --shadow-card-color: #e5e5e5;
-  /* 当前路径节点光晕色 —— 随单元色由 PathMap 内联覆盖 */
+  /* 當前路徑節點光暈色 —— 隨單元色由 PathMap 內聯覆蓋 */
   --node-glow-color: rgba(88, 204, 2, 0.35);
 }
 
 /* ============================================================
- * 深色 night 色板缺省值 —— 与 iOS DuoColors / tailwind night token 同 hex
- *   免费三态深色模式（系统 / 手动）只挂 .theme-dark 类即可拿到整套 token；
- *   购买的暗色美妆主题（theme_midnight / theme_obsidian）由 ThemeProvider
- *   在 html 上内联同名变量覆盖 —— 「强制暗色」但底层同一套 token。
+ * 深色 night 色板預設值 —— 與 iOS DuoColors / tailwind night token 同 hex
+ *   免費三態深色模式（系統 / 手動）只掛 .theme-dark 類即可拿到整套 token；
+ *   購買的暗色美妝主題（theme_midnight / theme_obsidian）由 ThemeProvider
+ *   在 html 上內聯同名變數覆蓋 —— 「強制暗色」但底層同一套 token。
  * ============================================================ */
 .theme-dark {
   --lesson-backdrop-overlay: rgba(19, 31, 36, 0.85);
@@ -121,8 +121,8 @@ body {
   height: 100%;
   -webkit-font-smoothing: antialiased;
   color: #4b4b4b;
-  /* 背景由 layout.tsx 的 body className="bg-bg" 统一提供，
-     这里不再硬编码以免覆盖 Tailwind utility。 */
+  /* 背景由 layout.tsx 的 body className="bg-bg" 統一提供，
+     這裡不再硬編碼以免覆蓋 Tailwind utility。 */
 }
 
 body {
@@ -132,14 +132,14 @@ body {
   line-height: 1.55;
 }
 
-/* 英文数字用 Nunito，中文 fallback 到 PingFang；display 类用于标题和按钮 */
+/* 英文數字用 Nunito，中文 fallback 到 PingFang；display 類用於標題和按鈕 */
 .font-display,
 h1,
 h2,
 h3,
 .btn-chunky,
 .display-text {
-  font-family: var(--font-display), "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+  font-family: var(--font-display), "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
   letter-spacing: 0;
 }
 
@@ -180,9 +180,9 @@ h3,
   .btn-chunky-ghost:not(:disabled):hover { background-color: var(--surface-hover); }
 }
 
-/* Duolingo 风格的厚底纯色卡片 —— 用于学科/课程/技能气泡
- * 背景色和底部阴影颜色需要在内联 style 上传入（不同学科不同色），
- * 这个类只负责过渡曲线和 hover/active 行为。
+/* Duolingo 風格的厚底純色卡片 —— 用於學科/課程/技能氣泡
+ * 背景色和底部陰影顏色需要在內聯 style 上傳入（不同學科不同色），
+ * 這個類只負責過渡曲線和 hover/active 行為。
  */
 .duo-chunky-card {
   transition: transform var(--motion-press) var(--ease-ui), box-shadow var(--motion-press) var(--ease-ui), filter var(--motion-fast) var(--ease-ui);
@@ -195,9 +195,9 @@ h3,
   box-shadow: none !important;
 }
 
-/* 选项卡（多邻国题目选项通用基底）
- * 规范：min-h 56px、px-4 py-3、border-2、rounded-2xl、text-base font-extrabold
- * 用于 ChoiceQuestion / TrueFalseQuestion / MatchingQuestion / WordOrderQuestion 等所有题型选项
+/* 選項卡（多鄰國題目選項通用基底）
+ * 規範：min-h 56px、px-4 py-3、border-2、rounded-2xl、text-base font-extrabold
+ * 用於 ChoiceQuestion / TrueFalseQuestion / MatchingQuestion / WordOrderQuestion 等所有題型選項
  */
 .option-card {
   @apply relative border-2 border-bg-softer rounded-2xl cursor-pointer overflow-hidden;
@@ -240,12 +240,12 @@ h3,
   animation: ripple 0.55s ease-out forwards;
 }
 
-/* 当前路径节点的光晕 —— 颜色随单元色（--node-glow-color 由节点内联覆盖） */
+/* 當前路徑節點的光暈 —— 顏色隨單元色（--node-glow-color 由節點內聯覆蓋） */
 .path-node-current::before {
   content: ""; position: absolute; inset: -9px; border: 4px solid var(--app-border, #e5e5e5); border-radius: 50%; pointer-events: none;
 }
 
-/* 可访问性：尊重系统"减少动画" */
+/* 可訪問性：尊重系統"減少動畫" */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -258,9 +258,9 @@ h3,
 }
 
 /* ============================================================
- * 可访问性：键盘焦点环
- * 仅在键盘导航 (:focus-visible) 时显示，鼠标点击不打扰
- * 用项目主色 + 双层 outline 模拟"硬 outline"
+ * 可訪問性：鍵盤焦點環
+ * 僅在鍵盤導航 (:focus-visible) 時顯示，滑鼠點選不打擾
+ * 用專案主色 + 雙層 outline 模擬"硬 outline"
  * ============================================================ */
 *:focus {
   outline: none;
@@ -275,7 +275,7 @@ h3,
 .btn-chunky-sm:focus-visible {
   outline-offset: 4px;
 }
-/* 链接 / 卡片自身已有圆角时 outline 跟随 */
+/* 連結 / 卡片自身已有圓角時 outline 跟隨 */
 a:focus-visible,
 button:focus-visible,
 [role="button"]:focus-visible,
@@ -284,7 +284,7 @@ button:focus-visible,
   outline-offset: 3px;
 }
 
-/* sr-only：屏幕阅读器可见但视觉隐藏（aria-live 兜底等） */
+/* sr-only：螢幕閱讀器可見但視覺隱藏（aria-live 兜底等） */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -298,10 +298,10 @@ button:focus-visible,
 }
 
 /* ============================================================
- * 暗色主题：.theme-dark 挂在 <html> 上（首屏内联脚本预挂，防白闪），
- * 通过选择器重映射常用 Tailwind 工具类。
- * 仅覆盖最常用的背景 / 边框 / 文本 token，保持设计语言一致；
- * 强调色跟随装备主题，阅读文字与状态反馈使用独立前景色。
+ * 暗色主題：.theme-dark 掛在 <html> 上（首屏內聯腳本預掛，防白閃），
+ * 透過選擇器重對映常用 Tailwind 工具類。
+ * 僅覆蓋最常用的背景 / 邊框 / 文字 token，保持設計語言一致；
+ * 強調色跟隨裝備主題，閱讀文字與狀態反饋使用獨立前景色。
  * ============================================================ */
 .theme-dark body {
   background-color: var(--app-bg) !important;
@@ -346,7 +346,7 @@ button:focus-visible,
 .theme-dark .text-ink-softer {
   color: var(--app-ink-softer) !important;
 }
-/* option-card 默认底色阴影（厚阴影颜色统一走 --shadow-card-color 变量） */
+/* option-card 預設底色陰影（厚陰影顏色統一走 --shadow-card-color 變數） */
 .theme-dark .option-card {
   background-color: var(--app-card);
   border-color: var(--app-border);

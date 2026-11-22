@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { useProgressStore } from "@/store/progress";
 
 /**
- * useProgressTicker — 定期刷新心数、提供一个每秒 tick 用于倒计时显示。
+ * useProgressTicker — 定期重新整理心數、提供一個每秒 tick 用於倒計時顯示。
  *
- * 挂载时立即调用 refreshHearts（回填从上次关闭到现在的心数恢复），
- * 然后每秒 tick 一次用于"下一颗心还有 mm:ss" 显示，
- * 每次 tick 都会尝试 refreshHearts。
+ * 掛載時立即呼叫 refreshHearts（回填從上次關閉到現在的心數恢復），
+ * 然後每秒 tick 一次用於"下一顆心還有 mm:ss" 顯示，
+ * 每次 tick 都會嘗試 refreshHearts。
  *
- * 返回 now（ms）用于倒计时计算。
+ * 返回 now（ms）用於倒計時計算。
  */
 export function useProgressTicker(): number {
   const refreshHearts = useProgressStore(s => s.refreshHearts);
@@ -24,7 +24,7 @@ export function useProgressTicker(): number {
       setNow(Date.now());
     }, 1000);
 
-    // 页面切回前台时立即刷新
+    // 頁面切回前臺時立即重新整理
     const onVis = () => {
       if (document.visibilityState === "visible") {
         refreshHearts();
@@ -42,7 +42,7 @@ export function useProgressTicker(): number {
   return now;
 }
 
-/** 格式化毫秒为 mm:ss */
+/** 格式化毫秒為 mm:ss */
 export function formatMsCountdown(ms: number): string {
   if (ms <= 0) return "0:00";
   const total = Math.ceil(ms / 1000);

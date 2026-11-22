@@ -12,7 +12,7 @@ async function getIndex(): Promise<SiteIndex> {
 
 interface OutlineFile {
   lessons: PathLessonMeta[];
-  /** 单元挑战课经由 units[].examLessonId 暴露（不进 lessons 普通节点） */
+  /** 單元挑戰課經由 units[].examLessonId 暴露（不進 lessons 普通節點） */
   units?: Array<{ unit_number: number; examLessonId?: string }>;
 }
 
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
     for (const l of outline.lessons) {
       params.push({ book: book.id, lesson: l.id });
     }
-    // ⚔️ 单元挑战课（exam）也要预渲染
+    // ⚔️ 單元挑戰課（exam）也要預渲染
     for (const u of outline.units ?? []) {
       if (u.examLessonId) {
         params.push({ book: book.id, lesson: u.examLessonId });
@@ -54,7 +54,7 @@ export default async function LessonPage({
     getLesson(book, lessonId),
     getOutline(book),
   ]);
-  // 本节课结束后是否紧跟一个宝箱 slot
+  // 本節課結束後是否緊跟一個寶箱 slot
   const chestSlot = findChestAfterLesson(book, outline.lessons, lessonId);
   const index = outline.lessons.findIndex(item => item.id === lessonId);
   const nextLessonId = index >= 0 ? outline.lessons[index + 1]?.id : undefined;

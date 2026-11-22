@@ -1,18 +1,18 @@
 "use client";
 
 /**
- * Toast —— 全局轻提示系统
+ * Toast —— 全域輕提示系統
  *
  * 用法：
- *   1. 在 layout.tsx 用 <ToastProvider> 包裹（已挂载，全局唯一）
- *   2. 任意组件里 const toast = useToast(); toast.success("已装备"); toast.error("宝石不够");
+ *   1. 在 layout.tsx 用 <ToastProvider> 包裹（已掛載，全域唯一）
+ *   2. 任意元件裡 const toast = useToast(); toast.success("已裝備"); toast.error("寶石不夠");
  *
- * 设计：
- *   - 多条堆叠：bottom-center 向上推；最多同时 3 条
- *   - 4 种类型：success / error / info / warning（颜色 + 图标 + chunky 阴影）
- *   - 自动 dismiss 2.4s（失败/警告 3.2s），可点击关闭
- *   - role="status" + aria-live="polite" 屏幕阅读器友好
- *   - reduced-motion 自动降级
+ * 設計：
+ *   - 多條堆疊：bottom-center 向上推；最多同時 3 條
+ *   - 4 種型別：success / error / info / warning（顏色 + 圖示 + chunky 陰影）
+ *   - 自動 dismiss 2.4s（失敗/警告 3.2s），可點選關閉
+ *   - role="status" + aria-live="polite" 螢幕閱讀器友好
+ *   - reduced-motion 自動降級
  */
 
 import {
@@ -75,7 +75,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         duration ?? (kind === "error" || kind === "warning" ? DEFAULT_DURATION_LONG : DEFAULT_DURATION);
       setItems(list => {
         const next = [...list, { id, msg, kind, duration: dur }];
-        // 超过 MAX_VISIBLE 时丢掉最早的
+        // 超過 MAX_VISIBLE 時丟掉最早的
         return next.length > MAX_VISIBLE ? next.slice(next.length - MAX_VISIBLE) : next;
       });
       window.setTimeout(() => remove(id), dur);
@@ -140,7 +140,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 export function useToast(): ToastApi {
   const ctx = useContext(ToastCtx);
   if (!ctx) {
-    // 没有 Provider 时静默 fallback，避免 SSR / 测试报错
+    // 沒有 Provider 時靜默 fallback，避免 SSR / 測試報錯
     return {
       show: () => {},
       success: () => {},

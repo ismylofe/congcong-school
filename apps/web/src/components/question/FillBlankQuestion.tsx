@@ -13,14 +13,14 @@ import { shouldIgnoreKey } from "./keyboard";
 import type { QuestionRendererProps } from "./QuestionRenderer";
 
 /**
- * 通用填空题：用于 fill_blank / calculation / word_problem 三种类型。
- * 顶部展示当前输入，底部是一个屏幕数字键盘（避免用户被迫调用系统输入法）。
+ * 通用填空題：用於 fill_blank / calculation / word_problem 三種型別。
+ * 頂部展示當前輸入，底部是一個螢幕數字鍵盤（避免使用者被迫呼叫系統輸入法）。
  *
- * 键盘（web-lesson-13）：补 "-"（负数）与 "/"（分数）键；
- * 桌面端物理键盘可直接输入 0-9 . / - 和退格。
+ * 鍵盤（web-lesson-13）：補 "-"（負數）與 "/"（分數）鍵；
+ * 桌面端物理鍵盤可直接輸入 0-9 . / - 和退格。
  */
 
-// 数字键盘布局：三行数字（尾列 - / .）+ 底行 [0(占2) / ⌫(占2)]
+// 數字鍵盤佈局：三行數字（尾列 - / .）+ 底行 [0(佔2) / ⌫(佔2)]
 const KEYPAD_KEYS: { key: string; span?: 2 }[] = [
   { key: "1" }, { key: "2" }, { key: "3" }, { key: "-" },
   { key: "4" }, { key: "5" }, { key: "6" }, { key: "/" },
@@ -49,16 +49,16 @@ export function FillBlankQuestion({
       return;
     }
     if (k === "." && answer.includes(".")) return;
-    // "-" 只允许作为开头的负号
+    // "-" 只允許作為開頭的負號
     if (k === "-" && answer.length > 0) return;
-    // "/" 只允许出现一次，且前面必须已有数字（分数写法 3/4）
+    // "/" 只允許出現一次，且前面必須已有數字（分數寫法 3/4）
     if (k === "/" && (answer.includes("/") || !/\d$/.test(answer))) return;
     onChange(answer + k);
   }
 
-  // 桌面端物理键盘：数字 / . / - / 退格（web-lesson-3 的填空半边）
+  // 桌面端物理鍵盤：數字 / . / - / 退格（web-lesson-3 的填空半邊）
   useEffect(() => {
-    if (locked || disabled) return; // 遮罩打开时不接管键盘（webrunner-5）
+    if (locked || disabled) return; // 遮罩開啟時不接管鍵盤（webrunner-5）
     const onKeyDown = (e: KeyboardEvent) => {
       if (shouldIgnoreKey(e)) return;
       const k = e.key;
@@ -101,7 +101,7 @@ export function FillBlankQuestion({
         {answer ? (
           <span className="min-w-0 max-w-full break-all">{answer}</span>
         ) : (
-          <span className="text-ink-light text-xl font-bold">点下方数字键</span>
+          <span className="text-ink-light text-xl font-bold">點下方數字鍵</span>
         )}
       </motion.div>
 
@@ -111,11 +111,11 @@ export function FillBlankQuestion({
           animate={{ y: 0, opacity: 1 }}
           className="mt-3 text-center text-sm text-ink-light"
         >
-          正确答案：<span className="font-extrabold text-primary-dark">{question.answer}</span>
+          正確答案：<span className="font-extrabold text-primary-dark">{question.answer}</span>
         </motion.div>
       )}
 
-      {/* 屏幕数字键盘（4 列：数字 + - / . + 大 0 / 大退格） */}
+      {/* 螢幕數字鍵盤（4 列：數字 + - / . + 大 0 / 大退格） */}
       <div className="mt-6 grid grid-cols-4 gap-3 select-none">
         {KEYPAD_KEYS.map(({ key: k, span }) => (
           <motion.button

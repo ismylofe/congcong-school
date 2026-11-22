@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * PageHeader —— 内页通用顶栏（移动端 56px / 桌面 72px）
+ * PageHeader —— 內頁通用頂欄（移動端 56px / 桌面 72px）
  *
- * 1:1 Duolingo 设计语言：
- *   - 左侧：圆角 ghost 风格的纯图标返回按钮（40×40 / lg 48×48），无文字
- *   - 中间：页面标题 + 可选副标题（左对齐，跟随返回按钮顶格）
- *   - 右侧：紧凑 StatsBar（移动端只显 心 + 连击 + 宝石 3 颗胶囊；lg+ 显示完整版）
+ * 1:1 Duolingo 設計語言：
+ *   - 左側：圓角 ghost 風格的純圖示返回按鈕（40×40 / lg 48×48），無文字
+ *   - 中間：頁面標題 + 可選副標題（左對齊，跟隨返回按鈕頂格）
+ *   - 右側：緊湊 StatsBar（移動端只顯 心 + 連擊 + 寶石 3 顆膠囊；lg+ 顯示完整版）
  *
- * 设计原则：
- *   - 移动端 0 留白溢出，所有内容塞进一行
- *   - 桌面端用同一组件，自动展开 max-width 与字号
- *   - 标题区永远在第二行（避免文字与 stats 抢空间）
+ * 設計原則：
+ *   - 移動端 0 留白溢位，所有內容塞進一行
+ *   - 桌面端用同一元件，自動展開 max-width 與字號
+ *   - 標題區永遠在第二行（避免文字與 stats 搶空間）
  */
 
 import { ReactNode } from "react";
@@ -21,17 +21,17 @@ import { SoundLink } from "@/components/SoundLink";
 import { StatsBar } from "@/components/StatsBar";
 
 interface PageHeaderProps {
-  /** 返回链接的目标路径；传 null 隐藏返回按钮（顶层页面无父级时用） */
+  /** 返回連結的目標路徑；傳 null 隱藏返回按鈕（頂層頁面無父級時用） */
   backHref: string | null;
-  /** 主标题 */
+  /** 主標題 */
   title: string;
-  /** 副标题（可选） */
+  /** 副標題（可選） */
   subtitle?: string;
-  /** 是否显示 StatsBar，默认 true */
+  /** 是否顯示 StatsBar，預設 true */
   showStats?: boolean;
-  /** 容器最大宽度（默认 max-w-3xl lg:max-w-5xl xl:max-w-6xl） */
+  /** 容器最大寬度（預設 max-w-3xl lg:max-w-5xl xl:max-w-6xl） */
   maxWidthClass?: string;
-  /** 标题右侧附加内容（如自定义按钮） */
+  /** 標題右側附加內容（如自定義按鈕） */
   rightExtra?: ReactNode;
 }
 
@@ -45,7 +45,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className={`w-full ${maxWidthClass}`}>
-      {/* 顶部 app bar —— 单行：返回 + stats */}
+      {/* 頂部 app bar —— 單行：返回 + stats */}
       <div className="shell-page-toolbar flex items-center justify-between gap-3 mb-4 lg:mb-6">
         {backHref ? (
           <SoundLink
@@ -65,7 +65,7 @@ export function PageHeader({
         )}
       </div>
 
-      {/* 标题区（独立一行，避免与 stats 抢宽） */}
+      {/* 標題區（獨立一行，避免與 stats 搶寬） */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}

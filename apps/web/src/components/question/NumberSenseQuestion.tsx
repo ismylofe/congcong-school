@@ -28,11 +28,11 @@ export function NumberSenseVisual({
     return (
       <div className="number-visual rounded-2xl bg-bg-soft p-2 sm:p-3 mb-4">
         <p className="text-sm text-ink-light mb-3">
-          可以点物体做记号，每个只数一次。
+          可以點物體做記號，每個只數一次。
         </p>
         <div
           role="group"
-          aria-label={`${visual.label}图`}
+          aria-label={`${visual.label}圖`}
           className={
             visual.layout === "frame"
               ? "grid grid-cols-5 gap-1"
@@ -84,10 +84,10 @@ export function NumberSenseVisual({
             role="status"
             className="mt-3 text-base font-extrabold text-secondary-dark"
           >
-            点过 {marked.length} 个。
+            點過 {marked.length} 個。
             {marked.length === visual.count
-              ? "每个都数到了！"
-              : "再看看有没有漏掉。"}
+              ? "每個都數到了！"
+              : "再看看有沒有漏掉。"}
           </p>
         )}
       </div>
@@ -98,7 +98,7 @@ export function NumberSenseVisual({
     return (
       <div className="number-visual rounded-2xl bg-bg-soft p-2 sm:p-3 mb-4">
         <p className="text-sm text-ink-light mb-3">
-          可以一个配一个，再看看哪一组有剩下。
+          可以一個配一個，再看看哪一組有剩下。
         </p>
         {[
           [visual.left, visual.leftEmoji, visual.leftLabel],
@@ -109,13 +109,13 @@ export function NumberSenseVisual({
             <div
               className="grid grid-cols-5 gap-1"
               role="group"
-              aria-label={`${label}图`}
+              aria-label={`${label}圖`}
             >
               {Array.from({ length: Number(count) }, (_, i) => (
                 <span
                   key={i}
                   className={`${objectClass} ${i < paired ? "border-secondary bg-secondary/10" : "border-bg-softer bg-white"}`}
-                  aria-label={`${label}${i + 1}${i < paired ? "，已经配对" : ""}`}
+                  aria-label={`${label}${i + 1}${i < paired ? "，已經配對" : ""}`}
                 >
                   <span aria-hidden="true">{emoji}</span>
                   {i < paired && (
@@ -133,8 +133,8 @@ export function NumberSenseVisual({
           className="btn-chunky-secondary w-full min-h-11"
         >
           {paired === Math.min(visual.left, visual.right)
-            ? "都配过了，看看剩下的"
-            : "配一对"}
+            ? "都配過了，看看剩下的"
+            : "配一對"}
         </button>
       </div>
     );
@@ -145,12 +145,12 @@ export function NumberSenseVisual({
   return (
     <div className="number-visual rounded-2xl bg-bg-soft p-2 sm:p-3 mb-4">
       <p className="text-sm text-ink-light mb-3">
-        点一个朋友，给它分一个。再点可以收回来。
+        點一個朋友，給它分一個。再點可以收回來。
       </p>
       <div
         className="flex flex-wrap gap-2 mb-3"
         role="group"
-        aria-label={`${visual.learnerLabel}图`}
+        aria-label={`${visual.learnerLabel}圖`}
       >
         {Array.from({ length: visual.learners }, (_, i) => (
           <button
@@ -160,7 +160,7 @@ export function NumberSenseVisual({
               locked || (!given.includes(i) && given.length >= visual.resources)
             }
             aria-pressed={given.includes(i)}
-            aria-label={`${visual.learnerLabel}${i + 1}${given.includes(i) ? "，已经分到" : ""}`}
+            aria-label={`${visual.learnerLabel}${i + 1}${given.includes(i) ? "，已經分到" : ""}`}
             className={`${objectClass} ${given.includes(i) ? "border-secondary bg-secondary/10" : "border-bg-softer bg-white"}`}
             onClick={() =>
               setMarked(
@@ -177,7 +177,7 @@ export function NumberSenseVisual({
           </button>
         ))}
       </div>
-      <p className="text-sm text-ink mb-2">还在桌上的{visual.resourceLabel}</p>
+      <p className="text-sm text-ink mb-2">還在桌上的{visual.resourceLabel}</p>
       <div
         className="flex flex-wrap gap-2 min-h-11"
         aria-label={`桌上剩下的${visual.resourceLabel}`}
@@ -229,7 +229,7 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
     stopTTS();
     window.speechSynthesis.cancel();
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "zh-CN";
+    speech.lang = "zh-TW";
     speech.rate = 0.85;
     speech.onerror = () => setAudioError(true);
     window.speechSynthesis.speak(speech);
@@ -243,15 +243,15 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
     >
       <p className="question-context text-secondary-dark">
         {task.stage === "guided"
-          ? "跟着做"
+          ? "跟著做"
           : task.stage === "transfer"
-            ? "换个情境试一试"
-            : "自己试一试"}
+            ? "換個情境試一試"
+            : "自己試一試"}
       </p>
-      <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} action={!question.audio?.question ? <button type="button" disabled={muted || locked} aria-label="朗读题目" onClick={() => readText(question.question)} className="ui-icon-button border-2 border-bg-softer text-secondary-dark"><Volume className="w-5 h-5"/></button> : undefined}/>
+      <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} action={!question.audio?.question ? <button type="button" disabled={muted || locked} aria-label="朗讀題目" onClick={() => readText(question.question)} className="ui-icon-button border-2 border-bg-softer text-secondary-dark"><Volume className="w-5 h-5"/></button> : undefined}/>
       {audioError && (
         <p role="status" className="text-sm text-ink-light mb-3">
-          这台设备暂时不能朗读，可以先看图和题目。
+          這臺裝置暫時不能朗讀，可以先看圖和題目。
         </p>
       )}
       <NumberSenseVisual
@@ -269,7 +269,7 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
           className="min-h-11 mt-3 text-secondary-dark font-bold underline"
           onClick={() => readText(question.explanation)}
         >
-          听听方法
+          聽聽方法
         </button>
       )}
       {phase === "answering" && props.onHint && (
@@ -285,10 +285,10 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
           >
             {" "}
             {hint === 0
-              ? "给我一点提示"
+              ? "給我一點提示"
               : hint < task.hints.length
-                ? "再给我一点提示"
-                : "可以照着提示再试试"}
+                ? "再給我一點提示"
+                : "可以照著提示再試試"}
           </button>
           {hint > 0 && (
             <p
@@ -304,7 +304,7 @@ export function NumberSenseQuestion(props: QuestionRendererProps) {
                   readText(task.hints[Math.min(hint, task.hints.length) - 1])
                 }
               >
-                听提示
+                聽提示
               </button>
             </p>
           )}

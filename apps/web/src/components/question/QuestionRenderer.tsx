@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * QuestionRenderer — 根据题型分发到对应的子组件。
+ * QuestionRenderer — 根據題型分發到對應的子元件。
  *
- * 设计：受控组件，父组件持有 currentAnswer 和 disabled 状态。
- * 子组件负责呈现选项 / 输入框，并在用户操作时调用 onChange。
+ * 設計：受控元件，父元件持有 currentAnswer 和 disabled 狀態。
+ * 子元件負責呈現選項 / 輸入框，並在使用者操作時呼叫 onChange。
  */
 
 import { NumberSenseQuestion } from "./NumberSenseQuestion";
@@ -25,8 +25,8 @@ export interface QuestionRendererProps {
   isCorrect: boolean | null;
   onChange: (value: string) => void;
   /**
-   * 🔒 遮罩打开时为 true（退出确认 / 断心遮罩 / 设置弹层 / 课前讲解）。
-   * 各题型必须据此停掉键盘快捷键、点击与自动提交，避免用户在弹层前面把题判掉。
+   * 🔒 遮罩開啟時為 true（退出確認 / 斷心遮罩 / 設定彈層 / 課前講解）。
+   * 各題型必須據此停掉鍵盤快捷鍵、點選與自動提交，避免使用者在彈層前面把題判掉。
    */
   locked?: boolean;
   visualDraft?: number[];
@@ -56,6 +56,6 @@ export function QuestionRenderer(props: QuestionRendererProps) {
     case "matching":
       return <MatchingQuestion {...props} />;
     default:
-      return <div className="text-danger">未知题型: {question.type}</div>;
+      return <div className="text-danger">未知題型: {question.type}</div>;
   }
 }

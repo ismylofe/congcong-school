@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * StateMessages —— 通用空状态 / 错误状态组件
+ * StateMessages —— 通用空狀態 / 錯誤狀態元件
  *
  * 用法：
- *   <EmptyState mood="cheer" title="还没有错题！" desc="..." action={<button>...</button>} />
- *   <ErrorState title="加载失败" desc="网络似乎断开了" onRetry={refetch} />
+ *   <EmptyState mood="cheer" title="還沒有錯題！" desc="..." action={<button>...</button>} />
+ *   <ErrorState title="載入失敗" desc="網路似乎斷開了" onRetry={refetch} />
  *
- * 风格：
- *   - 居中布局，吉祥物 + 标题 + 描述 + 可选 CTA
- *   - 使用项目里已有的 Mascot + chunky 按钮
- *   - 自动尺寸适配桌面 / 移动
+ * 風格：
+ *   - 居中佈局，吉祥物 + 標題 + 描述 + 可選 CTA
+ *   - 使用專案裡已有的 Mascot + chunky 按鈕
+ *   - 自動尺寸適配桌面 / 移動
  */
 
 import type { ReactNode } from "react";
@@ -19,13 +19,13 @@ import { Mascot, type MascotMood } from "./Mascot";
 import { CloudOff } from "@/components/icons";
 
 interface EmptyStateProps {
-  /** 吉祥物心情；默认 cheer */
+  /** 吉祥物心情；預設 cheer */
   mood?: MascotMood;
   title: string;
   desc?: string;
-  /** 可选 CTA 按钮节点 */
+  /** 可選 CTA 按鈕節點 */
   action?: ReactNode;
-  /** 较小的内联模式（卡片内部用） */
+  /** 較小的內聯模式（卡片內部用） */
   compact?: boolean;
 }
 
@@ -65,14 +65,14 @@ export function EmptyState({
 interface ErrorStateProps {
   title?: string;
   desc?: string;
-  /** 重试回调；若提供则显示"再试一次"按钮 */
+  /** 重試回呼；若提供則顯示"再試一次"按鈕 */
   onRetry?: () => void;
   compact?: boolean;
 }
 
 export function ErrorState({
-  title = "出错了",
-  desc = "好像网络断开了，稍后再试试看",
+  title = "出錯了",
+  desc = "好像網路斷開了，稍後再試試看",
   onRetry,
   compact = false,
 }: ErrorStateProps) {
@@ -110,7 +110,7 @@ export function ErrorState({
           onClick={onRetry}
           className="btn-chunky-primary mt-6 px-8"
         >
-          再试一次
+          再試一次
         </button>
       )}
     </motion.div>

@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * SubjectBadge — 学科徽章
+ * SubjectBadge — 學科徽章
  *
- * 显示学科名（数学 / 语文 / 英语...）的彩色胶囊，
- * 根据学科配置自动选取颜色。
+ * 顯示學科名（數學 / 語文 / 英語...）的彩色膠囊，
+ * 根據學科配置自動選取顏色。
  */
 
 import type { Book } from "@/types";

@@ -42,18 +42,18 @@ export const NUMBER_LESSONS: Record<
 > = {
   count: {
     id: "g1up-u1-kp1",
-    title: "数一数，认一认",
-    goal: "一个不漏地数到10，把物体和数字对起来。",
+    title: "數一數，認一認",
+    goal: "一個不漏地數到10，把物體和數字對起來。",
   },
   compare: {
     id: "g1up-u1-kp2",
     title: "配一配，比多少",
-    goal: "一个配一个，找出同样多和谁多谁少。",
+    goal: "一個配一個，找出同樣多和誰多誰少。",
   },
   apply: {
     id: "g1up-u1-kp3",
-    title: "分一分，够不够",
-    goal: "给每个朋友分一个，判断够不够。",
+    title: "分一分，夠不夠",
+    goal: "給每個朋友分一個，判斷夠不夠。",
   },
 };
 export function numberSkillForLesson(id: string): NumberSkill | undefined {
@@ -72,17 +72,17 @@ function task(
   const hints: [string, string] =
     visual.kind === "count"
       ? [
-          "点过的做个记号，每个只数一次。",
-          "从一个角开始，点一个数一个，最后数到几就是几个。",
+          "點過的做個記號，每個只數一次。",
+          "從一個角開始，點一個數一個，最後數到幾就是幾個。",
         ]
       : visual.kind === "compare"
         ? [
-            "试着让上面一个和下面一个配成一对。",
-            "一个配一个，看看哪一组还剩下；没有剩下就是同样多。",
+            "試著讓上面一個和下面一個配成一對。",
+            "一個配一個，看看哪一組還剩下；沒有剩下就是同樣多。",
           ]
         : [
-            "试着给每个朋友放一个。",
-            "每人一个。还有朋友没分到就是不够，每人都有且没有剩下就是刚好。",
+            "試著給每個朋友放一個。",
+            "每人一個。還有朋友沒分到就是不夠，每人都有且沒有剩下就是剛好。",
           ];
   return {
     id,
@@ -109,12 +109,12 @@ const count = (
     id,
     "count",
     stage,
-    `一共有几${label === "苹果" ? "个" : label === "小鸟" ? "只" : "个"}${label}？`,
+    `一共有幾${label === "蘋果" ? "個" : label === "小鳥" ? "只" : "個"}${label}？`,
     [String(n - 1), String(n), String(n === 10 ? 8 : n + 1)].sort(
       (a, b) => ((Number(a) + id) % 3) - ((Number(b) + id) % 3),
     ),
     String(n),
-    `每个只数一次，最后数到${n}，一共有${n}${label === "小鸟" ? "只" : "个"}${label}。`,
+    `每個只數一次，最後數到${n}，一共有${n}${label === "小鳥" ? "只" : "個"}${label}。`,
     { kind: "count", count: n, emoji, label, layout },
   );
 const compare = (
@@ -124,20 +124,20 @@ const compare = (
   stage: NumberTask["stage"],
   variant = false,
 ) => {
-  const leftLabel = variant ? "小鸟" : "兔子",
-    rightLabel = variant ? "小窝" : "萝卜";
+  const leftLabel = variant ? "小鳥" : "兔子",
+    rightLabel = variant ? "小窩" : "蘿蔔";
   return task(
     id,
     "compare",
     stage,
-    `${leftLabel}和${rightLabel}，谁多一些？`,
-    [leftLabel + "多", "同样多", rightLabel + "多"],
+    `${leftLabel}和${rightLabel}，誰多一些？`,
+    [leftLabel + "多", "同樣多", rightLabel + "多"],
     left > right
       ? leftLabel + "多"
       : left < right
         ? rightLabel + "多"
-        : "同样多",
-    `一个配一个，${left === right ? "两组都没有剩下，所以同样多" : left > right ? leftLabel + "有剩下，所以" + leftLabel + "多" : rightLabel + "有剩下，所以" + rightLabel + "多"}。`,
+        : "同樣多",
+    `一個配一個，${left === right ? "兩組都沒有剩下，所以同樣多" : left > right ? leftLabel + "有剩下，所以" + leftLabel + "多" : rightLabel + "有剩下，所以" + rightLabel + "多"}。`,
     {
       kind: "compare",
       left,
@@ -156,20 +156,20 @@ const share = (
   stage: NumberTask["stage"],
   variant = false,
 ) => {
-  const learnerLabel = variant ? "小熊" : "小猫",
+  const learnerLabel = variant ? "小熊" : "小貓",
     resourceLabel = variant ? "杯子" : "碗";
   return task(
     id,
     "apply",
     stage,
-    `每只${learnerLabel}分一个${resourceLabel}，够不够？`,
-    ["不够", "刚好够", "够，还有剩下"],
+    `每隻${learnerLabel}分一個${resourceLabel}，夠不夠？`,
+    ["不夠", "剛好夠", "夠，還有剩下"],
     resources < learners
-      ? "不够"
+      ? "不夠"
       : resources === learners
-        ? "刚好够"
-        : "够，还有剩下",
-    `${learners}只${learnerLabel}，每只分一个，需要${learners}个${resourceLabel}。有${resources}个，所以${resources < learners ? "不够" : resources === learners ? "刚好够" : "够，还有剩下"}。`,
+        ? "剛好夠"
+        : "夠，還有剩下",
+    `${learners}只${learnerLabel}，每隻分一個，需要${learners}個${resourceLabel}。有${resources}個，所以${resources < learners ? "不夠" : resources === learners ? "剛好夠" : "夠，還有剩下"}。`,
     {
       kind: "share",
       learners,
@@ -184,12 +184,12 @@ const share = (
 export function numberSenseQuestions(skill: NumberSkill): NumberQuestion[] {
   if (skill === "count")
     return [
-      count(1001, 3, "🍎", "苹果", "line", "guided"),
-      count(1002, 5, "🍎", "苹果", "scatter", "independent"),
-      count(1003, 5, "🍎", "苹果", "line", "independent"),
-      count(1004, 8, "🍎", "苹果", "frame", "independent"),
-      count(1005, 6, "🐦", "小鸟", "scatter", "transfer"),
-      count(1006, 10, "🐦", "小鸟", "frame", "transfer"),
+      count(1001, 3, "🍎", "蘋果", "line", "guided"),
+      count(1002, 5, "🍎", "蘋果", "scatter", "independent"),
+      count(1003, 5, "🍎", "蘋果", "line", "independent"),
+      count(1004, 8, "🍎", "蘋果", "frame", "independent"),
+      count(1005, 6, "🐦", "小鳥", "scatter", "transfer"),
+      count(1006, 10, "🐦", "小鳥", "frame", "transfer"),
     ];
   if (skill === "compare")
     return [
@@ -222,13 +222,13 @@ export function curateNumberSenseLesson(lesson: Lesson): Lesson {
       core_concept: meta.goal,
       key_formula:
         skill === "count"
-          ? "点一个，数一个；最后数到几，就是几个。"
-          : "一个配一个，看看有没有剩下。",
-      tips: "可以自己试，也可以点“给我一点提示”。学会以后换一种情境再练。",
+          ? "點一個，數一個；最後數到幾，就是幾個。"
+          : "一個配一個，看看有沒有剩下。",
+      tips: "可以自己試，也可以點“給我一點提示”。學會以後換一種情境再練。",
       common_mistakes: [
         skill === "count"
-          ? "物体摆得疏或密，数量不会变。"
-          : "先让每个都配上，再判断够不够。",
+          ? "物體擺得疏或密，數量不會變。"
+          : "先讓每個都配上，再判斷夠不夠。",
       ],
     },
   };
@@ -341,22 +341,22 @@ export function numberReviewQuestions(
 export function numberSkillLabel(
   entry: NumberSkillProgress | undefined,
 ): string {
-  if (!entry || entry.version !== NUMBER_SENSE_VERSION) return "还没开始";
+  if (!entry || entry.version !== NUMBER_SENSE_VERSION) return "還沒開始";
   if (entry.verifiedOn && entry.verifiedOn > entry.practicedOn)
-    return "隔天仍会";
+    return "隔天仍會";
   if (
     entry.reviewedOn &&
     entry.reviewedOn > entry.practicedOn &&
     (entry.reviewCorrect ?? 0) < (entry.reviewTotal ?? 0)
   )
-    return "隔天检验还需巩固";
+    return "隔天檢驗還需鞏固";
   const e = entry.evidence;
   return e.independentTotal >= 2 &&
     e.independentCorrect === e.independentTotal &&
     e.transferTotal >= 2 &&
     e.transferCorrect === e.transferTotal
-    ? "能独立做"
-    : "已经练习，继续巩固";
+    ? "能獨立做"
+    : "已經練習，繼續鞏固";
 }
 /** Defensive local-storage/backup reader; only the three known skills and valid dates. */
 export function normalizeNumberProgress(raw: unknown): NumberProgress {

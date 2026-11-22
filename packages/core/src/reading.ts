@@ -1,38 +1,38 @@
 /**
- * reading.ts —— 阅读完成 id 的单一事实源（双端互通的 key 空间）
+ * reading.ts —— 閱讀完成 id 的單一事實源（雙端互通的 key 空間）
  *
- * 背景：历史上两端各写各的 key，completedReadings 的键空间零交集——
+ * 背景：歷史上兩端各寫各的 key，completedReadings 的鍵空間零交集——
  *   web ：`passage-{passageId}-listen` / `passage-{passageId}-followup` / `story-{storyId}`
- *   iOS ：`{passageId}`（听读）/ `{passageId}-followup`（跟读）/ `{storyId}`（故事）
- * 导致备份互通时阅读进度 100% 失配（导入后全部显示未读，还能重复领 XP）。
+ *   iOS ：`{passageId}`（聽讀）/ `{passageId}-followup`（跟讀）/ `{storyId}`（故事）
+ * 導致備份互通時閱讀進度 100% 失配（匯入後全部顯示未讀，還能重複領 XP）。
  *
- * 现在统一为：`reading:{kind}:{rawId}`
- *   - rawId 是数据层的原始 id（Passage.id / Story.id，形如 `chinese-g1up-p3`、`chinese-g3up-s1`），
- *     不带任何平台前后缀；
- *   - BackupEnvelope.completedReadings 里只允许出现这种规范键（buildBackup / validateBackup
- *     会自动归一化）；两端本地存储也应在迁移时用 normalizeReadingMap 整表升级。
+ * 現在統一為：`reading:{kind}:{rawId}`
+ *   - rawId 是資料層的原始 id（Passage.id / Story.id，形如 `chinese-g1up-p3`、`chinese-g3up-s1`），
+ *     不帶任何平臺前字尾；
+ *   - BackupEnvelope.completedReadings 裡只允許出現這種規範鍵（buildBackup / validateBackup
+ *     會自動歸一化）；兩端本地儲存也應在遷移時用 normalizeReadingMap 整表升級。
  *
- * 值的契约：条目的值是完成日期，**归一化后一定非空**（日期不详时写
- * {@link UNKNOWN_COMPLETION_DATE}）。所以"这篇读没读过"一律按**键是否存在**判断
- * （`map[key] != null`），不要写成 `if (map[key])` —— 两套口径正是重复领 XP 的老病根。
+ * 值的契約：條目的值是完成日期，**歸一化後一定非空**（日期不詳時寫
+ * {@link UNKNOWN_COMPLETION_DATE}）。所以"這篇讀沒讀過"一律按**鍵是否存在**判斷
+ * （`map[key] != null`），不要寫成 `if (map[key])` —— 兩套口徑正是重複領 XP 的老病根。
  *
- * ⚠️ iOS `Domain/Reading.swift` 必须逐行镜像 readingId / normalizeReadingId 的规则。
+ * ⚠️ iOS `Domain/Reading.swift` 必須逐行鏡像 readingId / normalizeReadingId 的規則。
  */
 
-/** 阅读活动的三种类型：课文听读 / 课文跟读 / 故事阅读（含测验）。 */
+/** 閱讀活動的三種型別：課文聽讀 / 課文跟讀 / 故事閱讀（含測驗）。 */
 export type ReadingKind = "listen" | "followup" | "story";
 
-/** 规范键前缀。 */
+/** 規範鍵字首。 */
 export const READING_ID_PREFIX = "reading";
 
 const READING_KINDS: readonly ReadingKind[] = ["listen", "followup", "story"];
 
-/** 规范阅读完成 id：`reading:{kind}:{rawId}`。 */
+/** 規範閱讀完成 id：`reading:{kind}:{rawId}`。 */
 export function readingId(kind: ReadingKind, rawId: string): string {
   return `${READING_ID_PREFIX}:${kind}:${rawId}`;
 }
 
-/** 解析规范 id；不是规范格式（或 kind 未知）返回 null。 */
+/** 解析規範 id；不是規範格式（或 kind 未知）返回 null。 */
 export function parseReadingId(
   id: string,
 ): { kind: ReadingKind; rawId: string } | null {
@@ -48,26 +48,26 @@ export function parseReadingId(
 }
 
 /**
- * 故事 id 的形态：`{bookId}-s{序号}`（如 `chinese-g3up-s1`）。
- * 课文 id 是 `{bookId}-p{序号}`（如 `chinese-g1up-p3`），两者不会互相误判。
+ * 故事 id 的形態：`{bookId}-s{序號}`（如 `chinese-g3up-s1`）。
+ * 課文 id 是 `{bookId}-p{序號}`（如 `chinese-g1up-p3`），兩者不會互相誤判。
  */
 const STORY_ID_RE = /-s\d+$/;
 
 /**
- * 把历史 id 归一化成规范 id（已是规范 id 则原样返回，**幂等**）。
+ * 把歷史 id 歸一化成規範 id（已是規範 id 則原樣返回，**冪等**）。
  *
- * 消歧规则（按顺序匹配，先长后短，避免前缀/后缀互吃）：
- *   1. `reading:{kind}:{raw}`   → 原样（已规范）
+ * 消歧規則（按順序匹配，先長後短，避免字首/字尾互吃）：
+ *   1. `reading:{kind}:{raw}`   → 原樣（已規範）
  *   2. `story-{raw}`            → story        （web 故事）
- *   3. `passage-{raw}-followup` → followup     （web 跟读）
- *   4. `passage-{raw}-listen`   → listen       （web 听读）
- *   5. `passage-{raw}`          → listen       （web 早期无后缀写法，按听读处理）
- *   6. `{raw}-followup`         → followup     （iOS 跟读）
- *   7. 裸 `{raw}`               → raw 命中 `-s\d+` 时是 story，否则是 listen
- *      （iOS 听读与故事都用裸 id，只能靠 id 形态区分；web 不存在裸 id，
- *        所以这条规则不会误伤 web 老档。）
+ *   3. `passage-{raw}-followup` → followup     （web 跟讀）
+ *   4. `passage-{raw}-listen`   → listen       （web 聽讀）
+ *   5. `passage-{raw}`          → listen       （web 早期無字尾寫法，按聽讀處理）
+ *   6. `{raw}-followup`         → followup     （iOS 跟讀）
+ *   7. 裸 `{raw}`               → raw 命中 `-s\d+` 時是 story，否則是 listen
+ *      （iOS 聽讀與故事都用裸 id，只能靠 id 形態區分；web 不存在裸 id，
+ *        所以這條規則不會誤傷 web 老檔。）
  *
- * 无法识别的空串返回空串，交给调用方丢弃。
+ * 無法識別的空串返回空串，交給呼叫方丟棄。
  */
 export function normalizeReadingId(legacyId: string): string {
   const id = legacyId.trim();
@@ -101,35 +101,35 @@ export function normalizeReadingId(legacyId: string): string {
 }
 
 /**
- * 完成日期未知时的占位值。
+ * 完成日期未知時的佔位值。
  *
- * 为什么不能留空串：`completedReadings` 的值只是"完成凭证"，各处读取口径不一
- * （`map[key] != null` vs `if (map[key])`）。一旦某条的值是空串，真值口径会判它
- * **未完成**、存在性口径判它**已完成** —— 同一份数据两套结论，卡片显示"已读"
- * 却还能再领一次 XP（历史上 iOS 导出的值就是空串，导入 web 后每篇都能重复领）。
- * 归一化后一律保证"值非空"，任何口径都得到一致结论。
+ * 為什麼不能留空串：`completedReadings` 的值只是"完成憑證"，各處讀取口徑不一
+ * （`map[key] != null` vs `if (map[key])`）。一旦某條的值是空串，真值口徑會判它
+ * **未完成**、存在性口徑判它**已完成** —— 同一份資料兩套結論，卡片顯示"已讀"
+ * 卻還能再領一次 XP（歷史上 iOS 匯出的值就是空串，匯入 web 後每篇都能重複領）。
+ * 歸一化後一律保證"值非空"，任何口徑都得到一致結論。
  *
- * 取值刻意不是日期形态：它是"读过，但不知道哪天"的诚实表达，
- * 不会被误当成 1970 之类的假日期显示给小朋友。
+ * 取值刻意不是日期形態：它是"讀過，但不知道哪天"的誠實表達，
+ * 不會被誤當成 1970 之類的假日期顯示給小朋友。
  */
 export const UNKNOWN_COMPLETION_DATE = "unknown";
 
-/** 这个完成时间是不是"读过但日期不详"（空串 / 占位值）。 */
+/** 這個完成時間是不是"讀過但日期不詳"（空串 / 佔位值）。 */
 function isUnknownCompletion(v: string): boolean {
   return v.trim() === "" || v === UNKNOWN_COMPLETION_DATE;
 }
 
 /**
- * 整表归一化（导入侧 + 本地迁移共用）。
+ * 整表歸一化（匯入側 + 本地遷移共用）。
  *
- * - 值是完成日期（`YYYY-MM-DD`，老档里可能是 ISO 时间戳，两种都保留原样）；
- * - 多个历史键归到同一个规范键时**保留较早的完成日期**：先比日期部分（前 10 位），
- *   同日再取字典序较小者（即 `2026-08-02` 优于 `2026-08-02T09:00:00Z`），
- *   保证与遍历顺序无关、双端结果一致；
- * - 空键 / 非字符串值直接丢弃；
- * - 空串（或纯空白）日期不覆盖已有的真实日期，且**不会原样留在结果里**——
- *   会写成 {@link UNKNOWN_COMPLETION_DATE}，保证输出中不存在"值为空串"的条目；
- * - 幂等：对结果再跑一次得到完全相同的表。
+ * - 值是完成日期（`YYYY-MM-DD`，老檔裡可能是 ISO 時間戳，兩種都保留原樣）；
+ * - 多個歷史鍵歸到同一個規範鍵時**保留較早的完成日期**：先比日期部分（前 10 位），
+ *   同日再取字典序較小者（即 `2026-08-02` 優於 `2026-08-02T09:00:00Z`），
+ *   保證與遍歷順序無關、雙端結果一致；
+ * - 空鍵 / 非字串值直接丟棄；
+ * - 空串（或純空白）日期不覆蓋已有的真實日期，且**不會原樣留在結果裡**——
+ *   會寫成 {@link UNKNOWN_COMPLETION_DATE}，保證輸出中不存在"值為空串"的條目；
+ * - 冪等：對結果再跑一次得到完全相同的表。
  */
 export function normalizeReadingMap(
   map: Record<string, string>,
@@ -139,7 +139,7 @@ export function normalizeReadingMap(
     if (typeof rawValue !== "string") continue;
     const key = normalizeReadingId(rawKey);
     if (key === "") continue;
-    // 日期不详的条目也是"读过"，只是丢了日期：换成占位值，绝不留空串
+    // 日期不詳的條目也是"讀過"，只是丟了日期：換成佔位值，絕不留空串
     const value = rawValue.trim() === "" ? UNKNOWN_COMPLETION_DATE : rawValue;
     const prev = out[key];
     out[key] = prev === undefined ? value : earlierCompletion(prev, value);
@@ -147,7 +147,7 @@ export function normalizeReadingMap(
   return out;
 }
 
-/** 两个完成时间取较早的一个（日期不详的一方永远输给有真实日期的一方）。 */
+/** 兩個完成時間取較早的一個（日期不詳的一方永遠輸給有真實日期的一方）。 */
 function earlierCompletion(a: string, b: string): string {
   if (isUnknownCompletion(a)) return isUnknownCompletion(b) ? UNKNOWN_COMPLETION_DATE : b;
   if (isUnknownCompletion(b)) return a;

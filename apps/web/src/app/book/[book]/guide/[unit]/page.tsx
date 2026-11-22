@@ -35,7 +35,7 @@ async function getUnitSummaries(
       const lesson = JSON.parse(await fs.readFile(lessonPath, "utf-8"));
       if (lesson?.knowledge) out.push(lesson.knowledge as KnowledgeSummary);
     } catch {
-      // 课程文件缺失时跳过：最终交给客户端显示空态
+      // 課程檔案缺失時跳過：最終交給客戶端顯示空態
     }
   }
   return out;
@@ -51,7 +51,7 @@ export async function generateStaticParams() {
         params.push({ book: b.id, unit: String(u.unit_number) });
       }
     } catch {
-      // 某本书 outline 缺失时跳过
+      // 某本書 outline 缺失時跳過
     }
   }
   return params;

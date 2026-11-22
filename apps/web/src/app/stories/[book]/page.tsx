@@ -60,7 +60,7 @@ export default async function StoryListPage({
       <InnerHeader
         backHref={`/book/${bookId}/`}
         title={`${book.textbookName}·故事`}
-        subtitle={`${doc.stories.length} 篇故事 · 阅读理解`}
+        subtitle={`${doc.stories.length} 篇故事 · 閱讀理解`}
         badge={<SubjectBadge book={book} />}
         flatOnDesktop
       />
@@ -68,12 +68,12 @@ export default async function StoryListPage({
       <div className="max-w-md lg:max-w-none mx-auto px-4 lg:px-0 py-5 lg:pt-2 space-y-6">
         <div className="flex items-center gap-4 rounded-2xl border-2 border-secondary/25 bg-white p-4">
           <Mascot mood="wave" size={64} />
-          <div><h2 className="text-xl font-bold text-ink">聪聪的故事时间</h2><p className="text-sm text-ink-light mt-1">选一个故事，一起听，一起发现。读完再说说你的想法。</p></div>
+          <div><h2 className="text-xl font-bold text-ink">聰聰的故事時間</h2><p className="text-sm text-ink-light mt-1">選一個故事，一起聽，一起發現。讀完再說說你的想法。</p></div>
         </div>
         {units.map(([unitNum, stories]) => (
           <div key={unitNum}>
             <div className="text-xs font-extrabold text-ink-softer uppercase tracking-wider mb-2 px-1">
-              第{unitNum}单元 · {stories[0].unitTitle}
+              第{unitNum}單元 · {stories[0].unitTitle}
             </div>
             <div className="space-y-3 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-3">
               {stories.map(s => (

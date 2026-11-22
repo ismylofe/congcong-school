@@ -11,7 +11,7 @@ async function getIndex(): Promise<SiteIndex> {
 export default async function HomePage() {
   const index = await getIndex();
 
-  // 按年级聚合（一年级有上下册两本）
+  // 按年級聚合（一年級有上下冊兩本）
   const byGrade: Record<number, typeof index.books> = {};
   for (const book of index.books) {
     if (book.supersededBy) continue;

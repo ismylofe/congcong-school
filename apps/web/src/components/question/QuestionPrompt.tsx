@@ -18,7 +18,7 @@ export function QuestionPrompt({
       <h2>
         <MathText text={text} />
       </h2>
-      {action ?? <TTSButton src={audio} label="朗读题目" disabled={locked} />}
+      {action ?? <TTSButton src={audio} label="朗讀題目" disabled={locked} />}
     </div>
   );
 }

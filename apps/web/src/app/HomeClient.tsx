@@ -14,13 +14,13 @@ interface HomeClientProps {
 }
 
 /**
- * 首页路由分发（打开即路径）：
- *   - 有当前教材（activeBookId）→ 软跳转到 /book/{id}/（router.replace，无整页白闪）
- *   - 只选过年级 → 软跳转到 /grade/{grade}/
- *   - 都没有（首访 / 刚点了「换年级」）→ 渲染 GradePicker 引导
+ * 首頁路由分發（開啟即路徑）：
+ *   - 有當前教材（activeBookId）→ 軟跳轉到 /book/{id}/（router.replace，無整頁白閃）
+ *   - 只選過年級 → 軟跳轉到 /grade/{grade}/
+ *   - 都沒有（首訪 / 剛點了「換年級」）→ 渲染 GradePicker 引導
  *
- * 换年级会把 selectedGrade 清空；此时残留的 activeBookId 已属于旧年级，
- * 在这里顺手清掉（自愈），避免下次打开又跳回旧教材。
+ * 換年級會把 selectedGrade 清空；此時殘留的 activeBookId 已屬於舊年級，
+ * 在這裡順手清掉（自愈），避免下次開啟又跳回舊教材。
  */
 export function HomeClient(_: HomeClientProps) {
   const selectedGrade = useProgressStore(s => s.selectedGrade);
@@ -34,7 +34,7 @@ export function HomeClient(_: HomeClientProps) {
   useEffect(() => {
     if (!hydrated) return;
     if (selectedGrade == null) {
-      // 年级已重置 → 旧教材选择随之失效
+      // 年級已重置 → 舊教材選擇隨之失效
       if (activeBookId != null) setActiveBookId(null);
       return;
     }
@@ -46,7 +46,7 @@ export function HomeClient(_: HomeClientProps) {
     }
   }, [hydrated, selectedGrade, activeBookId, setActiveBookId, router]);
 
-  // 跳转前渲染空底色占位，避免闪 GradePicker
+  // 跳轉前渲染空底色佔位，避免閃 GradePicker
   if (!hydrated || selectedGrade != null) {
     return <main className="min-h-screen bg-bg" aria-busy="true" />;
   }

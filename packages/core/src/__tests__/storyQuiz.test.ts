@@ -9,24 +9,24 @@ import {
 import type { Story } from "../types";
 const story = {
   id: "test-story",
-  sentences: [{ text: "小鸟飞来了。" }, { text: "小鸟停在树上。" }],
+  sentences: [{ text: "小鳥飛來了。" }, { text: "小鳥停在樹上。" }],
   questions: [
     {
       id: 1,
       type: "choice",
-      question: "小鸟停在哪里？",
-      options: ["树上", "河里"],
-      answer: "树上",
-      explanation: "第2句说明小鸟在树上。",
+      question: "小鳥停在哪裡？",
+      options: ["樹上", "河裡"],
+      answer: "樹上",
+      explanation: "第2句說明小鳥在樹上。",
       evidence_sentence_indices: [2, 2, 99, -1],
     },
     {
       id: 2,
       type: "fill_blank_text",
-      question: "谁停在树上？",
+      question: "誰停在樹上？",
       options: [],
-      answer: "小鸟",
-      explanation: "原文写的是小鸟。",
+      answer: "小鳥",
+      explanation: "原文寫的是小鳥。",
       evidence_sentence_indices: [1, 2],
     },
   ],
@@ -55,7 +55,7 @@ describe("story evidence and quiz continuity", () => {
     s = advanceStoryQuiz(s, { type: "next" }, story);
     expect(s.index).toBe(1);
     expect(s.checked).toBe(false);
-    s = advanceStoryQuiz(s, { type: "answer", value: "小鸟" }, story);
+    s = advanceStoryQuiz(s, { type: "answer", value: "小鳥" }, story);
     s = advanceStoryQuiz(s, { type: "check" }, story);
     s = advanceStoryQuiz(s, { type: "next" }, story);
     expect(s.phase).toBe("result");
@@ -68,7 +68,7 @@ describe("story evidence and quiz continuity", () => {
     s = advanceStoryQuiz(s, { type: "evidence", sentence: 2 }, story);
     const raw = { contentKey: storySessionKey(story), state: s };
     expect(restoreStoryQuiz(raw, story)).toEqual(s);
-    const revised = { ...story, sentences: [{ text: "小鸟在地上。" }] };
+    const revised = { ...story, sentences: [{ text: "小鳥在地上。" }] };
     expect(restoreStoryQuiz(raw, revised)).toEqual(newStoryQuiz());
     const media = {
       ...story,

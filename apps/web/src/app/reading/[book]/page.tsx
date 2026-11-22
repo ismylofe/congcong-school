@@ -35,17 +35,17 @@ export async function generateStaticParams() {
 }
 
 const ROLE_LABEL: Record<string, string> = {
-  main: "正课", garden: "语文园地", writing_example: "习作例文",
-  optional: "选学", revision: "复习",
+  main: "正課", garden: "語文園地", writing_example: "習作例文",
+  optional: "選學", revision: "複習",
 };
 
 const KIND_LABEL: Record<string, string> = {
-  ancient_poem: "古诗",
-  poem: "现代诗",
+  ancient_poem: "古詩",
+  poem: "現代詩",
   prose: "散文",
   story: "故事",
-  song: "歌谣",
-  dialogue: "对话",
+  song: "歌謠",
+  dialogue: "對話",
 };
 
 /** Pick the "main" page image — the one matching pdfPage, or middle of array */
@@ -78,8 +78,8 @@ export default async function ReadingListPage({
     <main className="min-h-screen bg-bg lg:bg-transparent">
       <InnerHeader
         backHref={`/book/${bookId}/`}
-        title={`${book.textbookName}·课文`}
-        subtitle={`${doc.passages.length} 篇课文 · 听读 / 跟读`}
+        title={`${book.textbookName}·課文`}
+        subtitle={`${doc.passages.length} 篇課文 · 聽讀 / 跟讀`}
         badge={<SubjectBadge book={book} />}
         flatOnDesktop
       />
@@ -119,7 +119,7 @@ export default async function ReadingListPage({
                     {p.curriculumRole ? `${ROLE_LABEL[p.curriculumRole]} · ` : ""}
                     {kindLabel ? `${kindLabel} · ` : ""}
                     {p.sentences.length} 句
-                    {!audioReady && " · 音频生成中"}
+                    {!audioReady && " · 音訊生成中"}
                   </div>
                 </div>
                 {audioReady && (

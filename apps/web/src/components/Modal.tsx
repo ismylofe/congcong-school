@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * Modal — 可复用的模态框底座
+ * Modal — 可複用的模態框底座
  *
- * backdrop 半透明黑 + blur，内容 spring 弹入。
- * 点击 backdrop 或按 Esc 触发 onClose。
+ * backdrop 半透明黑 + blur，內容 spring 彈入。
+ * 點選 backdrop 或按 Esc 觸發 onClose。
  *
  * a11y:
  *   - role="dialog" + aria-modal="true"
- *   - 打开时 trap focus 在 modal 内；Tab/Shift+Tab 循环
- *   - 关闭后自动还焦给打开时的元素
- *   - 打开时锁 body 滚动
+ *   - 開啟時 trap focus 在 modal 內；Tab/Shift+Tab 迴圈
+ *   - 關閉後自動還焦給開啟時的元素
+ *   - 開啟時鎖 body 滾動
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -22,9 +22,9 @@ interface ModalProps {
   open: boolean;
   onClose?: () => void;
   children: React.ReactNode;
-  /** 禁用 backdrop 点击关闭 */
+  /** 禁用 backdrop 點選關閉 */
   dismissible?: boolean;
-  /** 无障碍标题（aria-label），如未提供尽量给一个 */
+  /** 無障礙標題（aria-label），如未提供儘量給一個 */
   ariaLabel?: string;
   /** Reading needs a wider text column than short confirmation dialogs. */
   size?: "compact" | "reading";
@@ -45,7 +45,7 @@ export function Modal({ open, onClose, children, dismissible = true, ariaLabel, 
   const dialogRef = useRef<HTMLDivElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
 
-  // Esc 关闭
+  // Esc 關閉
   useEffect(() => {
     if (!open || !portalReady) return;
     const onEsc = (e: KeyboardEvent) => {
@@ -55,7 +55,7 @@ export function Modal({ open, onClose, children, dismissible = true, ariaLabel, 
     return () => window.removeEventListener("keydown", onEsc);
   }, [open, portalReady, onClose, dismissible]);
 
-  // 焦点陷阱 + 还焦 + 滚动锁
+  // 焦點陷阱 + 還焦 + 滾動鎖
   useEffect(() => {
     if (!open || !portalReady) return;
     restoreFocusRef.current = document.activeElement as HTMLElement | null;
@@ -67,7 +67,7 @@ export function Modal({ open, onClose, children, dismissible = true, ariaLabel, 
       .map(element => ({ element, inert: element.inert }));
     background.forEach(({ element }) => { element.inert = true; });
 
-    // 下一帧聚焦第一个可聚焦元素
+    // 下一幀聚焦第一個可聚焦元素
     const raf = requestAnimationFrame(() => {
       const root = dialogRef.current;
       if (!root) return;
@@ -131,7 +131,7 @@ export function Modal({ open, onClose, children, dismissible = true, ariaLabel, 
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-label={ariaLabel ?? "对话框"}
+            aria-label={ariaLabel ?? "對話框"}
             tabIndex={-1}
             initial={{ y: 16, scale: 0.98, opacity: 0 }}
             animate={{ y: 0, scale: 1, opacity: 1 }}

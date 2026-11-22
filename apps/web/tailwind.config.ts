@@ -8,9 +8,9 @@ import type { Config } from "tailwindcss";
  */
 
 const chineseStack = [
-  '"PingFang SC"',
-  '"Microsoft YaHei"',
-  '"Hiragino Sans GB"',
+  '"PingFang TC"',
+  '"Microsoft JhengHei"',
+  '"Noto Sans TC"',
   "sans-serif",
 ];
 
@@ -127,7 +127,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['"PingFang SC"', '"Microsoft YaHei"', '"Hiragino Sans GB"', "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ['"PingFang TC"', '"Microsoft JhengHei"', '"Noto Sans TC"', "ui-sans-serif", "system-ui", "sans-serif"],
         display: ["var(--font-display)", ...chineseStack],
       },
       boxShadow: {

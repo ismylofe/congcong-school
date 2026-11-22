@@ -5,7 +5,7 @@ import { Volume, VolumeMute } from "@/components/icons";
 import { useProgressStore } from "@/store/progress";
 import { setMuted, playSfx, primeAudioOnFirstGesture } from "@/lib/sfx";
 
-/** 同步 store.muted → sfx 全局静音 & 首次启动 prime AudioContext */
+/** 同步 store.muted → sfx 全域靜音 & 首次啟動 prime AudioContext */
 export function useSyncMute() {
   const muted = useProgressStore(s => s.muted);
   useEffect(() => {
@@ -28,10 +28,10 @@ export function MuteToggle({ className }: MuteToggleProps) {
     <button
       type="button"
       aria-pressed={!muted}
-      aria-label={muted ? "开启音效" : "关闭音效"}
+      aria-label={muted ? "開啟音效" : "關閉音效"}
       onClick={() => {
         toggleMute();
-        // 解除瞬间播一下反馈（仅在从 muted 切回 on 时）
+        // 解除瞬間播一下反饋（僅在從 muted 切回 on 時）
         if (muted) {
           setMuted(false);
           playSfx("tap");
@@ -45,8 +45,8 @@ export function MuteToggle({ className }: MuteToggleProps) {
 }
 
 /**
- * 自动朗读开关 —— 控制题干/知识卡/讲解是否自动播 TTS。
- * 面向家长/大童：默认开；低龄从此免找喇叭。
+ * 自動朗讀開關 —— 控制題幹/知識卡/講解是否自動播 TTS。
+ * 面向家長/大童：預設開；低齡從此免找喇叭。
  */
 export function AutoNarrateToggle({ className }: MuteToggleProps) {
   const autoNarrate = useProgressStore(s => s.autoNarrate);
@@ -56,8 +56,8 @@ export function AutoNarrateToggle({ className }: MuteToggleProps) {
     <button
       type="button"
       aria-pressed={autoNarrate}
-      aria-label={autoNarrate ? "关闭自动朗读" : "开启自动朗读"}
-      title={autoNarrate ? "自动朗读：开" : "自动朗读：关"}
+      aria-label={autoNarrate ? "關閉自動朗讀" : "開啟自動朗讀"}
+      title={autoNarrate ? "自動朗讀：開" : "自動朗讀：關"}
       onClick={() => {
         toggleAutoNarrate();
         playSfx("tap");
@@ -69,7 +69,7 @@ export function AutoNarrateToggle({ className }: MuteToggleProps) {
       } ${className ?? ""}`}
     >
       <Volume className="w-3.5 h-3.5" />
-      <span>自动</span>
+      <span>自動</span>
     </button>
   );
 }

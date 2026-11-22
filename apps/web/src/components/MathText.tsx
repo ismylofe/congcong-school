@@ -1,19 +1,19 @@
 "use client";
 
 /**
- * MathText — 把含 $...$ 的字符串拆开，行内 LaTeX 用 KaTeX 渲染。
+ * MathText — 把含 $...$ 的字串拆開，行內 LaTeX 用 KaTeX 渲染。
  *
- * 支持美元符号及 TeX 圆括号/方括号分隔的行内和块级公式。
- * 未配对的分隔符保留为普通文本。
+ * 支援美元符號及 TeX 圓括號/方括號分隔的行內和塊級公式。
+ * 未配對的分隔符保留為普通文字。
  */
 
 import dynamic from "next/dynamic";
 import { Fragment } from "react";
 import { splitMath } from "@/lib/math-segments";
 
-// react-katex + katex 的体积较大 (~100KB+)，改为按需加载，
-// 让 LessonRunner 初次渲染时不阻塞在 KaTeX chunk 上。
-// 首屏先显示原始 LaTeX 字符串（等公式 chunk 到位后自动替换为渲染结果）。
+// react-katex + katex 的體積較大 (~100KB+)，改為按需載入，
+// 讓 LessonRunner 初次渲染時不阻塞在 KaTeX chunk 上。
+// 首屏先顯示原始 LaTeX 字串（等公式 chunk 到位後自動替換為渲染結果）。
 const InlineMath = dynamic(
   () => import("react-katex").then(m => ({ default: m.InlineMath })),
   {

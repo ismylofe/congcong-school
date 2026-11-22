@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * DailyGoalRing — 每日目标圆环
+ * DailyGoalRing — 每日目標圓環
  *
- * SVG stroke-dasharray 进度圆环，XP 在中间 count-up。
- * 达成时播放一次光晕脉冲。可点击弹出目标调整弹窗。
+ * SVG stroke-dasharray 進度圓環，XP 在中間 count-up。
+ * 達成時播放一次光暈脈衝。可點選彈出目標調整彈窗。
  */
 
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => setHydrated(true), []);
 
-  // 若 lastXpDate 不是今天，则今日 XP 显示为 0
+  // 若 lastXpDate 不是今天，則今日 XP 顯示為 0
   const today = hydrated ? new Date().toISOString().slice(0, 10).replace(/-/g, "-") : "";
   const displayXp = hydrated ? (lastXpDate === todayStr() ? todayXp : 0) : 0;
   const progress = Math.min(1, displayXp / goal);
@@ -41,7 +41,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
   const dashOffset = circumference * (1 - progress);
   const gradientId = `dgr-grad-${size}-${achieved ? "g" : "p"}`;
 
-  // 内部字号根据 size 动态缩放
+  // 內部字號根據 size 動態縮放
   const xpFontPx = Math.round(size * 0.26);
   const labelFontPx = Math.max(9, Math.round(size * 0.11));
 
@@ -58,9 +58,9 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
         style={{ width: size, height: size }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.96 }}
-        aria-label="每日目标"
+        aria-label="每日目標"
       >
-        {/* 内圆软底 + 内阴影 */}
+        {/* 內圓軟底 + 內陰影 */}
         <div
           className="absolute rounded-full"
           style={{
@@ -88,7 +88,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
               )}
             </linearGradient>
           </defs>
-          {/* 背景环 */}
+          {/* 背景環 */}
           <circle
             cx={size / 2}
             cy={size / 2}
@@ -97,7 +97,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
             strokeWidth={stroke}
             fill="none"
           />
-          {/* 进度环 */}
+          {/* 進度環 */}
           <motion.circle
             cx={size / 2}
             cy={size / 2}
@@ -154,12 +154,12 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
         )}
       </motion.button>
 
-      {/* 目标调整弹窗 */}
-      <Modal ariaLabel="每日目标" open={showModal} onClose={() => setShowModal(false)}>
+      {/* 目標調整彈窗 */}
+      <Modal ariaLabel="每日目標" open={showModal} onClose={() => setShowModal(false)}>
         <div className="text-center">
           <Target className="w-12 h-12 text-primary mx-auto" />
-          <h2 className="text-2xl font-extrabold text-ink mt-2">每日目标</h2>
-          <p className="text-ink-light mt-1 mb-5">选择你每天想挣的 XP</p>
+          <h2 className="text-2xl font-extrabold text-ink mt-2">每日目標</h2>
+          <p className="text-ink-light mt-1 mb-5">選擇你每天想掙的 XP</p>
           <div className="grid grid-cols-2 gap-3">
             {DAILY_GOAL_OPTIONS.map(opt => (
               <button
@@ -191,7 +191,7 @@ export function DailyGoalRing({ size = 120 }: DailyGoalRingProps) {
             }}
             className="btn-chunky-primary w-full mt-6"
           >
-            确定
+            確定
           </button>
         </div>
       </Modal>

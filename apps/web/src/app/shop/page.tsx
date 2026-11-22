@@ -1,17 +1,17 @@
 "use client";
 
 /**
- * 聪聪衣橱 —— 用 gems 解锁吉祥物皮肤 / UI 主题 / 课程背景
+ * 聰聰衣櫥 —— 用 gems 解鎖吉祥物皮膚 / UI 主題 / 課程背景
  *
- * 公益项目约束：
- *   - 所有道具都能通过游戏内 gems 解锁
- *   - 没有"premium 限定"或"充值专属"
- *   - 不影响游戏数值，纯美学
+ * 公益專案約束：
+ *   - 所有道具都能透過遊戲內 gems 解鎖
+ *   - 沒有"premium 限定"或"充值專屬"
+ *   - 不影響遊戲數值，純美學
  *
- * 宽容器布局（760px+）：
- *   左侧粘性大预览（Mascot / 主题样卡 / 背景全屏） + 右侧道具网格
- * 移动端：
- *   顶部紧凑预览 + 下方道具网格
+ * 寬容器佈局（760px+）：
+ *   左側粘性大預覽（Mascot / 主題樣卡 / 背景全屏） + 右側道具網格
+ * 移動端：
+ *   頂部緊湊預覽 + 下方道具網格
  */
 
 import { useMemo, useRef, useState } from "react";
@@ -59,9 +59,9 @@ const TABS: Array<{
   label: string;
   Icon: React.ComponentType<{ className?: string }>;
 }> = [
-  { id: "mascot_skin", label: "聪聪装扮", Icon: Panda },
-  { id: "ui_theme", label: "界面主题", Icon: Palette },
-  { id: "lesson_backdrop", label: "课堂背景", Icon: Picture },
+  { id: "mascot_skin", label: "聰聰裝扮", Icon: Panda },
+  { id: "ui_theme", label: "介面主題", Icon: Palette },
+  { id: "lesson_backdrop", label: "課堂背景", Icon: Picture },
 ];
 
 const CATALOGS: Record<Tab, CosmeticItem[]> = {
@@ -101,7 +101,7 @@ export default function ShopPage() {
     return equippedBackdrop;
   }
 
-  // 选择只改变预览；解锁或装备必须使用明确的行动按钮。
+  // 選擇只改變預覽；解鎖或裝備必須使用明確的行動按鈕。
   const previewId = selectedItemId ?? getEquippedId(tab);
   const previewItem = useMemo(
     () => items.find(i => i.id === previewId) ?? items[0],
@@ -117,20 +117,20 @@ export default function ShopPage() {
       if (ok) {
         playSfx("star");
         haptic("success");
-        toast.success(`已装备：${item.name}`);
+        toast.success(`已裝備：${item.name}`);
       }
     } else {
       const result = purchaseCosmetic(item.id);
       if (result.ok) {
         playSfx("unlock");
         haptic("success");
-        toast.success(`解锁成功：${item.name}`);
+        toast.success(`解鎖成功：${item.name}`);
         setUnlockBurstId(item.id);
         window.setTimeout(() => setUnlockBurstId(null), 1400);
       } else {
         playSfx("wrong");
         haptic("heavy");
-        toast.error(result.reason ?? "购买失败");
+        toast.error(result.reason ?? "購買失敗");
       }
     }
   }
@@ -151,14 +151,14 @@ export default function ShopPage() {
       <main className="min-h-screen px-4 py-6 md:px-0 md:py-2">
         <header className="flex items-start justify-between gap-4 mb-7">
           <div className="min-w-0">
-            <h1 className="text-2xl md:text-3xl font-extrabold text-ink">聪聪衣橱</h1>
-            <p className="text-sm text-ink-light leading-relaxed mt-2">学习赚宝石，解锁新装扮。</p>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-ink">聰聰衣櫥</h1>
+            <p className="text-sm text-ink-light leading-relaxed mt-2">學習賺寶石，解鎖新裝扮。</p>
           </div>
           <GemBadge asLink={false} />
         </header>
 
         <div ref={containerRef} className="shop-container">
-          <div role="tablist" aria-label="装扮分类" className="grid grid-cols-3 gap-2 mb-6 rounded-2xl bg-white border border-bg-softer p-1">
+          <div role="tablist" aria-label="裝扮分類" className="grid grid-cols-3 gap-2 mb-6 rounded-2xl bg-white border border-bg-softer p-1">
             {TABS.map((t, index) => {
               const active = tab === t.id;
               const Icon = t.Icon;
@@ -191,8 +191,8 @@ export default function ShopPage() {
 
             <section id="shop-catalog" role="tabpanel" aria-labelledby={`shop-tab-${tab}`} tabIndex={0} className="min-w-0">
               <div className="flex items-center justify-between gap-3 mb-4 text-sm text-ink-light">
-                <span>{items.length} 件{tab === "mascot_skin" ? "装扮" : tab === "ui_theme" ? "主题" : "背景"}</span>
-                <span>已拥有 {items.filter(item => ownedCosmetics[item.id]).length} 件</span>
+                <span>{items.length} 件{tab === "mascot_skin" ? "裝扮" : tab === "ui_theme" ? "主題" : "背景"}</span>
+                <span>已擁有 {items.filter(item => ownedCosmetics[item.id]).length} 件</span>
               </div>
               <div className="shop-grid" data-shop-grid>
                 {items.map(item => <ItemCard key={item.id} item={item}
@@ -204,7 +204,7 @@ export default function ShopPage() {
         </div>
 
         <details className="mt-10 rounded-2xl border border-bg-softer bg-white p-5">
-          <summary className="cursor-pointer min-h-11 text-base font-bold text-ink">学习补给 <span className="ml-2 text-sm font-normal text-ink-light">连胜护盾与红心</span></summary>
+          <summary className="cursor-pointer min-h-11 text-base font-bold text-ink">學習補給 <span className="ml-2 text-sm font-normal text-ink-light">連勝護盾與紅心</span></summary>
           <div className="mt-5"><PowerUpsSection /></div>
         </details>
       </main>
@@ -213,7 +213,7 @@ export default function ShopPage() {
 }
 
 // ============================================================
-// ⚡ 红心 & 连胜 —— 连胜护盾 / 补满红心（功能性，非美妆）
+// ⚡ 紅心 & 連勝 —— 連勝護盾 / 補滿紅心（功能性，非美妝）
 // ============================================================
 function PowerUpsSection() {
   const toast = useToast();
@@ -233,10 +233,10 @@ function PowerUpsSection() {
     if (buyStreakFreeze()) {
       playSfx("unlock");
       haptic("success");
-      toast.success("🛡️ 连胜护盾 +1！漏学一天也不怕啦");
+      toast.success("🛡️ 連勝護盾 +1！漏學一天也不怕啦");
     } else {
       playSfx("wrong");
-      toast.error("宝石不够，先去学习攒宝石吧");
+      toast.error("寶石不夠，先去學習攢寶石吧");
     }
   }
 
@@ -247,38 +247,38 @@ function PowerUpsSection() {
     if (buyHeartRefill()) {
       playSfx("unlock");
       haptic("success");
-      toast.success("❤️ 红心已补满！");
+      toast.success("❤️ 紅心已補滿！");
     } else {
       playSfx("wrong");
-      toast.error("宝石不够，先去学习攒宝石吧");
+      toast.error("寶石不夠，先去學習攢寶石吧");
     }
   }
 
   return (
-    <section aria-label="红心与连胜补给">
+    <section aria-label="紅心與連勝補給">
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* 连胜护盾 */}
+        {/* 連勝護盾 */}
         <PowerUpCard
           icon={<Snowflake className="w-8 h-8" />}
           iconColor="#1CB0F6"
-          title="连胜护盾"
-          desc={`漏学一天时保住连胜。当前持有 ${Math.min(freezes, MAX_FREEZES)}/${MAX_FREEZES} 个，每周一学习可补充 1 个。`}
+          title="連勝護盾"
+          desc={`漏學一天時保住連勝。當前持有 ${Math.min(freezes, MAX_FREEZES)}/${MAX_FREEZES} 個，每週一學習可補充 1 個。`}
           cost={FREEZE_COST}
           disabled={freezesFull}
-          disabledLabel="已满 2/2"
+          disabledLabel="已滿 2/2"
           canAfford={gems >= FREEZE_COST}
           onBuy={handleBuyFreeze}
         />
-        {/* 补满红心 */}
+        {/* 補滿紅心 */}
         <PowerUpCard
           icon={<Heart className="w-8 h-8" />}
           iconColor="#FF4B4B"
-          title="补满红心"
-          desc={`立刻回满 ${MAX_HEARTS} 颗红心，继续闯关`}
+          title="補滿紅心"
+          desc={`立刻回滿 ${MAX_HEARTS} 顆紅心，繼續闖關`}
           cost={HEART_REFILL_COST}
           disabled={heartsFull}
-          disabledLabel="红心已满"
+          disabledLabel="紅心已滿"
           canAfford={gems >= HEART_REFILL_COST}
           onBuy={handleBuyRefill}
         />
@@ -339,7 +339,7 @@ function PowerUpCard({
         >
           <Gem className="w-4 h-4" />
           <span className="tabular-nums">{cost}</span>
-          <span>{canAfford ? "购买" : "宝石不够"}</span>
+          <span>{canAfford ? "購買" : "寶石不夠"}</span>
         </button>
       )}
     </div>
@@ -347,7 +347,7 @@ function PowerUpCard({
 }
 
 // ============================================================
-// 大预览面板（左 / 顶）
+// 大預覽面板（左 / 頂）
 // ============================================================
 function PreviewPane({
   item,
@@ -361,7 +361,7 @@ function PreviewPane({
   owned: boolean;
   equipped: boolean;
   canAfford: boolean;
-  /** 当前宝石数（响应式订阅自父组件，「还差 N」随之实时更新） */
+  /** 當前寶石數（響應式訂閱自父元件，「還差 N」隨之實時更新） */
   gems: number;
   onTryEquip: () => void;
 }) {
@@ -373,10 +373,10 @@ function PreviewPane({
       className="shop-preview-card bg-white rounded-3xl border border-bg-softer overflow-hidden"
       style={{ boxShadow: "0 5px 0 0 var(--shadow-card-color)" }}
     >
-      {/* 预览舞台 */}
+      {/* 預覽舞臺 */}
       <PreviewStage item={item} />
 
-      {/* 信息条 */}
+      {/* 資訊條 */}
       <div className="px-5 py-4">
         <div className="flex items-start justify-between gap-3 mb-1">
           <h2 className="text-xl font-extrabold text-ink leading-tight flex-1">
@@ -391,12 +391,12 @@ function PreviewPane({
         </div>
         <p className="text-sm text-ink-light leading-relaxed">{item.description}</p>
 
-        {/* 状态 / 行动按钮 */}
+        {/* 狀態 / 行動按鈕 */}
         <div className="mt-4">
           {equipped ? (
             <div className="min-h-[50px] inline-flex items-center justify-center rounded-2xl bg-bg-softer text-ink-light font-bold w-full">
               <Check className="w-4 h-4 mr-1.5" strokeWidth={3} />
-              已装备
+              已裝備
             </div>
           ) : owned ? (
             <button
@@ -405,7 +405,7 @@ function PreviewPane({
               className="btn-chunky-primary w-full"
             >
               <Check className="w-4 h-4 mr-1.5" strokeWidth={3} />
-              立即装备
+              立即裝備
             </button>
           ) : canAfford ? (
             <button
@@ -415,12 +415,12 @@ function PreviewPane({
             >
               <Gem className="w-4 h-4 mr-1.5" />
               <span className="tabular-nums">{item.cost}</span>
-              <span className="ml-1.5">解锁</span>
+              <span className="ml-1.5">解鎖</span>
             </button>
           ) : (
             <div role="status" className="rounded-2xl border border-bg-softer bg-bg-soft p-3 text-center">
-              <p className="text-sm text-ink-light">还差 <span className="font-bold tabular-nums">{item.cost - gems}</span> 颗宝石</p>
-              <SoundLink href="/" className="mt-2 min-h-11 flex items-center justify-center rounded-xl text-sm font-bold text-gem hover:bg-bg-softer">去学习赚宝石</SoundLink>
+              <p className="text-sm text-ink-light">還差 <span className="font-bold tabular-nums">{item.cost - gems}</span> 顆寶石</p>
+              <SoundLink href="/" className="mt-2 min-h-11 flex items-center justify-center rounded-xl text-sm font-bold text-gem hover:bg-bg-softer">去學習賺寶石</SoundLink>
             </div>
           )}
         </div>
@@ -430,7 +430,7 @@ function PreviewPane({
 }
 
 // ============================================================
-// 预览舞台 —— 根据道具类型渲染不同的全屏式预览
+// 預覽舞臺 —— 根據道具型別渲染不同的全屏式預覽
 // ============================================================
 function PreviewStage({ item }: { item: CosmeticItem }) {
   const mode = useThemeMode();
@@ -468,7 +468,7 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
         className="relative h-64 px-5 py-5 flex flex-col gap-3"
         style={{ background: dark ? (t.isDark ? t.bg : "#131F24") : t.bg, color: dark ? "#CBD5E1" : "#4B4B4B" }}
       >
-        {/* 模拟一个题区卡片 */}
+        {/* 模擬一個題區卡片 */}
         <div className="rounded-2xl border-2 p-3 flex items-center gap-2 shadow-sm" style={{ background: surface, borderColor: border }}>
           <div
             className="w-8 h-8 rounded-full"
@@ -479,7 +479,7 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
             <div className="h-2 rounded-full w-1/2" style={{ background: border }} />
           </div>
         </div>
-        {/* 模拟一个 chunky 主按钮 */}
+        {/* 模擬一個 chunky 主按鈕 */}
         <div
           className="rounded-2xl py-3 text-center font-bold text-[19px]"
           style={{
@@ -488,13 +488,13 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
             boxShadow: `0 4px 0 0 ${previewColors['--action-primary-edge']}`,
           }}
         >
-          检查
+          檢查
         </div>
-        {/* 调色板色块 */}
+        {/* 調色盤色塊 */}
         <div className="flex gap-2 mt-auto">
           <ColorChip color={t.primary} label="主色" />
           <ColorChip color={t.primaryDark} label="深色" />
-          <ColorChip color={t.accent} label="点缀" />
+          <ColorChip color={t.accent} label="點綴" />
         </div>
       </div>
     );
@@ -510,13 +510,13 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
         {bd.data.needsOverlay && (
           <div className="absolute inset-0 bg-white/40" />
         )}
-        {/* 模拟一个题卡片漂浮其上 */}
+        {/* 模擬一個題卡片漂浮其上 */}
         <div className="relative bg-white rounded-2xl border-2 border-bg-softer p-4 mx-6 shadow-lg">
           <div className="text-xs text-ink-softer font-extrabold uppercase tracking-wider mb-1">
             示意
           </div>
           <div className="text-sm font-bold text-ink leading-relaxed">
-            这就是答题时背后看到的氛围
+            這就是答題時背後看到的氛圍
           </div>
         </div>
       </div>
@@ -526,7 +526,7 @@ function PreviewStage({ item }: { item: CosmeticItem }) {
 }
 
 // ============================================================
-// 解锁爆裂动画 —— 在预览面板上短暂展示星星 + 闪光
+// 解鎖爆裂動畫 —— 在預覽面板上短暫展示星星 + 閃光
 // ============================================================
 function UnlockBurst({ active }: { active: boolean }) {
   return (
@@ -539,7 +539,7 @@ function UnlockBurst({ active }: { active: boolean }) {
           className="pointer-events-none absolute inset-0 overflow-hidden rounded-3xl flex items-center justify-center"
           aria-hidden="true"
         >
-          {/* 中心圆环 */}
+          {/* 中心圓環 */}
           <motion.div
             initial={{ scale: 0, opacity: 0.8 }}
             animate={{ scale: 4, opacity: 0 }}
@@ -550,7 +550,7 @@ function UnlockBurst({ active }: { active: boolean }) {
                 "radial-gradient(circle, rgba(28,176,246,0.55), transparent 70%)",
             }}
           />
-          {/* 8 颗散开的星星 */}
+          {/* 8 顆散開的星星 */}
           {Array.from({ length: 8 }).map((_, i) => {
             const angle = (i / 8) * Math.PI * 2;
             const dist = 110;
@@ -593,7 +593,7 @@ function ColorChip({ color, label }: { color: string; label: string }) {
 }
 
 // ============================================================
-// 右侧道具卡片
+// 右側道具卡片
 // ============================================================
 function ItemCard({
   item,
@@ -616,7 +616,7 @@ function ItemCard({
       whileTap={{ scale: 0.97 }}
       onClick={onClick}
       data-shop-card
-      aria-label={`预览${item.name}`}
+      aria-label={`預覽${item.name}`}
       aria-pressed={selected}
       className="min-w-0 relative bg-white rounded-2xl border overflow-hidden text-left flex flex-col"
       style={{
@@ -624,10 +624,10 @@ function ItemCard({
         boxShadow: selected ? "0 0 0 1px var(--theme-primary, #58CC02)" : "0 2px 5px rgba(0,0,0,.025)",
       }}
     >
-      {/* 缩略预览 */}
+      {/* 縮略預覽 */}
       <ItemThumb item={item} />
 
-      {/* 信息 */}
+      {/* 資訊 */}
       <div className="px-3 py-3 flex flex-col gap-2">
         <div data-shop-name className="text-base font-bold text-ink leading-relaxed break-words">
           {item.name}
@@ -641,11 +641,11 @@ function ItemCard({
           </span>
           {equipped ? (
             <span className="text-xs font-semibold text-ink-light">
-              已装备
+              已裝備
             </span>
           ) : owned ? (
             <span className="text-xs font-semibold text-ink-light">
-              已拥有
+              已擁有
             </span>
           ) : (
             <span
@@ -662,7 +662,7 @@ function ItemCard({
 }
 
 // ============================================================
-// 缩略预览（卡片顶部）
+// 縮略預覽（卡片頂部）
 // ============================================================
 function ItemThumb({ item }: { item: CosmeticItem }) {
   if (item.type === "mascot_skin") {

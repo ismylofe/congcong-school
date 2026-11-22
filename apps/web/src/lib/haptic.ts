@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * haptic.ts — 轻量震动封装
- * 桌面端自动 no-op；受全局 muted 开关控制。
+ * haptic.ts — 輕量震動封裝
+ * 桌面端自動 no-op；受全域 muted 開關控制。
  */
 
 import { isMuted } from "./sfx";

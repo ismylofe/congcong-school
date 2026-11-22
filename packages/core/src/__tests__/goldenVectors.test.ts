@@ -1,8 +1,8 @@
 /**
- * goldenVectors.test.ts —— 逐组断言 spec/golden-vectors.json 与 TS 实现一致。
+ * goldenVectors.test.ts —— 逐組斷言 spec/golden-vectors.json 與 TS 實現一致。
  *
- * 这份 JSON 是 web / iOS 双端的黄金向量：Swift 侧应读取同一文件跑等价断言。
- * 任何一端实现改动导致这里飘红，说明经济口径漂移，必须先改 spec 再改实现。
+ * 這份 JSON 是 web / iOS 雙端的黃金向量：Swift 側應讀取同一檔案跑等價斷言。
+ * 任何一端實現改動導致這裡飄紅，說明經濟口徑漂移，必須先改 spec 再改實現。
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -43,7 +43,7 @@ import { computeChestsForBook } from "../chestLogic";
 import type { PathLessonMeta, Question } from "../types";
 
 // ============================================================
-// 黄金向量组
+// 黃金向量組
 // ============================================================
 
 describe("golden vectors: stars", () => {
@@ -100,7 +100,7 @@ describe("golden vectors: streakAdvance", () => {
 });
 
 describe("golden vectors: srsReview", () => {
-  const FROZEN_NOW = new Date(2026, 7, 25, 10, 0, 0); // 2026-08-25（周二）
+  const FROZEN_NOW = new Date(2026, 7, 25, 10, 0, 0); // 2026-08-25（週二）
 
   beforeEach(() => {
     vi.useFakeTimers();
@@ -129,7 +129,7 @@ describe("golden vectors: srsReview", () => {
   };
 
   for (const v of vectors.srsReview) {
-    it(`box${v.box} ${v.isCorrect ? "答对" : "答错"} → box${v.expBox}，${v.expIntervalDays} 天后复习`, () => {
+    it(`box${v.box} ${v.isCorrect ? "答對" : "答錯"} → box${v.expBox}，${v.expIntervalDays} 天后複習`, () => {
       const entry: SrsMistakeEntry = {
         lessonId: "lesson-1",
         question: dummyQuestion,
@@ -145,10 +145,10 @@ describe("golden vectors: srsReview", () => {
 });
 
 describe("golden vectors: srsGraduation", () => {
-  // 这组向量是 iOS Domain/SRS.swift 的镜像基准：毕业是**派生判定**，
-  // 不是"只认显式 graduated 标记"。
+  // 這組向量是 iOS Domain/SRS.swift 的鏡像基準：畢業是**派生判定**，
+  // 不是"只認顯式 graduated 標記"。
   for (const v of vectors.srsGraduation) {
-    it(`${v.$case} → ${v.expGraduated ? "毕业" : "未毕业"}`, () => {
+    it(`${v.$case} → ${v.expGraduated ? "畢業" : "未畢業"}`, () => {
       expect(
         isSrsGraduated({
           graduated: v.graduated ?? undefined,
@@ -159,7 +159,7 @@ describe("golden vectors: srsGraduation", () => {
     });
   }
 
-  it("due 队列过滤与毕业判定同源：派生毕业的条目不再出现", () => {
+  it("due 佇列過濾與畢業判定同源：派生畢業的條目不再出現", () => {
     const base = {
       lessonId: "lesson-1",
       question: { id: 1 } as unknown as Question,
@@ -167,9 +167,9 @@ describe("golden vectors: srsGraduation", () => {
       nextReviewDate: "2020-01-01", // 早就到期
     };
     const entries: SrsMistakeEntry[] = [
-      { ...base, box: 3, correctCount: 2 }, // 派生毕业，无 graduated 字段
-      { ...base, box: 3, correctCount: 1 }, // 未达标
-      { ...base, box: 1, correctCount: 0, graduated: true }, // 显式毕业
+      { ...base, box: 3, correctCount: 2 }, // 派生畢業，無 graduated 欄位
+      { ...base, box: 3, correctCount: 1 }, // 未達標
+      { ...base, box: 1, correctCount: 0, graduated: true }, // 顯式畢業
     ];
     const due = getDueSrsEntries(entries);
     expect(due).toHaveLength(1);
@@ -180,7 +180,7 @@ describe("golden vectors: srsGraduation", () => {
 
 describe("golden vectors: dailyReward", () => {
   for (const v of vectors.dailyReward) {
-    it(`streak=${v.streak} → ${v.expGems} 宝石`, () => {
+    it(`streak=${v.streak} → ${v.expGems} 寶石`, () => {
       expect(dailyRewardForStreak(v.streak)).toBe(v.expGems);
     });
   }
@@ -188,7 +188,7 @@ describe("golden vectors: dailyReward", () => {
 
 describe("golden vectors: milestone", () => {
   for (const v of vectors.milestone) {
-    it(`streakAfter=${v.streakAfter} → ${v.expGems} 宝石`, () => {
+    it(`streakAfter=${v.streakAfter} → ${v.expGems} 寶石`, () => {
       expect(streakMilestoneReward(v.streakAfter)).toBe(v.expGems);
     });
   }
@@ -213,11 +213,11 @@ describe("golden vectors: examXp", () => {
 describe("golden vectors: league", () => {
   const g = vectors.league;
   const input = { weekKey: g.weekKey, tier: g.tier as LeagueTierId, salt: g.salt };
-  // weekKey=2026-08-24（周一）；周三 12:00 与周日 23:59 均为本地时区
+  // weekKey=2026-08-24（週一）；週三 12:00 與週日 23:59 均為本地時區
   const wednesdayNoon = new Date(2026, 7, 26, 12, 0);
   const sundayNight = new Date(2026, 7, 30, 23, 59);
 
-  it("15 个 bot 名单逐字一致且组内去重", () => {
+  it("15 個 bot 名單逐字一致且組內去重", () => {
     const bots = botsForWeek(input);
     const names = bots.map(b => b.name);
     expect(names).toEqual(g.names);
@@ -226,7 +226,7 @@ describe("golden vectors: league", () => {
   });
 
   for (const v of g.bots) {
-    it(`bot${v.botIndex}（${v.expName}）目标 ${v.expGoal}，周三午 ${v.expXpWednesdayNoon}，周日夜 ${v.expXpSundayNight}`, () => {
+    it(`bot${v.botIndex}（${v.expName}）目標 ${v.expGoal}，週三午 ${v.expXpWednesdayNoon}，週日夜 ${v.expXpSundayNight}`, () => {
       expect(botsForWeek(input)[v.botIndex].name).toBe(v.expName);
       expect(botWeeklyGoal({ ...input, botIndex: v.botIndex })).toBe(v.expGoal);
       expect(botXpAt({ ...input, botIndex: v.botIndex, date: wednesdayNoon })).toBe(v.expXpWednesdayNoon);
@@ -239,9 +239,9 @@ describe("golden vectors: chestSlot", () => {
   function makeLessons(count: number): PathLessonMeta[] {
     return Array.from({ length: count }, (_, i) => ({
       id: `book-u1-l${i + 1}`,
-      title: `第 ${i + 1} 课`,
+      title: `第 ${i + 1} 課`,
       unitNumber: 1,
-      unitTitle: "第一单元",
+      unitTitle: "第一單元",
       kpIndex: i + 1,
       kpTotal: count,
       questionCount: 10,
@@ -249,7 +249,7 @@ describe("golden vectors: chestSlot", () => {
   }
 
   for (const v of vectors.chestSlot) {
-    it(`单元内完成第 ${v.lessonsCompletedInUnit} 课后应有 ${v.expChests} 个宝箱`, () => {
+    it(`單元內完成第 ${v.lessonsCompletedInUnit} 課後應有 ${v.expChests} 個寶箱`, () => {
       const slots = computeChestsForBook("book", makeLessons(v.lessonsCompletedInUnit));
       expect(slots.length).toBe(v.expChests);
     });
@@ -257,15 +257,15 @@ describe("golden vectors: chestSlot", () => {
 });
 
 // ============================================================
-// 补充单测
+// 補充單測
 // ============================================================
 
-describe("latchUnlocked（只进不出账本）", () => {
-  it("空账本 + 新解锁 = 新解锁", () => {
+describe("latchUnlocked（只進不出賬本）", () => {
+  it("空賬本 + 新解鎖 = 新解鎖", () => {
     expect(latchUnlocked([], ["a", "b"])).toEqual(["a", "b"]);
   });
 
-  it("进度倒退（当前集合缩水）不会回锁", () => {
+  it("進度倒退（當前集合縮水）不會回鎖", () => {
     expect(latchUnlocked(["streak-7", "streak-30"], ["streak-3"])).toEqual([
       "streak-7",
       "streak-30",
@@ -273,11 +273,11 @@ describe("latchUnlocked（只进不出账本）", () => {
     ]);
   });
 
-  it("重复 id 去重，且保持 prevLedger 原顺序", () => {
+  it("重複 id 去重，且保持 prevLedger 原順序", () => {
     expect(latchUnlocked(["a", "b"], ["b", "c", "a", "c"])).toEqual(["a", "b", "c"]);
   });
 
-  it("不修改入参", () => {
+  it("不修改入參", () => {
     const prev = ["a"];
     const current = ["a", "b"];
     latchUnlocked(prev, current);
@@ -286,18 +286,18 @@ describe("latchUnlocked（只进不出账本）", () => {
   });
 });
 
-describe("reviewHeartReward（复习补心，双端同口径）", () => {
-  it("答对数不足门槛不补心", () => {
+describe("reviewHeartReward（複習補心，雙端同口徑）", () => {
+  it("答對數不足門檻不補心", () => {
     expect(reviewHeartReward(REVIEW_HEART_MIN_CORRECT - 1, 0)).toBe(0);
     expect(reviewHeartReward(0, 0)).toBe(0);
   });
 
-  it("达到门槛补 1 颗", () => {
+  it("達到門檻補 1 顆", () => {
     expect(reviewHeartReward(REVIEW_HEART_MIN_CORRECT, 0)).toBe(REVIEW_HEART_REWARD);
     expect(reviewHeartReward(REVIEW_HEART_MIN_CORRECT + 10, 2)).toBe(REVIEW_HEART_REWARD);
   });
 
-  it("可用错题不足五道时，完成整轮仍能回心", () => {
+  it("可用錯題不足五道時，完成整輪仍能迴心", () => {
     expect(reviewHeartReward(3, 0, 3)).toBe(1);
     expect(reviewHeartReward(2, 0, 3)).toBe(0);
     expect(reviewHeartReward(1, 0, 1)).toBe(1);
@@ -305,14 +305,14 @@ describe("reviewHeartReward（复习补心，双端同口径）", () => {
     expect(reviewHeartReward(3, 0, Number.NaN)).toBe(0);
   });
 
-  it("满心不再补，也不会补出上限", () => {
+  it("滿心不再補，也不會補出上限", () => {
     expect(reviewHeartReward(20, MAX_HEARTS)).toBe(0);
     expect(reviewHeartReward(20, MAX_HEARTS + 3)).toBe(0);
     expect(reviewHeartReward(20, MAX_HEARTS - 1)).toBe(1);
   });
 });
 
-describe("first-cosmetic 成就（初始白送不算数）", () => {
+describe("first-cosmetic 成就（初始白送不算數）", () => {
   const starterIds = getStarterCosmetics().map(c => c.id);
   const achievement = ALL_ACHIEVEMENTS.find(a => a.id === "first-cosmetic")!;
   const snapshot = (ownedIds: string[]): AchievementProgressSnapshot => ({
@@ -325,27 +325,27 @@ describe("first-cosmetic 成就（初始白送不算数）", () => {
     mistakesBank: [],
   });
 
-  it("只拥有全部初始美妆时进度为 0", () => {
+  it("只擁有全部初始美妝時進度為 0", () => {
     expect(achievement.getProgress(snapshot(starterIds))).toBe(0);
   });
 
-  it("只拥有部分初始美妆（老档缺项）时进度仍为 0", () => {
+  it("只擁有部分初始美妝（老檔缺項）時進度仍為 0", () => {
     expect(achievement.getProgress(snapshot(starterIds.slice(0, 1)))).toBe(0);
   });
 
-  it("买到第一件非初始美妆即达标", () => {
+  it("買到第一件非初始美妝即達標", () => {
     expect(
       achievement.getProgress(snapshot([...starterIds.slice(0, 1), "skin_panda"])),
     ).toBe(1);
   });
 });
 
-describe("dailyRewardForStreak 边界", () => {
-  it("负数连胜按 0 处理", () => {
+describe("dailyRewardForStreak 邊界", () => {
+  it("負數連勝按 0 處理", () => {
     expect(dailyRewardForStreak(-5)).toBe(5);
   });
 
-  it("超过 7 封顶在最后一档 30", () => {
+  it("超過 7 封頂在最後一檔 30", () => {
     expect(dailyRewardForStreak(8)).toBe(30);
     expect(dailyRewardForStreak(365)).toBe(30);
   });

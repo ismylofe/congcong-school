@@ -24,7 +24,7 @@ function tomorrowKey(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-/** 把"YYYY-MM-DD"和今天比较，<= today 即为可复习 */
+/** 把"YYYY-MM-DD"和今天比較，<= today 即為可複習 */
 function isDueToday(dateStr?: string): boolean {
   if (!dateStr) return true;
   return dateStr <= todayKey();
@@ -36,8 +36,8 @@ function isTomorrow(dateStr?: string): boolean {
 }
 
 const BOX_LABELS: Record<number, { label: string; color: string }> = {
-  1: { label: "新错题", color: "text-danger bg-danger/10 border-danger/30" },
-  2: { label: "再练练", color: "text-warning bg-warning/10 border-warning/40" },
+  1: { label: "新錯題", color: "text-danger bg-danger/10 border-danger/30" },
+  2: { label: "再練練", color: "text-warning bg-warning/10 border-warning/40" },
   3: { label: "快掌握了", color: "text-primary-dark bg-primary/10 border-primary/30" },
 };
 
@@ -52,7 +52,7 @@ export function ReviewClient() {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
-  // SRS 排序：先 box 1 → 2 → 3，同 box 内按 lastReviewedAt 旧的优先；毕业条目沉底
+  // SRS 排序：先 box 1 → 2 → 3，同 box 內按 lastReviewedAt 舊的優先；畢業條目沉底
   const sortedMistakes = hydrated
     ? [...mistakes].sort((a, b) => {
         const ga = isSrsGraduated(a) ? 1 : 0;
@@ -67,16 +67,16 @@ export function ReviewClient() {
       })
     : [];
 
-  // 按 lessonId 分组
+  // 按 lessonId 分組
   const grouped = sortedMistakes.reduce<Record<string, { title: string; items: typeof mistakes }>>((acc, m) => {
     const key = m.lessonId;
-    if (!acc[key]) acc[key] = { title: m.lessonTitle || "学习练习", items: [] };
+    if (!acc[key]) acc[key] = { title: m.lessonTitle || "學習練習", items: [] };
     acc[key].items.push(m);
     return acc;
   }, {});
   const groupEntries = Object.entries(grouped);
   const totalMistakes = hydrated ? mistakes.length : 0;
-  // 到期可复习 = nextReviewDate 到期 且 未毕业（与 core getDueSrsEntries 同口径）
+  // 到期可複習 = nextReviewDate 到期 且 未畢業（與 core getDueSrsEntries 同口徑）
   const dueCount = hydrated
     ? mistakes.filter(m => !isSrsGraduated(m) && isDueToday(m.nextReviewDate)).length
     : 0;
@@ -84,7 +84,7 @@ export function ReviewClient() {
   return (
     <AppShell centerMaxWidth={840}>
     <main className="min-h-screen bg-bg lg:bg-transparent relative">
-      {/* Header —— 仅移动端：白底 sticky（lg+ HUD 由右栏 RightRail 常驻，不再重复） */}
+      {/* Header —— 僅移動端：白底 sticky（lg+ HUD 由右欄 RightRail 常駐，不再重複） */}
       <div className="shell-page-toolbar bg-white border-b border-bg-softer">
         <div className="max-w-2xl lg:max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3 lg:px-0 lg:py-2">
           <SoundLink
@@ -95,7 +95,7 @@ export function ReviewClient() {
             <ArrowLeft className="w-5 h-5" />
           </SoundLink>
           <div className="flex-1 min-w-0 text-center lg:hidden">
-            <h1 className="text-base font-extrabold text-ink">错题本</h1>
+            <h1 className="text-base font-extrabold text-ink">錯題本</h1>
           </div>
           <div className="hidden lg:block flex-1" />
           <div className="w-auto shrink-0 flex justify-end">
@@ -105,7 +105,7 @@ export function ReviewClient() {
       </div>
 
       <div className="max-w-2xl lg:max-w-4xl mx-auto px-4 pt-6 pb-28">
-        <h1 className="hidden lg:block text-3xl font-extrabold text-ink mb-6">错题本</h1>
+        <h1 className="hidden lg:block text-3xl font-extrabold text-ink mb-6">錯題本</h1>
         {hydrated && totalMistakes > 0 && (
           <SrsSummary
             todayCount={dueCount}
@@ -117,11 +117,11 @@ export function ReviewClient() {
         {hydrated && totalMistakes === 0 ? (
           <EmptyState
             mood="cheer"
-            title="这里记录你的进步"
-            desc="做错的题会收在这里，慢慢练，就会越来越熟悉。"
+            title="這裡記錄你的進步"
+            desc="做錯的題會收在這裡，慢慢練，就會越來越熟悉。"
             action={
               <SoundLink href="/" hapticIntensity="medium" className="btn-chunky-primary px-8">
-                去学习
+                去學習
               </SoundLink>
             }
           />
@@ -137,7 +137,7 @@ export function ReviewClient() {
                 style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
               >
                 <div className="px-5 py-3 border-b-2 border-bg-softer bg-bg-soft">
-                  <div className="text-xs text-ink-light font-semibold">课程</div>
+                  <div className="text-xs text-ink-light font-semibold">課程</div>
                   <div className="text-base font-extrabold text-ink">{group.title}</div>
                 </div>
                 <AnimatePresence>
@@ -159,7 +159,7 @@ export function ReviewClient() {
         )}
       </div>
 
-      {/* 📚 底部悬浮：开始复习（有到期错题时才出现，直达 runner） */}
+      {/* 📚 底部懸浮：開始複習（有到期錯題時才出現，直達 runner） */}
       {hydrated && dueCount > 0 && (
         <motion.div
           initial={{ y: 80, opacity: 0 }}
@@ -174,7 +174,7 @@ export function ReviewClient() {
               className="btn-chunky-danger px-10 pointer-events-auto inline-flex items-center gap-2"
             >
               <Rocket className="w-5 h-5" />
-              开始复习（{dueCount} 题）
+              開始複習（{dueCount} 題）
             </SoundLink>
           </div>
         </motion.div>
@@ -205,10 +205,10 @@ function SrsSummary({
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="text-base font-extrabold text-ink">今日复习计划</div>
+        <div className="text-base font-extrabold text-ink">今日複習計劃</div>
         <div className="text-xs font-extrabold text-ink-light tabular-nums">
           <span className="text-danger">{todayCount}</span>
-          <span className="text-ink-softer"> / {total} 待办</span>
+          <span className="text-ink-softer"> / {total} 待辦</span>
         </div>
       </div>
       <div className="h-2 rounded-full bg-bg-softer overflow-hidden mb-3">
@@ -222,7 +222,7 @@ function SrsSummary({
       <div className="grid grid-cols-4 gap-2">
         <SrsBucket label="今天" count={todayCount} color="text-danger" bg="bg-danger/10" />
         <SrsBucket label="明天" count={tomorrowCount} color="text-warning" bg="bg-warning/15" />
-        <SrsBucket label="之后" count={laterCount} color="text-secondary" bg="bg-secondary/10" />
+        <SrsBucket label="之後" count={laterCount} color="text-secondary" bg="bg-secondary/10" />
         <SrsBucket label="已掌握" count={graduatedCount} color="text-primary" bg="bg-primary/10" />
       </div>
     </motion.section>
@@ -260,9 +260,9 @@ interface MistakeItemProps {
 }
 
 /**
- * 错题条目 —— 只读展示。
- * 正确答案默认折叠（先自己想一想，点「查看答案」才展开答案 + 解析）；
- * 真实作答请走「开始复习」runner，自评按钮已移除。
+ * 錯題條目 —— 只讀展示。
+ * 正確答案預設摺疊（先自己想一想，點「查看答案」才展開答案 + 解析）；
+ * 真實作答請走「開始複習」runner，自評按鈕已移除。
  */
 function MistakeItem({
   questionText,
@@ -291,15 +291,15 @@ function MistakeItem({
               {boxStyle.label}
             </span>
             {!graduated && !due && (
-              <span className="text-[10px] text-ink-softer">今天不用复习</span>
+              <span className="text-[10px] text-ink-softer">今天不用複習</span>
             )}
           </div>
           <div className="text-base font-semibold text-ink leading-relaxed">
             <MathText text={questionText} />
           </div>
 
-          {/* 正确答案默认折叠：先想一想，再看答案 */}
-          {!correctAnswer.trim() ? <p className="mt-2 text-sm text-ink-light">进入复习后同步题目</p> : <button
+          {/* 正確答案預設摺疊：先想一想，再看答案 */}
+          {!correctAnswer.trim() ? <p className="mt-2 text-sm text-ink-light">進入複習後同步題目</p> : <button
             type="button"
             onClick={() => {
               playSfx("tap");
@@ -321,7 +321,7 @@ function MistakeItem({
               >
                 <div className="mt-2 flex items-center gap-2 text-sm">
                   <CheckCircle className="w-4 h-4 text-primary shrink-0" />
-                  <span className="text-ink-light">正确答案：</span>
+                  <span className="text-ink-light">正確答案：</span>
                   <span className="font-extrabold text-primary-dark">
                     <MathText text={correctAnswer} />
                   </span>

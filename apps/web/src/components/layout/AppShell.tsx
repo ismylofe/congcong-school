@@ -1,19 +1,19 @@
 "use client";
 
 /**
- * AppShell —— 响应式三栏布局壳（左 SideNav / 中央内容 / 右 RightRail）
+ * AppShell —— 響應式三欄佈局殼（左 SideNav / 中央內容 / 右 RightRail）
  *
- * 断点（web-shell-14）：
- *   - < md：单列，底部 BottomNav（BottomNav 自身 md:hidden）
- *   - md (768-1023)：icon-only 72px SideNav + 中央列（max ~640），无右栏
+ * 斷點（web-shell-14）：
+ *   - < md：單列，底部 BottomNav（BottomNav 自身 md:hidden）
+ *   - md (768-1023)：icon-only 72px SideNav + 中央列（max ~640），無右欄
  *   - lg：200px SideNav + 中央列；xl+ 才展示 288px RightRail
  *
- * 单树渲染：children 只挂载一次，通过同一组 CSS 断点控制两侧栏的显隐，
- * 避免旧版「移动端 + 桌面端各渲染一份 children」带来的音效 / observer /
- * ticker 双跑与重复 <main> 问题。
+ * 單樹渲染：children 只掛載一次，透過同一組 CSS 斷點控制兩側欄的顯隱，
+ * 避免舊版「移動端 + 桌面端各渲染一份 children」帶來的音效 / observer /
+ * ticker 雙跑與重複 <main> 問題。
  *
- * 语义：AppShell 自身不再输出 <main>——由各页面的 children 提供唯一的
- * <main> 地标（现有壳内页面均已自带）。
+ * 語義：AppShell 自身不再輸出 <main>——由各頁面的 children 提供唯一的
+ * <main> 地標（現有殼內頁面均已自帶）。
  */
 
 import type { CSSProperties, ReactNode } from "react";
@@ -22,9 +22,9 @@ import { RightRail } from "./RightRail";
 
 interface AppShellProps {
   children: ReactNode;
-  /** 自定义右栏。传 null 显式隐藏；不传则显示默认 RightRail */
+  /** 自定義右欄。傳 null 顯式隱藏；不傳則顯示預設 RightRail */
   right?: ReactNode | null;
-  /** 中央内容栏最大宽度（仅 md+ 生效），默认 640 */
+  /** 中央內容欄最大寬度（僅 md+ 生效），預設 640 */
   centerMaxWidth?: number;
 }
 

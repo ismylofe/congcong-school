@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * BottomNav —— 移动端底部固定导航栏
+ * BottomNav —— 移動端底部固定導航欄
  *
- * 5 个真实 tab：学习 / 排行榜 / 错题本 / 商店 / 我的
+ * 5 個真實 tab：學習 / 排行榜 / 錯題本 / 商店 / 我的
  */
 
 import { useEffect, useState } from "react";
@@ -29,18 +29,18 @@ interface NavItem {
   href: string;
   label: string;
   Icon: ComponentType<IconProps>;
-  /** 命中前缀判断 active */
+  /** 命中字首判斷 active */
   matchPrefix: string;
-  /** 激活态主色 */
+  /** 啟用態主色 */
   activeColor: string;
-  /** 激活态背景 */
+  /** 啟用態背景 */
   activeBg: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
   {
     href: "/",
-    label: "学习",
+    label: "學習",
     Icon: HomeIcon,
     matchPrefix: "/",
     activeColor: "text-secondary-dark",
@@ -56,7 +56,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   {
     href: "/review/",
-    label: "错题本",
+    label: "錯題本",
     Icon: Bookmark,
     matchPrefix: "/review",
     activeColor: "text-secondary-dark",
@@ -105,29 +105,29 @@ export function BottomNav() {
   const gems = useProgressStore(s => s.gems);
   const ownedCosmetics = useProgressStore(s => s.ownedCosmetics);
   const claimableQuestCount = useProgressStore(s => s.claimableQuestCount);
-  // claimableQuestCount 是派生函数（引用恒定），订阅其依赖字段驱动徽章实时刷新
+  // claimableQuestCount 是派生函式（引用恆定），訂閱其依賴欄位驅動徽章實時重新整理
   useProgressStore(
     s =>
       `${s.dailyQuestDate}|${s.lastXpDate}|${s.todayXp}|${s.dailyLessons}|${s.dailyReviews}|${s.dailyReadings}|${Object.keys(s.claimedQuests).length}`,
   );
 
-  // 错题本徽章：今日可复习的数量
+  // 錯題本徽章：今日可複習的數量
   const today = todayStr();
   const reviewBadge = hydrated
     ? mistakes.filter(m => !m.nextReviewDate || m.nextReviewDate <= today).length
     : 0;
 
-  // 商店徽章：有任何当前 gems 买得起且未拥有的道具就亮红点
+  // 商店徽章：有任何當前 gems 買得起且未擁有的道具就亮紅點
   const shopHasAffordable = hydrated
     ? ALL_COSMETICS.some(c => !ownedCosmetics[c.id] && c.cost > 0 && gems >= c.cost)
     : false;
 
-  // 个人中心徽章：可领取的每日任务（计数优先），其次未读成就红点
+  // 個人中心徽章：可領取的每日任務（計數優先），其次未讀成就紅點
   const claimableQuests = hydrated ? claimableQuestCount() : 0;
   const profileHasUnseen = hydrated && hasUnseenAchievements();
 
-  // 沉浸式路径（课程 / 跳级 / 复习 runner / 阅读器）隐藏底部导航，
-  // 否则固定底栏会盖住这些页面底部的「检查 / 继续」按钮。
+  // 沉浸式路徑（課程 / 跳級 / 複習 runner / 閱讀器）隱藏底部導航，
+  // 否則固定底欄會蓋住這些頁面底部的「檢查 / 繼續」按鈕。
   if (!hydrated || (pathname === "/" && selectedGrade == null) || isImmersivePath(pathname)) return null;
 
   const navItems = NAV_ITEMS;
@@ -144,8 +144,8 @@ export function BottomNav() {
 
   return (
     <>
-    {/* 占位条：把页面内容顶出固定导航的高度（含安全区），
-        代替旧版全局 body pb-16 —— 导航隐藏时占位也随之消失 */}
+    {/* 佔位條：把頁面內容頂出固定導航的高度（含安全區），
+        代替舊版全域 body pb-16 —— 導航隱藏時佔位也隨之消失 */}
     <div
       aria-hidden="true"
       className="md:hidden"
@@ -156,7 +156,7 @@ export function BottomNav() {
       style={{
         paddingBottom: "max(env(safe-area-inset-bottom), 0px)",
       }}
-      aria-label="主导航"
+      aria-label="主導航"
     >
       <div className="grid grid-cols-5 max-w-md mx-auto h-[68px]">
         {navItems.map(item => {
@@ -174,9 +174,9 @@ export function BottomNav() {
               className="flex flex-col items-center justify-center gap-1 select-none relative"
               aria-label={
                 badge?.count
-                  ? `${item.label}（${badge.count} 项待办）`
+                  ? `${item.label}（${badge.count} 項待辦）`
                   : badge?.dot
-                    ? `${item.label}（有新内容）`
+                    ? `${item.label}（有新內容）`
                     : item.label
               }
               aria-current={active ? "page" : undefined}

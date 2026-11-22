@@ -70,8 +70,8 @@ export default function NumberSenseReview() {
       setSaved(true);
       setSaveMessage(
         applied
-          ? "今天的检验已保存。"
-          : "这次结果已保留；如果今天已经检验过，同一轮不会再次领取奖励。",
+          ? "今天的檢驗已儲存。"
+          : "這次結果已保留；如果今天已經檢驗過，同一輪不會再次領取獎勵。",
       );
     }
   }, [session, ready]);
@@ -108,15 +108,15 @@ export default function NumberSenseReview() {
       <main className="min-h-screen px-5 flex flex-col justify-center items-center text-center gap-4">
         <Mascot mood="happy" size={100} />
         <h1 className="text-2xl font-extrabold text-ink">
-          {limited ? "今天先休息一下" : "下次再用新题试试"}
+          {limited ? "今天先休息一下" : "下次再用新題試試"}
         </h1>
         <p className="text-ink-light max-w-md">
           {limited
-            ? "今天的学习时间到了，明天再来。"
-            : "练习后的下一天才做隔天检验。同一天重练不会标成“隔天仍会”。"}
+            ? "今天的學習時間到了，明天再來。"
+            : "練習後的下一天才做隔天檢驗。同一天重練不會標成“隔天仍會”。"}
         </p>
         <Link className="btn-chunky-primary px-5" href="/number-sense/">
-          回到示范单元
+          回到示範單元
         </Link>
       </main>
     );
@@ -129,7 +129,7 @@ export default function NumberSenseReview() {
     return (
       <main className="min-h-screen px-5 py-8 max-w-lg mx-auto text-center">
         <Mascot mood="cheer" size={100} />
-        <h1 className="text-2xl font-extrabold text-ink mt-4">隔天检验完成</h1>
+        <h1 className="text-2xl font-extrabold text-ink mt-4">隔天檢驗完成</h1>
         {numberCheckResults(session).map((r) => (
           <div
             key={r.skill}
@@ -137,20 +137,20 @@ export default function NumberSenseReview() {
           >
             <h2 className="font-extrabold">{NUMBER_LESSONS[r.skill].title}</h2>
             <p>
-              {r.correct}/{r.total} 道新题独立答对
+              {r.correct}/{r.total} 道新題獨立答對
             </p>
             <p className="text-sm text-ink-light">
               {r.correct === r.total
-                ? "隔天仍会，一周后再巩固。"
-                : "还需要巩固，明天再试。可以先回去练一练。"}
+                ? "隔天仍會，一週後再鞏固。"
+                : "還需要鞏固，明天再試。可以先回去練一練。"}
             </p>
           </div>
         ))}
         <p role="status" className="mt-4 text-sm text-ink-light">
-          {saved ? saveMessage : "正在保存…"}
+          {saved ? saveMessage : "正在儲存…"}
         </p>
         <Link className="btn-chunky-primary w-full mt-5" href="/number-sense/">
-          看看学习记录
+          看看學習記錄
         </Link>
       </main>
     );
@@ -161,7 +161,7 @@ export default function NumberSenseReview() {
           className="min-h-11 inline-flex items-center font-bold text-secondary-dark"
           href="/number-sense/"
         >
-          保存并返回
+          儲存並返回
         </Link>
         <span>
           {session.index + 1}/{questions.length}
@@ -169,9 +169,9 @@ export default function NumberSenseReview() {
         <MuteToggle />
       </div>
       <div ref={questionScrollRef} className="lesson-content px-3 sm:px-4">
-      <h1 className="text-lg font-extrabold">隔天用新题试一试</h1>
+      <h1 className="text-lg font-extrabold">隔天用新題試一試</h1>
       <p className="text-sm text-ink-light mb-5 mt-2">
-        可以点物体做记号。需要帮助也没关系，我们会把它记成“还需要巩固”。
+        可以點物體做記號。需要幫助也沒關係，我們會把它記成“還需要鞏固”。
       </p>
       <div className="rounded-2xl bg-white border-2 border-bg-softer p-2 sm:p-4">
         <QuestionRenderer
@@ -187,14 +187,14 @@ export default function NumberSenseReview() {
       {session.checked ? (
         <div className="lesson-actions max-h-[45dvh] overflow-y-auto px-3 pt-3 pb-4 bg-white border-t-2 border-bg-softer">
           <p role="status" className="rounded-xl bg-secondary/10 p-4">
-            {correct ? "这道新题答对了。" : "一起看看方法："}{" "}
+            {correct ? "這道新題答對了。" : "一起看看方法："}{" "}
             {current.explanation}
           </p>
           <button
             className="btn-chunky-primary w-full mt-4"
             onClick={() => update({ type: "next" })}
           >
-            {session.index + 1 === questions.length ? "完成检验" : "下一题"}
+            {session.index + 1 === questions.length ? "完成檢驗" : "下一題"}
           </button>
         </div>
       ) : (
@@ -208,13 +208,13 @@ export default function NumberSenseReview() {
             disabled={!session.answer}
             onClick={() => update({ type: "check" })}
           >
-            检查
+            檢查
           </button>
           <button
             className="ui-text-button text-secondary-dark mt-1 w-full"
             onClick={() => update({ type: "help" })}
           >
-            需要帮助，先看看方法
+            需要幫助，先看看方法
           </button>
         </div>
       )}

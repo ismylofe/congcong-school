@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * ContinueLearningCard —— Home 页顶部的"继续学习"大卡片。
+ * ContinueLearningCard —— Home 頁頂部的"繼續學習"大卡片。
  *
- * 行为：
- *   1. 如果 store 里有 activeLesson（未完成的课程会话），点击直达那节课
- *   2. 否则不渲染（Home 按年级网格选择即可）
+ * 行為：
+ *   1. 如果 store 裡有 activeLesson（未完成的課程會話），點選直達那節課
+ *   2. 否則不渲染（Home 按年級網格選擇即可）
  *
- * 视觉：Duolingo 风格绿色厚底卡片 + Mascot + 一句召唤 + ▶ CONTINUE 按钮
+ * 視覺：Duolingo 風格綠色厚底卡片 + Mascot + 一句召喚 + ▶ CONTINUE 按鈕
  */
 
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ import { playSfx } from "@/lib/sfx";
 import { haptic } from "@/lib/haptic";
 import type { Book, SubjectId } from "@/types";
 
-/** 从 lessonId 反推 bookId —— pattern: {bookId}-u{N}-kp{M} */
+/** 從 lessonId 反推 bookId —— pattern: {bookId}-u{N}-kp{M} */
 function parseBookId(lessonId: string): string | null {
   const m = lessonId.match(/^(.+?)-u\d+-kp\d+$/);
   return m ? m[1] : null;
@@ -47,7 +47,7 @@ export function ContinueLearningCard({ compact = false, placement = "page" }: { 
   if (compact) return (
     <Link href={href} data-placement={placement} className="continue-strip flex items-center gap-3 w-full rounded-2xl border-2 border-bg-softer bg-white p-3 mb-4" onClick={() => { playSfx("tap"); haptic("light"); }}>
       <span className="continue-play w-10 h-10 rounded-xl flex items-center justify-center shrink-0" aria-hidden>▶</span>
-      <span className="flex-1 min-w-0"><span className="block text-base font-bold text-ink">继续上次的练习</span><span className="block text-sm text-ink-light mt-0.5">已答 {activeLesson.correctCount + activeLesson.mistakeCount} 题</span></span>
+      <span className="flex-1 min-w-0"><span className="block text-base font-bold text-ink">繼續上次的練習</span><span className="block text-sm text-ink-light mt-0.5">已答 {activeLesson.correctCount + activeLesson.mistakeCount} 題</span></span>
       <span className="text-secondary-dark" aria-hidden>→</span>
     </Link>
   );
@@ -78,16 +78,16 @@ export function ContinueLearningCard({ compact = false, placement = "page" }: { 
           </motion.div>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-extrabold text-primary uppercase tracking-wide">
-              继续学习
+              繼續學習
             </div>
             <div className="mt-0.5 flex items-center gap-1.5 min-w-0">
               <span className="text-base lg:text-2xl font-extrabold text-ink break-words">
-                上次的课程还没做完呢
+                上次的課程還沒做完呢
               </span>
               <Sparkle className="w-3.5 h-3.5 lg:w-5 lg:h-5 text-gold shrink-0" />
             </div>
             <div className="text-xs lg:text-base text-ink-light mt-1 leading-relaxed">
-              已答 {activeLesson.correctCount + activeLesson.mistakeCount} 题 · 连击 ×{activeLesson.combo}
+              已答 {activeLesson.correctCount + activeLesson.mistakeCount} 題 · 連擊 ×{activeLesson.combo}
             </div>
           </div>
           <motion.div
@@ -105,13 +105,13 @@ export function ContinueLearningCard({ compact = false, placement = "page" }: { 
 }
 
 // ============================================================
-// ActiveBookSync —— 挂在 /book/{id} 页里的隐形同步器：
-// 访问哪本书，哪本书就成为「当前教材」（activeBookId），
-// 首页据此实现「打开即路径」。同时把 selectedGrade 对齐到该书年级。
+// ActiveBookSync —— 掛在 /book/{id} 頁裡的隱形同步器：
+// 訪問哪本書，哪本書就成為「當前教材」（activeBookId），
+// 首頁據此實現「開啟即路徑」。同時把 selectedGrade 對齊到該書年級。
 // ============================================================
 export function ActiveBookSync({ bookId, grade }: { bookId: string; grade: number }) {
-  // 只在进入该书页时同步一次（依赖仅 bookId/grade）：
-  // 若依赖 store 字段，会与弹层里的「换年级」（清空两者后跳走）竞态互写。
+  // 只在進入該書頁時同步一次（依賴僅 bookId/grade）：
+  // 若依賴 store 欄位，會與彈層裡的「換年級」（清空兩者後跳走）競態互寫。
   useEffect(() => {
     const s = useProgressStore.getState();
     if (s.activeBookId !== bookId) s.setActiveBookId(bookId);
@@ -122,8 +122,8 @@ export function ActiveBookSync({ bookId, grade }: { bookId: string; grade: numbe
 }
 
 // ============================================================
-// CurrentBookBadge —— 「当前教材」徽章按钮 + 换书弹层
-// 列出本年级各科教材（选择即 setActiveBookId 并跳转），附换年级入口。
+// CurrentBookBadge —— 「當前教材」徽章按鈕 + 換書彈層
+// 列出本年級各科教材（選擇即 setActiveBookId 並跳轉），附換年級入口。
 // ============================================================
 
 const SUBJECT_ORDER: SubjectId[] = ["math", "chinese", "english", "science"];
@@ -136,9 +136,9 @@ export function CurrentBookBadge({
   book,
   gradeBooks,
 }: {
-  /** 当前所在的教材 */
+  /** 當前所在的教材 */
   book: Book;
-  /** 同年级全部教材（服务端传入，含当前这本） */
+  /** 同年級全部教材（服務端傳入，含當前這本） */
   gradeBooks: Book[];
 }) {
   const [open, setOpen] = useState(false);
@@ -148,7 +148,7 @@ export function CurrentBookBadge({
   const setActiveBookId = useProgressStore(s => s.setActiveBookId);
   const setSelectedGrade = useProgressStore(s => s.setSelectedGrade);
 
-  // 学科序 + 学期序（上册在前）
+  // 學科序 + 學期序（上冊在前）
   const sorted = gradeBooks.filter(b => (b.schoolSystem ?? "6-3") === schoolSystem).sort((a, b) => {
     const so = SUBJECT_ORDER.indexOf(subjectOf(a)) - SUBJECT_ORDER.indexOf(subjectOf(b));
     if (so !== 0) return so;
@@ -168,7 +168,7 @@ export function CurrentBookBadge({
     playSfx("tap");
     haptic("light");
     setOpen(false);
-    // 清空年级 + 当前教材 → 首页回到 GradePicker 引导
+    // 清空年級 + 當前教材 → 首頁回到 GradePicker 引導
     setActiveBookId(null);
     setSelectedGrade(null);
     router.push("/");
@@ -184,7 +184,7 @@ export function CurrentBookBadge({
           setOpen(true);
         }}
         aria-haspopup="dialog"
-        aria-label={`当前教材：${book.subjectName ?? ""}${book.textbookName}，点击切换`}
+        aria-label={`當前教材：${book.subjectName ?? ""}${book.textbookName}，點選切換`}
         className="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-xl bg-white border-2 border-bg-softer hover:border-primary/50 transition-colors select-none min-w-0"
         style={{ boxShadow: "0 2px 0 0 var(--shadow-card-color)" }}
       >
@@ -198,12 +198,12 @@ export function CurrentBookBadge({
         </span>
       </button>
 
-      <Modal open={open} onClose={() => setOpen(false)} ariaLabel="切换教材">
-        <div className="text-lg font-extrabold text-ink leading-tight">切换教材</div>
+      <Modal open={open} onClose={() => setOpen(false)} ariaLabel="切換教材">
+        <div className="text-lg font-extrabold text-ink leading-tight">切換教材</div>
         <div className="text-xs text-ink-light mt-1 mb-4">
-          {book.gradeName}的全部教材，点一下就换
+          {book.gradeName}的全部教材，點一下就換
         </div>
-        {gradeBooks.some(b => b.schoolSystem === "5-4") && <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label="切换学制">
+        {gradeBooks.some(b => b.schoolSystem === "5-4") && <div className="flex flex-wrap gap-2 mb-3" role="group" aria-label="切換學制">
           {(["6-3", "5-4"] as const).map(value => <button
             key={value} type="button" aria-pressed={schoolSystem === value}
             onClick={() => setSchoolSystem(value)}
@@ -234,7 +234,7 @@ export function CurrentBookBadge({
                     {b.textbookName}
                   </span>
                   <span className="block text-[11px] text-ink-light mt-0.5">
-                    {b.unitsCount} 单元 · {b.lessonsCount} 节小课
+                    {b.unitsCount} 單元 · {b.lessonsCount} 節小課
                   </span>
                 </span>
                 {isCurrent && (
@@ -251,14 +251,14 @@ export function CurrentBookBadge({
             onClick={changeGrade}
             className="min-h-11 px-2 text-sm font-extrabold text-secondary hover:underline"
           >
-            换个年级
+            換個年級
           </button>
           <SoundLink
             href={`/grade/${book.grade}/`}
             onClick={() => setOpen(false)}
             className="min-h-11 px-2 text-sm font-extrabold text-ink-light hover:text-ink"
           >
-            看年级主页 →
+            看年級主頁 →
           </SoundLink>
         </div>
       </Modal>

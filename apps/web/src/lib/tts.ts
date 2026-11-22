@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * tts.ts — 播放 build-data 注入的预生成 TTS mp3。
+ * tts.ts — 播放 build-data 注入的預生成 TTS mp3。
  *
- * 设计：
- *   - 单例 HTMLAudioElement，同一时间只有一段 TTS 在播
- *   - 受全局 muted 状态控制
- *   - 简单 LRU 预加载（避免重复 fetch）
+ * 設計：
+ *   - 單例 HTMLAudioElement，同一時間只有一段 TTS 在播
+ *   - 受全域 muted 狀態控制
+ *   - 簡單 LRU 預載入（避免重複 fetch）
  */
 
 import { isMuted } from "./sfx";
@@ -70,7 +70,7 @@ export function playTTSResult(src: string | undefined | null): Promise<TTSPlayba
   if (isMuted()) return Promise.resolve("muted");
   const a = getEl();
   if (!a) return Promise.resolve("missing");
-  // 同一段再次点击 → 停止
+  // 同一段再次點選 → 停止
   if (currentSrc === src && !a.paused) {
     stopTTS();
     return Promise.resolve("interrupted");

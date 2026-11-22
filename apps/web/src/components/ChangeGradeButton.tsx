@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * ChangeGradeButton —— 在 grade 页头部显示的"切换年级"按钮
- * 点击后清空 selectedGrade 并跳回 / ，触发 GradePicker 重新选择。
+ * ChangeGradeButton —— 在 grade 頁頭部顯示的"切換年級"按鈕
+ * 點選後清空 selectedGrade 並跳回 / ，觸發 GradePicker 重新選擇。
  */
 
 import { useRouter } from "next/navigation";
@@ -25,7 +25,7 @@ export function ChangeGradeButton() {
       }}
       className="ui-text-button text-secondary hover:underline"
     >
-      切换年级
+      切換年級
     </button>
   );
 }

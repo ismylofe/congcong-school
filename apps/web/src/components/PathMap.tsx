@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * PathMap — 多邻国式蛇形学习路径
+ * PathMap — 多鄰國式蛇形學習路徑
  *
- * - 顶部 sticky banner：随滚动切换显示当前可见单元（不同 unit 不同颜色）
- * - 单元之间用细分隔条（横线 + 居中标题），不再用大 SectionCard
- * - 节点蛇形左右摆动 (snake offset)
- * - 节点状态：completed / current / locked
- * - 每 N 课插入宝箱节点
+ * - 頂部 sticky banner：隨滾動切換顯示當前可見單元（不同 unit 不同顏色）
+ * - 單元之間用細分隔條（橫線 + 居中標題），不再用大 SectionCard
+ * - 節點蛇形左右擺動 (snake offset)
+ * - 節點狀態：completed / current / locked
+ * - 每 N 課插入寶箱節點
  */
 
 import {
@@ -41,17 +41,17 @@ import type { PathLessonMeta, LessonStatus } from "@cstf/core";
 export type { PathLessonMeta, LessonStatus };
 
 /**
- * 单元挑战节点（⚔️ exam 课）的展示元数据 —— 由 BookPathView
- * 按「该单元全部普通课完成 → 解锁」的规则计算好传入。
+ * 單元挑戰節點（⚔️ exam 課）的展示中繼資料 —— 由 BookPathView
+ * 按「該單元全部普通課完成 → 解鎖」的規則計算好傳入。
  */
 export interface ExamNodeMeta {
   lessonId: string;
   questionCount: number;
-  /** 该单元全部普通课已完成 → 可挑战 */
+  /** 該單元全部普通課已完成 → 可挑戰 */
   unlocked: boolean;
-  /** 已通关（completedLessons 有记录） */
+  /** 已通關（completedLessons 有記錄） */
   completed: boolean;
-  /** accuracy ≥ 0.8 → 征服（奖杯金色态） */
+  /** accuracy ≥ 0.8 → 征服（獎盃金色態） */
   conquered: boolean;
 }
 
@@ -60,17 +60,17 @@ interface PathMapProps {
   lessons: PathLessonMeta[];
   /** lessonId → status */
   statuses: Record<string, LessonStatus>;
-  /** lessonId → 星数 (1-3) */
+  /** lessonId → 星數 (1-3) */
   stars?: Record<string, number>;
-  /** 教材标签（如 "数学 · 一年级下册"），并入 sticky banner 顶部，替代独立的页面 header */
+  /** 教材標籤（如 "數學 · 一年級下冊"），併入 sticky banner 頂部，替代獨立的頁面 header */
   headerLabel?: ReactNode;
-  /** 是否展示 GUIDEBOOK 按钮；点击跳到 /book/{bookId}/guide/{activeUnitNum}/ */
+  /** 是否展示 GUIDEBOOK 按鈕；點選跳到 /book/{bookId}/guide/{activeUnitNum}/ */
   hasGuide?: boolean;
-  /** ← 返回按钮目标路径；不传则不渲染返回按钮 */
+  /** ← 返回按鈕目標路徑；不傳則不渲染返回按鈕 */
   backHref?: string;
-  /** 在 sticky banner 上方渲染的插槽内容（随 banner 一起 sticky） */
+  /** 在 sticky banner 上方渲染的插槽內容（隨 banner 一起 sticky） */
   topSlot?: ReactNode;
-  /** 单元挑战节点：unitNumber → meta（缺省 = 该单元没有挑战课） */
+  /** 單元挑戰節點：unitNumber → meta（預設 = 該單元沒有挑戰課） */
   exams?: Record<number, ExamNodeMeta>;
 }
 
@@ -81,9 +81,9 @@ type UnitItem =
 
 interface ActiveChestState {
   slot: ChestSlot;
-  /** 本次开箱抽到的奖励 */
+  /** 本次開箱抽到的獎勵 */
   gems: number;
-  /** 奖励档位（common/rare/epic）—— ChestModal 按档位分层演出 */
+  /** 獎勵檔位（common/rare/epic）—— ChestModal 按檔位分層演出 */
   tier: ChestRewardTier;
 }
 
@@ -104,7 +104,7 @@ export function PathMap({
 }: PathMapProps) {
   const [activeLesson, setActiveLesson] = useState<PathLessonMeta | null>(null);
   const [activeChest, setActiveChest] = useState<ActiveChestState | null>(null);
-  // 点开的单元挑战（弹 LessonStartModal 挑战版）
+  // 點開的單元挑戰（彈 LessonStartModal 挑戰版）
   const [activeExam, setActiveExam] = useState<{
     meta: ExamNodeMeta;
     unitNumber: number;
@@ -115,7 +115,7 @@ export function PathMap({
   const addGems = useProgressStore(s => s.addGems);
   const claimChest = useProgressStore(s => s.claimChest);
 
-  // 宝箱插槽：每 N 课一个，稳定 id
+  // 寶箱插槽：每 N 課一個，穩定 id
   const chestSlots = useMemo(() => computeChestsForBook(bookId, lessons), [bookId, lessons]);
   const chestByAfterLesson = useMemo(() => {
     const m = new Map<string, ChestSlot>();
@@ -123,8 +123,8 @@ export function PathMap({
     return m;
   }, [chestSlots]);
 
-  // 按单元分组，合并 lesson + chest 为一个 unitItems 列表；
-  // 单元末尾追加 ⚔️ 挑战节点（该单元有 exam 课时）
+  // 按單元分組，合併 lesson + chest 為一個 unitItems 列表；
+  // 單元末尾追加 ⚔️ 挑戰節點（該單元有 exam 課時）
   const byUnit = useMemo(() => {
     const map = new Map<number, { title: string; label?: string; items: UnitItem[] }>();
     for (const l of lessons) {
@@ -153,7 +153,7 @@ export function PathMap({
 
   const unitEntries = useMemo(() => Array.from(byUnit.entries()), [byUnit]);
 
-  // sticky banner：跟随滚动指示当前可见的单元
+  // sticky banner：跟隨滾動指示當前可見的單元
   const sectionRefs = useRef(new Map<number, HTMLDivElement | null>());
   const [activeUnitNum, setActiveUnitNum] = useState<number>(unitEntries[0]?.[0] ?? 1);
 
@@ -161,7 +161,7 @@ export function PathMap({
     if (typeof window === "undefined") return;
     const observer = new IntersectionObserver(
       entries => {
-        // 找到所有 isIntersecting 的 unit，取最靠上的那个
+        // 找到所有 isIntersecting 的 unit，取最靠上的那個
         const visible = entries
           .filter(e => e.isIntersecting)
           .map(e => Number((e.target as HTMLElement).dataset.unit ?? "0"))
@@ -172,7 +172,7 @@ export function PathMap({
         }
       },
       {
-        // 观察"进入屏幕上半部分"的元素
+        // 觀察"進入螢幕上半部分"的元素
         rootMargin: "-80px 0px -55% 0px",
         threshold: 0,
       },
@@ -194,8 +194,8 @@ export function PathMap({
     playSfx("tap");
     haptic("medium");
     if (claimedChests[slot.id]) {
-      // 已领取的宝箱不再进入开箱流程（避免开出 +0 的挫败感）
-      toast.info("这个宝箱已经开过啦");
+      // 已領取的寶箱不再進入開箱流程（避免開出 +0 的挫敗感）
+      toast.info("這個寶箱已經開過啦");
       return;
     }
     const reward = rollChestReward();
@@ -208,7 +208,7 @@ export function PathMap({
     if (!meta.unlocked) {
       playSfx("tap");
       haptic("light");
-      toast.info("先完成本单元全部课程，就能开启挑战啦");
+      toast.info("先完成本單元全部課程，就能開啟挑戰啦");
       return;
     }
     playSfx("tap");
@@ -216,15 +216,15 @@ export function PathMap({
     setActiveExam({ meta, unitNumber });
   }
 
-  // 当前 sticky banner 对应的单元元数据
+  // 當前 sticky banner 對應的單元中繼資料
   const activeUnitIndex = unitEntries.findIndex(([n]) => n === activeUnitNum);
   const safeIndex = activeUnitIndex >= 0 ? activeUnitIndex : 0;
   const activeUnit = unitEntries[safeIndex];
   const color = unitColor(safeIndex);
   const activeUnitTitle = activeUnit?.[1]?.title ?? "";
 
-  // ⚡ 跳级入口（E2）：当前可见单元「整个单元都还锁着」时，banner 上出现
-  // 「跳到这里」——测试通过即可解锁之前全部课程（口径见 /jump/）
+  // ⚡ 跳級入口（E2）：當前可見單元「整個單元都還鎖著」時，banner 上出現
+  // 「跳到這裡」——測試透過即可解鎖之前全部課程（口徑見 /jump/）
   const activeUnitFullyLocked = useMemo(() => {
     const group = byUnit.get(activeUnitNum);
     if (!group) return false;
@@ -239,7 +239,7 @@ export function PathMap({
 
   return (
     <div className="w-full max-w-md mx-auto lg:max-w-none lg:mx-0 px-4 lg:px-0 pb-6">
-      {/* === sticky 单元 banner === */}
+      {/* === sticky 單元 banner === */}
       <div
         className="sticky top-0 lg:top-4 z-20 -mx-4 px-4 lg:mx-0 lg:px-0 pt-2 pb-4 bg-bg"
       >
@@ -266,7 +266,7 @@ export function PathMap({
               </SoundLink>
             )}
             <div className="min-w-0 flex-1">
-              {/* 小标签行：subject + textbookName · 第 N 单元 */}
+              {/* 小標籤行：subject + textbookName · 第 N 單元 */}
               <div className="flex items-center gap-1.5 text-sm font-bold leading-snug min-w-0 flex-wrap">
                 {headerLabel && (
                   <span className="inline-flex items-center gap-1.5 min-w-0">
@@ -274,9 +274,9 @@ export function PathMap({
                   </span>
                 )}
                 <span className="opacity-60">·</span>
-                <span className="whitespace-nowrap">{activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 单元`}</span>
+                <span className="whitespace-nowrap">{activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 單元`}</span>
               </div>
-              {/* 大字单元标题 */}
+              {/* 大字單元標題 */}
               <div className="text-xl font-bold leading-snug break-words tracking-tight mt-1.5">
                 {activeUnitTitle}
               </div>
@@ -284,18 +284,18 @@ export function PathMap({
             {activeUnitFullyLocked && (
               <SoundLink href={`/jump/?book=${bookId}&unit=${activeUnitNum}`} hapticIntensity="medium"
                 className="shrink-0 inline-flex items-center gap-1.5 px-2 min-h-11 rounded-xl path-banner-action hover:bg-white/15 transition-colors text-xs font-bold"
-                aria-label={`跳级测试：直接跳到${activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 单元`}`}>
-                <Lightning className="w-4 h-4" aria-hidden /><span>跳级</span>
+                aria-label={`跳級測試：直接跳到${activeUnit?.[1]?.label ?? `第 ${activeUnitNum} 單元`}`}>
+                <Lightning className="w-4 h-4" aria-hidden /><span>跳級</span>
               </SoundLink>
             )}
             {hasGuide && (
               <SoundLink
                 href={`/book/${bookId}/guide/${activeUnitNum}/`}
                 className="shrink-0 inline-flex items-center gap-1.5 px-3 h-11 rounded-xl font-bold text-sm tracking-tight path-banner-action hover:bg-white/15 transition-colors"
-                aria-label="打开知识手册"
+                aria-label="開啟知識手冊"
               >
                 <Book className="w-4 h-4" aria-hidden />
-                <span className="hidden sm:inline">知识手册</span>
+                <span className="hidden sm:inline">知識手冊</span>
               </SoundLink>
             )}
           </motion.div>
@@ -304,7 +304,7 @@ export function PathMap({
 
       {topSlot && <div className="mb-3">{topSlot}</div>}
 
-      {/* === 连续蛇形路径（单元边界只作为视觉分隔 label，不中断路径） === */}
+      {/* === 連續蛇形路徑（單元邊界只作為視覺分隔 label，不中斷路徑） === */}
       <div className="pt-2">
         <UnitPath
           entries={unitEntries}
@@ -349,8 +349,8 @@ export function PathMap({
           bookId={bookId}
           lessonId={activeExam.meta.lessonId}
           title={byUnit.get(activeExam.unitNumber)?.label
-            ? `${byUnit.get(activeExam.unitNumber)!.title}挑战`
-            : `第 ${activeExam.unitNumber} 单元挑战`}
+            ? `${byUnit.get(activeExam.unitNumber)!.title}挑戰`
+            : `第 ${activeExam.unitNumber} 單元挑戰`}
           questionCount={activeExam.meta.questionCount}
           unitNumber={activeExam.unitNumber}
           unitLabel={byUnit.get(activeExam.unitNumber)?.label}
@@ -365,10 +365,10 @@ export function PathMap({
 }
 
 /**
- * 单元内部的蛇形路径渲染：
- * - 舞台最大宽 440px；窄容器保留文字宽度并收拢横向偏移，避免溢出
- * - SVG cubic bezier 连接相邻节点（控制点放在中点 y 上，自然形成 S 曲线）
- * - 节点与文字采用正常文档流；连接线根据实际行高测量绘制
+ * 單元內部的蛇形路徑渲染：
+ * - 舞臺最大寬 440px；窄容器保留文字寬度並收攏橫向偏移，避免溢位
+ * - SVG cubic bezier 連線相鄰節點（控制點放在中點 y 上，自然形成 S 曲線）
+ * - 節點與文字採用正常文件流；連接線根據實際行高測量繪製
  */
 const STAGE_WIDTH = 440;
 const NODE_SIZE = 72;
@@ -434,7 +434,7 @@ function UnitPath({
             <div data-unit-divider className="relative flex items-center justify-center gap-3 pt-2 pb-8">
               <span className="h-px flex-1 bg-bg-softer" />
               <div className="max-w-[75%] text-center text-sm font-bold leading-relaxed text-ink-light bg-bg-soft px-2">
-                {entry.unitLabel ?? `第 ${entry.unitNum} 单元`} · {entry.unitTitle}
+                {entry.unitLabel ?? `第 ${entry.unitNum} 單元`} · {entry.unitTitle}
               </div>
               <span className="h-px flex-1 bg-bg-softer" />
             </div>
@@ -463,7 +463,7 @@ function UnitPath({
   );
 }
 
-/** 蛇形偏移：固定 8 步循环 (0, +60, +110, +60, 0, -60, -110, -60) px —— 明显 S 形 */
+/** 蛇形偏移：固定 8 步迴圈 (0, +60, +110, +60, 0, -60, -110, -60) px —— 明顯 S 形 */
 const SNAKE_PATTERN = [0, 60, 110, 60, 0, -60, -110, -60];
 function snakeOffset(index: number): number {
   return SNAKE_PATTERN[index % SNAKE_PATTERN.length];
@@ -474,12 +474,12 @@ interface PathNodeProps {
   status: LessonStatus;
   stars: number;
   breatheDelay: number;
-  /** 所属单元的循环色（web-shell-15）：current 节点底色/阴影/光晕随单元色 */
+  /** 所屬單元的迴圈色（web-shell-15）：current 節點底色/陰影/光暈隨單元色 */
   color: { bg: string; shadow: string };
   onSelect: () => void;
 }
 
-/** #RRGGBB → rgba 字符串（光晕用） */
+/** #RRGGBB → rgba 字串（光暈用） */
 function hexToRgba(hex: string, alpha: number): string {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 0xff}, ${(n >> 8) & 0xff}, ${n & 0xff}, ${alpha})`;
@@ -514,7 +514,7 @@ function PathNode({ lesson, status, stars, breatheDelay, color, onSelect }: Path
           isCompleted && "bg-gold text-white",
         )}
         style={{
-          // current 节点底色/阴影/光晕跟随单元循环色（UNIT_COLORS）
+          // current 節點底色/陰影/光暈跟隨單元迴圈色（UNIT_COLORS）
           backgroundColor: isCurrent ? color.bg : undefined,
           boxShadow: isLocked
             ? "0 3px 0 0 var(--shadow-card-color)"
@@ -530,7 +530,7 @@ function PathNode({ lesson, status, stars, breatheDelay, color, onSelect }: Path
         {isCurrent && <Star className="w-8 h-8 fill-white" />}
         {isCompleted && (lesson.questionCount < 3 ? <Check className="w-8 h-8" /> : <Crown className="w-8 h-8 fill-white" />)}
 
-        {/* 星数小角标 */}
+        {/* 星數小角標 */}
         {isCompleted && stars > 0 && lesson.questionCount >= 3 && (
           <div className="absolute -bottom-1 -right-1 bg-white rounded-full px-1.5 py-0.5 shadow inline-flex items-center gap-0.5 text-gold">
             {Array.from({ length: stars }).map((_, i) => (
@@ -540,7 +540,7 @@ function PathNode({ lesson, status, stars, breatheDelay, color, onSelect }: Path
         )}
       </motion.div>
 
-      {/* 课程标题：只在 current 节点上显示（避免视觉拥挤） */}
+      {/* 課程標題：只在 current 節點上顯示（避免視覺擁擠） */}
       {isCurrent && (
         <div data-path-label className="path-label mt-3 px-2 bg-bg rounded-lg text-center text-sm font-bold leading-relaxed text-ink">
           {lesson.title}
@@ -612,7 +612,7 @@ function ChestNode({ unlocked, claimed, breatheDelay, onSelect }: ChestNodeProps
           <Chest className="w-8 h-8" />
         )}
 
-        {/* 未领取时的脉冲光圈 */}
+        {/* 未領取時的脈衝光圈 */}
         {unlocked && !claimed && (
           <motion.span
             aria-hidden
@@ -631,7 +631,7 @@ function ChestNode({ unlocked, claimed, breatheDelay, onSelect }: ChestNodeProps
       type="button"
       onClick={onSelect}
       className={unlocked ? "block w-full" : "block w-full cursor-not-allowed"}
-      aria-label={claimed ? "已领取的宝箱" : unlocked ? "打开宝箱" : "未解锁宝箱"}
+      aria-label={claimed ? "已領取的寶箱" : unlocked ? "開啟寶箱" : "未解鎖寶箱"}
     >
       {node}
     </button>
@@ -639,11 +639,11 @@ function ChestNode({ unlocked, claimed, breatheDelay, onSelect }: ChestNodeProps
 }
 
 // ============================================================
-// ⚔️ 单元挑战节点（奖杯）—— 紫金配色，区别于普通课程节点
-//   locked    ：灰色 + 点按提示「先完成本单元全部课程」
-//   unlocked  ：紫底金边奖杯 + 脉冲光圈（可挑战）
-//   completed ：紫底 + 星数角标（通关但未征服）
-//   conquered ：金色奖杯（accuracy ≥ 0.8 征服态）
+// ⚔️ 單元挑戰節點（獎盃）—— 紫金配色，區別於普通課程節點
+//   locked    ：灰色 + 點按提示「先完成本單元全部課程」
+//   unlocked  ：紫底金邊獎盃 + 脈衝光圈（可挑戰）
+//   completed ：紫底 + 星數角標（通關但未征服）
+//   conquered ：金色獎盃（accuracy ≥ 0.8 征服態）
 // ============================================================
 
 interface ExamNodeProps {
@@ -691,13 +691,13 @@ function ExamNode({ meta, stars, breatheDelay, onSelect }: ExamNodeProps) {
         style={{
           background,
           boxShadow: shadow,
-          // 紫金配色：可挑战 / 已通关（未征服）时挂一圈金边
+          // 紫金配色：可挑戰 / 已通關（未征服）時掛一圈金邊
           border: unlocked && !conquered ? "3px solid #FFC800" : "none",
         }}
       >
         {!unlocked ? <Lock className="w-7 h-7" /> : <Trophy className="w-8 h-8" />}
 
-        {/* 可挑战：金色脉冲光圈 */}
+        {/* 可挑戰：金色脈衝光圈 */}
         {unlocked && !completed && (
           <motion.span
             aria-hidden
@@ -708,7 +708,7 @@ function ExamNode({ meta, stars, breatheDelay, onSelect }: ExamNodeProps) {
           />
         )}
 
-        {/* 通关星数角标 */}
+        {/* 通關星數角標 */}
         {completed && stars > 0 && (
           <div className="absolute -bottom-1 -right-1 bg-white rounded-full px-1.5 py-0.5 shadow inline-flex items-center gap-0.5 text-gold">
             {Array.from({ length: stars }).map((_, i) => (
@@ -718,14 +718,14 @@ function ExamNode({ meta, stars, breatheDelay, onSelect }: ExamNodeProps) {
         )}
       </motion.div>
 
-      {/* 节点小标签 */}
+      {/* 節點小標籤 */}
       <div data-path-label
         className={cn(
           "path-label mt-3 px-2 bg-bg-soft rounded-lg text-center text-sm font-bold leading-relaxed",
           !unlocked ? "text-ink-softer" : conquered ? "text-gold" : "text-purple-600",
         )}
       >
-        {conquered ? "已征服 ⚔️" : "单元挑战"}
+        {conquered ? "已征服 ⚔️" : "單元挑戰"}
       </div>
     </motion.div>
   );
@@ -737,14 +737,14 @@ function ExamNode({ meta, stars, breatheDelay, onSelect }: ExamNodeProps) {
       className={unlocked ? "block w-full" : "block w-full cursor-not-allowed"}
       aria-label={
         !unlocked
-          ? "单元挑战（先完成本单元全部课程）"
+          ? "單元挑戰（先完成本單元全部課程）"
           : conquered
-            ? "单元挑战（已征服）"
+            ? "單元挑戰（已征服）"
             : completed
-              ? "单元挑战（已通关，可再战）"
-              : "开始单元挑战"
+              ? "單元挑戰（已通關，可再戰）"
+              : "開始單元挑戰"
       }
-      title="单元挑战"
+      title="單元挑戰"
     >
       {node}
     </button>

@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * 文字填空题：用于语文 / 英语 / 科学的术语填空。
- * 屏幕汉字键盘：把正确答案的字和干扰字打散，学生直接点字填写。
+ * 文字填空題：用於語文 / 英語 / 科學的術語填空。
+ * 螢幕漢字鍵盤：把正確答案的字和干擾字打散，學生直接點字填寫。
  *
- * 答案是 1-6 个汉字 / 1 个英文单词。
+ * 答案是 1-6 個漢字 / 1 個英文單詞。
  */
 
 import { useMemo } from "react";
@@ -19,12 +19,12 @@ import { useAutoNarrate } from "@/lib/useAutoNarrate";
 import type { QuestionRendererProps } from "./QuestionRenderer";
 
 /**
- * 常用汉字池 —— 用于生成干扰项，涵盖小学低年级高频字。
+ * 常用漢字池 —— 用於生成干擾項，涵蓋小學低年級高頻字。
  */
 const DISTRACTOR_POOL =
-  "的一是了不人我在有他这中大来上个国到说们为子和你地出会也时要就可以对生能而着事前里所去行过家十用发天如然作方成者多日都三小军二无同么经法当起与好看学进种将还分此心前把把道文些将主实重新明体开它合已从提力此面理由她长角期将再想许让向又物被全书走给最便位加将些别几义路反条其化或接将片向才助战持区住四带运段切反确据形今指两打西再至张头走知活步往什";
+  "的一是了不人我在有他這中大來上個國到說們為子和你地出會也時要就可以對生能而著事前裡所去行過家十用發天如然作方成者多日都三小軍二無同麼經法當起與好看學進種將還分此心前把把道文些將主實重新明體開它合已從提力此面理由她長角期將再想許讓向又物被全書走給最便位加將些別幾義路反條其化或接將片向才助戰持區住四帶運段切反確據形今指兩打西再至張頭走知活步往什";
 
-/** 简易伪随机 —— 基于 question id 做稳定 shuffle，每次渲染保持一致 */
+/** 簡易偽隨機 —— 基於 question id 做穩定 shuffle，每次渲染保持一致 */
 function seededShuffle<T>(arr: T[], seed: number): T[] {
   const a = [...arr];
   let s = seed;
@@ -36,20 +36,20 @@ function seededShuffle<T>(arr: T[], seed: number): T[] {
   return a;
 }
 
-/** 英文干扰字母池（web-lesson-14）：小写元音 + 高频辅音，不再混中文字 */
+/** 英文干擾字母池（web-lesson-14）：小寫母音 + 高頻子音，不再混中文字 */
 const EN_VOWELS = "aeiou";
 const EN_CONSONANTS = "bcdfghklmnprstwy";
 
-/** 根据答案生成候选字列表（答案字 + 干扰字，打散） */
+/** 根據答案生成候選字列表（答案字 + 干擾字，打散） */
 function buildCandidates(answerStr: string, questionId: number): string[] {
-  // === 英文单词答案：干扰项用小写字母（元音/辅音合理配比），不混中文字 ===
+  // === 英文單詞答案：干擾項用小寫字母（母音/子音合理配比），不混中文字 ===
   if (/^[a-zA-Z][a-zA-Z\s'-]*$/.test(answerStr.trim())) {
     const answerChars = [
       ...new Set(answerStr.toLowerCase().replace(/[^a-z-]/g, "").split("")),
     ];
     const need = Math.max(9, answerChars.length + 4);
     const distractorCount = need - answerChars.length;
-    // 干扰项约 1/3 元音、2/3 辅音，贴近英文字母的自然分布
+    // 干擾項約 1/3 母音、2/3 子音，貼近英文字母的自然分佈
     const vowelWanted = Math.max(1, Math.round(distractorCount / 3));
     const vowelPool = seededShuffle(
       EN_VOWELS.split("").filter(c => !answerChars.includes(c)),
@@ -65,12 +65,12 @@ function buildCandidates(answerStr: string, questionId: number): string[] {
   }
 
   const answerChars = [...new Set(answerStr.split(""))];
-  // 干扰字数量：至少让总数 >= 9，最多 12
+  // 干擾字數量：至少讓總數 >= 9，最多 12
   const need = Math.max(9, answerChars.length + 4);
   const distractorCount = need - answerChars.length;
 
   const pool = DISTRACTOR_POOL.split("").filter(c => !answerChars.includes(c));
-  // 从池中选干扰字（用 seed 稳定）
+  // 從池中選干擾字（用 seed 穩定）
   const shuffledPool = seededShuffle(pool, questionId + 7);
   const distractors = shuffledPool.slice(0, distractorCount);
 
@@ -95,7 +95,7 @@ export function FillBlankTextQuestion({
   );
 
   function handleKey(k: string) {
-    if (locked || disabled) return; // 遮罩打开时停摆（webrunner-5）
+    if (locked || disabled) return; // 遮罩開啟時停擺（webrunner-5）
     cancelNarrate();
     playSfx("tap");
     haptic("light");
@@ -103,7 +103,7 @@ export function FillBlankTextQuestion({
       onChange(answer.slice(0, -1));
       return;
     }
-    // 限制长度，防止误操作
+    // 限制長度，防止誤操作
     if (answer.length >= Math.max(10, question.answer.trim().length)) return;
     onChange(answer + k);
   }
@@ -121,21 +121,21 @@ export function FillBlankTextQuestion({
     displayCls = cn(displayCls, "border-secondary bg-white text-ink shadow-glow");
   }
 
-  // 键盘列数：候选字 <= 9 用 3 列，否则 4 列
+  // 鍵盤列數：候選字 <= 9 用 3 列，否則 4 列
   const cols = candidates.length <= 9 ? 3 : 4;
 
   return (
     <div className="w-full">
       <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} />
 
-      {/* 答案显示区 */}
+      {/* 答案顯示區 */}
       <motion.div
         className={displayCls}
         initial={{ scale: 0.98, opacity: 0.6 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", damping: 18, stiffness: 260 }}
       >
-        {answer ? <span className="min-w-0 break-all">{answer}</span> : <span className="text-ink-light text-xl font-bold">{/[a-zA-Z]/.test(question.answer) ? "点下方字母作答" : "点下方汉字作答"}</span>}
+        {answer ? <span className="min-w-0 break-all">{answer}</span> : <span className="text-ink-light text-xl font-bold">{/[a-zA-Z]/.test(question.answer) ? "點下方字母作答" : "點下方漢字作答"}</span>}
       </motion.div>
 
       {phase === "checked" && !isCorrect && (
@@ -144,12 +144,12 @@ export function FillBlankTextQuestion({
           animate={{ y: 0, opacity: 1 }}
           className="mt-3 text-center text-sm text-ink-light"
         >
-          正确答案：
+          正確答案：
           <span className="font-extrabold text-primary-dark">{question.answer}</span>
         </motion.div>
       )}
 
-      {/* 汉字键盘 */}
+      {/* 漢字鍵盤 */}
       <div
         className="mt-6 grid gap-3 select-none"
         style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
@@ -169,12 +169,12 @@ export function FillBlankTextQuestion({
             {ch}
           </motion.button>
         ))}
-        {/* 退格键 */}
+        {/* 退格鍵 */}
         <motion.button
           type="button"
           disabled={disabled}
           onClick={() => handleKey("⌫")}
-          aria-label="删除最后一个字"
+          aria-label="刪除最後一個字"
           className={cn(
             "ui-key h-14 rounded-2xl text-2xl font-extrabold bg-white border-2 border-bg-softer text-danger",
             "hover:border-danger/40 active:translate-y-[2px] active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors",

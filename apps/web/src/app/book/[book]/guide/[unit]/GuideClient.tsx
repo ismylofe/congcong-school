@@ -1,12 +1,12 @@
 "use client";
 
 /**
- * GuideClient — 单元知识手册 slide carousel
+ * GuideClient — 單元知識手冊 slide carousel
  *
- * 对标 Duolingo "这是什么?" 知识介绍页：
- *   - 一屏一个知识点，大图 + 标题 + TTS 朗读 + 通俗描述
- *   - 顶部 X 关闭 + 进度圆点 + 计数
- *   - 底部"下一步 →" 推进；最后一张显示"完成"
+ * 對標 Duolingo "這是什麼?" 知識介紹頁：
+ *   - 一屏一個知識點，大圖 + 標題 + TTS 朗讀 + 通俗描述
+ *   - 頂部 X 關閉 + 進度圓點 + 計數
+ *   - 底部"下一步 →" 推進；最後一張顯示"完成"
  */
 
 import { useRef, useState } from "react";
@@ -52,13 +52,13 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
     setIdx(i => Math.min(total - 1, i + 1));
   }
 
-  // 空态：该单元的 lesson 没有 knowledge 数据
+  // 空態：該單元的 lesson 沒有 knowledge 資料
   if (!current) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center bg-white px-6 text-center">
-        <h1 className="text-base font-extrabold text-ink mb-2">本单元暂无知识手册</h1>
+        <h1 className="text-base font-extrabold text-ink mb-2">本單元暫無知識手冊</h1>
         <div className="text-sm text-ink-light mb-6">
-          {book.textbookName} · {unit.label ?? `第 ${unit.unit_number} 单元`} · {unit.title}
+          {book.textbookName} · {unit.label ?? `第 ${unit.unit_number} 單元`} · {unit.title}
         </div>
         <button
           type="button"
@@ -73,17 +73,17 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
 
   return (
     <main className="guide-screen min-h-screen flex flex-col bg-white overflow-x-hidden">
-      {/* 顶部：X + 进度圆点 + 计数 */}
+      {/* 頂部：X + 進度圓點 + 計數 */}
       <header className="sticky top-0 z-20 bg-white flex items-center gap-3 px-4 py-3 border-b border-bg-softer">
         <button
           type="button"
-          aria-label="关闭"
+          aria-label="關閉"
           onClick={close}
           className="shrink-0 w-11 h-11 rounded-full inline-flex items-center justify-center text-ink-light hover:bg-bg-soft transition-colors"
         >
           <Close className="w-5 h-5" />
         </button>
-        <div className="min-w-0 flex-1 flex items-center justify-center gap-1.5" role="progressbar" aria-label="知识手册进度" aria-valuemin={0} aria-valuemax={total} aria-valuenow={idx + 1}>
+        <div className="min-w-0 flex-1 flex items-center justify-center gap-1.5" role="progressbar" aria-label="知識手冊進度" aria-valuemin={0} aria-valuemax={total} aria-valuenow={idx + 1}>
           {Array.from({ length: total }).map((_, i) => (
             <span
               key={i}
@@ -99,7 +99,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
         </div>
       </header>
 
-      {/* 主体 slide */}
+      {/* 主體 slide */}
       <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -114,17 +114,17 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
             transition={{ duration: 0.22 }}
             className="flex-1 flex flex-col items-stretch px-5 pt-6 pb-8 w-full max-w-[640px] mx-auto"
           >
-            {/* 单元上下文 */}
+            {/* 單元上下文 */}
             <div className="text-sm font-bold text-ink-light">
-              {unit.label ?? `第 ${unit.unit_number} 单元`} · {unit.title}
+              {unit.label ?? `第 ${unit.unit_number} 單元`} · {unit.title}
             </div>
             <h1 ref={slideTitleRef} tabIndex={-1} className="focus:outline-none text-[28px] font-bold text-ink mt-2 leading-snug max-w-lg">
               <MathText text={current.point} />
             </h1>
 
-            <div className="flex items-center gap-2 mt-6 text-secondary-dark text-sm font-bold"><BookOpen className="w-7 h-7" />知识讲解</div>
+            <div className="flex items-center gap-2 mt-6 text-secondary-dark text-sm font-bold"><BookOpen className="w-7 h-7" />知識講解</div>
 
-            {/* 标题 + TTS */}
+            {/* 標題 + TTS */}
             <div className="mt-5 flex items-center gap-3">
               <div className="text-xl font-bold text-ink">核心概念</div>
               {current.audio?.core_concept && (
@@ -143,14 +143,14 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
                 <div className="flex items-center gap-1.5 mb-2">
                   <Target className="w-3.5 h-3.5 text-primary" />
                   <span className="text-sm font-bold text-ink">
-                    记住这个
+                    記住這個
                   </span>
                   {current.audio?.key_formula && (
                     <TTSButton
                       src={current.audio.key_formula}
                       size="sm"
                       className="ml-auto"
-                      label="朗读公式"
+                      label="朗讀公式"
                     />
                   )}
                 </div>
@@ -160,7 +160,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
               </div>
             )}
 
-            {/* 小贴士 */}
+            {/* 小貼士 */}
             {current.tips && (
               <div className="mt-6 border-t-2 border-bg-softer pt-5 max-w-lg w-full">
                 <div className="flex items-start gap-2">
@@ -169,7 +169,7 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
                   )}
                   <div className="min-w-0 flex-1">
                     <div className="text-sm font-bold text-ink mb-1">
-                      小贴士
+                      小貼士
                     </div>
                     <div className="text-base text-ink leading-relaxed">
                       <MathText text={current.tips} />
@@ -179,11 +179,11 @@ export function GuideClient({ book, unit, summaries }: GuideClientProps) {
               </div>
             )}
 
-            {/* 易错点 */}
+            {/* 易錯點 */}
             {current.common_mistakes && current.common_mistakes.length > 0 && (
               <div className="mt-5 border-t-2 border-bg-softer pt-5 max-w-lg w-full">
                 <div className="text-sm font-bold text-danger mb-2">
-                  容易搞错
+                  容易搞錯
                 </div>
                 <ul className="space-y-1.5">
                   {current.common_mistakes.map((m, i) => (

@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * 词语排序题：把打乱的词语按正确顺序点击拼成句子。
+ * 詞語排序題：把打亂的詞語按正確順序點選拼成句子。
  *
- * answer 是逗号连接的正确顺序词语；
- * options 是打乱顺序的同一组词语。
+ * answer 是逗號連線的正確順序詞語；
+ * options 是打亂順序的同一組詞語。
  *
- * 交互：
- *   - 上方"已选区"按点击顺序展示
- *   - 下方"待选区"展示尚未点选的词语
- *   - 点击已选区的词可以撤回
- *   - 每次选择/撤回都写入受控 answer，刷新后按 answer 恢复
+ * 互動：
+ *   - 上方"已選區"按點選順序展示
+ *   - 下方"待選區"展示尚未點選的詞語
+ *   - 點選已選區的詞可以撤回
+ *   - 每次選擇/撤回都寫入受控 answer，重新整理後按 answer 恢復
  */
 
 import { wordOrderIndices } from "@/lib/questionDraft";
@@ -37,17 +37,17 @@ export function WordOrderQuestion({
   const options = question.options ?? [];
   const cancelNarrate = useAutoNarrate([question.audio?.question], question.id);
 
-  // 已选索引列表（指向 options 中的 index）
+  // 已選索引列表（指向 options 中的 index）
   const picked = wordOrderIndices(options, answer);
 
-  /** 播放第 i 个选项的 TTS */
+  /** 播放第 i 個選項的 TTS */
   function playOptionAudio(i: number) {
     const src = question.audio?.options?.[i];
     if (src) playTTS(src);
   }
 
   function pick(i: number) {
-    if (locked || disabled) return; // 遮罩打开时停摆（webrunner-5）
+    if (locked || disabled) return; // 遮罩開啟時停擺（webrunner-5）
     if (picked.includes(i)) return;
     cancelNarrate();
     playSfx("tap");
@@ -66,14 +66,14 @@ export function WordOrderQuestion({
 
   const remaining = options.map((_, i) => i).filter(i => !picked.includes(i));
 
-  // checked 阶段下，把正确序列拆出来供对照展示
+  // checked 階段下，把正確序列拆出來供對照展示
   const correctSeq = phase === "checked" ? question.answer.split(",").map(s => s.trim()) : [];
 
   return (
     <div className="w-full">
       <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} />
 
-      {/* 已选区 */}
+      {/* 已選區 */}
       <div
         className={cn(
           "min-h-[64px] rounded-2xl border-2 border-dashed p-3 flex flex-wrap gap-2 mb-4 transition-colors",
@@ -92,7 +92,7 @@ export function WordOrderQuestion({
               exit={{ opacity: 0 }}
               className="text-ink-softer text-base self-center"
             >
-              点击下方词语按顺序排列
+              點選下方詞語按順序排列
             </motion.span>
           )}
           {picked.map(i => (
@@ -115,7 +115,7 @@ export function WordOrderQuestion({
         </AnimatePresence>
       </div>
 
-      {/* 待选区 */}
+      {/* 待選區 */}
       <div className="flex flex-wrap gap-2">
         {remaining.map(i => (
           <motion.button
@@ -131,18 +131,18 @@ export function WordOrderQuestion({
           </motion.button>
         ))}
         {remaining.length === 0 && disabled === false && (
-          <span className="text-xs text-ink-softer self-center">已全部选完，请检查</span>
+          <span className="text-xs text-ink-softer self-center">已全部選完，請檢查</span>
         )}
       </div>
 
-      {/* 错误时显示正确答案 */}
+      {/* 錯誤時顯示正確答案 */}
       {phase === "checked" && !isCorrect && (
         <motion.div
           initial={{ y: 6, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="mt-4 text-center text-sm text-ink-light"
         >
-          正确顺序：
+          正確順序：
           <span className="font-extrabold text-primary-dark">{correctSeq.join(" → ")}</span>
         </motion.div>
       )}

@@ -1,16 +1,16 @@
 // ============================================================
-// 题目相关
+// 題目相關
 // ============================================================
 
 export type QuestionType =
   | "true_false"
   | "choice"
-  | "fill_blank"        // 数字键盘（数学 / 科学）
-  | "calculation"       // 数字键盘（数学）
-  | "fill_blank_text"   // 文字输入（语文 / 英语 / 科学术语）
-  | "word_order"        // 词语排序（语文 / 英语）
-  | "matching"          // 连线配对（语文 / 英语）
-  | "word_problem";     // 历史保留
+  | "fill_blank"        // 數字鍵盤（數學 / 科學）
+  | "calculation"       // 數字鍵盤（數學）
+  | "fill_blank_text"   // 文字輸入（語文 / 英語 / 科學術語）
+  | "word_order"        // 詞語排序（語文 / 英語）
+  | "matching"          // 連線配對（語文 / 英語）
+  | "word_problem";     // 歷史保留
 
 export interface Question {
   /** Optional curated visual task; legacy questions remain unchanged. */
@@ -21,10 +21,10 @@ export interface Question {
   difficulty: 1 | 2 | 3 | 4 | 5;
   knowledge_point: string;
   question: string;
-  options: string[]; // 选择题 4 项；其他为空
+  options: string[]; // 選擇題 4 項；其他為空
   answer: string;
   explanation: string;
-  /** 题干 / 选项 / 解析的 TTS 音频相对路径，由 build-data 注入 */
+  /** 題幹 / 選項 / 解析的 TTS 音訊相對路徑，由 build-data 注入 */
   audio?: {
     question?: string;
     options?: (string | null)[];
@@ -33,7 +33,7 @@ export interface Question {
 }
 
 // ============================================================
-// 单元 / 知识点 / 课程
+// 單元 / 知識點 / 課程
 // ============================================================
 
 export interface KnowledgeSummary {
@@ -42,7 +42,7 @@ export interface KnowledgeSummary {
   key_formula: string;
   common_mistakes: string[];
   tips: string;
-  /** 各字段的 TTS 音频相对路径 */
+  /** 各欄位的 TTS 音訊相對路徑 */
   audio?: {
     point?: string;
     core_concept?: string;
@@ -62,8 +62,8 @@ export interface QuizFile {
 }
 
 /**
- * 一节"小课" = 一个知识点 + 该知识点对应的题目（5-7 道）
- * 这是多邻国式的最小学习单位
+ * 一節"小課" = 一個知識點 + 該知識點對應的題目（5-7 道）
+ * 這是多鄰國式的最小學習單位
  */
 export interface Lesson {
   /** Extra practice retains pre-pilot questions without replacing the visual pilot. */
@@ -71,19 +71,19 @@ export interface Lesson {
   /** Original lesson whose questions this practice lesson preserves. */
   restoresLessonId?: string;
   id: string; // e.g. "g1up-u3-kp2"
-  title: string; // 知识点名
+  title: string; // 知識點名
   bookId: string; // "g1up"
   unitNumber: number;
   unitTitle: string;
   unitLabel?: string;
-  kpIndex: number; // 在单元内的序号 (从 0 开始)
-  kpTotal: number; // 本单元知识点总数
+  kpIndex: number; // 在單元內的序號 (從 0 開始)
+  kpTotal: number; // 本單元知識點總數
   questions: Question[];
   knowledge: KnowledgeSummary | null;
 }
 
 // ============================================================
-// 教材 / 大纲
+// 教材 / 大綱
 // ============================================================
 
 export interface KnowledgePoint {
@@ -99,12 +99,12 @@ export interface Unit {
   title: string;
   knowledge_points: KnowledgePoint[];
   /**
-   * 单元挑战课 id（"{bookId}-u{n}-exam"），由 build-data 在该单元
-   * exam 题数 ≥4 时注入；缺省表示该单元没有挑战课。
-   * iOS 容错：outline 有此字段但本地课程文件缺失时，节点隐藏。
+   * 單元挑戰課 id（"{bookId}-u{n}-exam"），由 build-data 在該單元
+   * exam 題數 ≥4 時注入；預設表示該單元沒有挑戰課。
+   * iOS 容錯：outline 有此欄位但本地課程檔案缺失時，節點隱藏。
    */
   examLessonId?: string;
-  /** 单元挑战题目数（取 exam 全部，上限 15，超出均匀抽样后的实际数） */
+  /** 單元挑戰題目數（取 exam 全部，上限 15，超出均勻抽樣後的實際數） */
   examQuestionCount?: number;
 }
 
@@ -123,8 +123,8 @@ export interface Outline {
 }
 
 /**
- * 学科标识 —— 当前只有 math；未来添加 chinese/english/science 时保持同一 key。
- * 字段在 Book 上为可选以便老数据降级到 "math"。
+ * 學科標識 —— 當前只有 math；未來新增 chinese/english/science 時保持同一 key。
+ * 欄位在 Book 上為可選以便老資料降級到 "math"。
  */
 export type SubjectId = "math" | "chinese" | "english" | "science";
 
@@ -132,12 +132,12 @@ export interface Book {
   id: string; // 'g3up'
   grade: number; // 1-6
   semester: "up" | "down"; // 上 / 下
-  subject?: SubjectId; // 学科（未来多科支持）
-  gradeName: string; // '三年级'
-  semesterName: string; // '上册'
-  subjectName?: string; // '数学'（显示用）
-  textbookName: string; // '三年级上册'
-  fullName: string; // '人教版小学数学三年级上册'
+  subject?: SubjectId; // 學科（未來多科支援）
+  gradeName: string; // '三年級'
+  semesterName: string; // '上冊'
+  subjectName?: string; // '數學'（顯示用）
+  textbookName: string; // '三年級上冊'
+  fullName: string; // '人教版小學數學三年級上冊'
   schoolSystem?: "6-3" | "5-4";
   publisherLabel?: string;
   sourceEdition?: string;
@@ -148,14 +148,14 @@ export interface Book {
   activitiesCount?: number;
   unitsCount: number;
   lessonsCount: number;
-  /** 该书是否有课文听读数据（由 build-data 注入） */
+  /** 該書是否有課文聽讀資料（由 build-data 注入） */
   hasPassages?: boolean;
-  /** 该书是否有故事阅读数据（由 build-data 注入） */
+  /** 該書是否有故事閱讀資料（由 build-data 注入） */
   hasStories?: boolean;
 }
 
 // ============================================================
-// 课文听读（语文 / 英语）
+// 課文聽讀（語文 / 英語）
 // ============================================================
 
 export type PassageKind =
@@ -168,7 +168,7 @@ export type PassageKind =
 
 export interface PassageSentence {
   text: string;
-  /** TTS 音频相对路径，由 build-data 注入。未生成时为 undefined */
+  /** TTS 音訊相對路徑，由 build-data 注入。未生成時為 undefined */
   audio?: string;
 }
 
@@ -184,13 +184,13 @@ export interface Passage {
   author?: string | null;
   language: "Chinese" | "English";
   sentences: PassageSentence[];
-  /** Gemini 从页眉读到的印刷页码（debug 用，前端一般不用）*/
+  /** Gemini 從頁首讀到的印刷頁碼（debug 用，前端一般不用）*/
   pageHint?: number | null;
-  /** 应用 book-level offset 后的真实 PDF 物理页 */
+  /** 應用 book-level offset 後的真實 PDF 物理頁 */
   pdfPage?: number | null;
   /**
-   * 该篇课文对应的课本原页 JPG 列表，按物理页号升序。
-   * 通常是 [pdfPage-1, pdfPage, pdfPage+1]，前端默认显示 pdfPage 那张。
+   * 該篇課文對應的課本原頁 JPG 列表，按物理頁號升序。
+   * 通常是 [pdfPage-1, pdfPage, pdfPage+1]，前端預設顯示 pdfPage 那張。
    */
   pageImages?: string[];
 }
@@ -203,7 +203,7 @@ export interface BookPassages {
 }
 
 // ============================================================
-// 故事阅读（LLM 生成的分级故事 + 阅读理解题）
+// 故事閱讀（LLM 生成的分級故事 + 閱讀理解題）
 // ============================================================
 
 export interface StoryQuestion {
@@ -233,7 +233,7 @@ export interface Story {
   language: "Chinese" | "English";
   sentences: PassageSentence[];
   questions: StoryQuestion[];
-  /** 故事配图路径（由 build-data 注入） */
+  /** 故事配圖路徑（由 build-data 注入） */
   image?: string;
 }
 
@@ -256,7 +256,7 @@ export interface SiteIndex {
 }
 
 // ============================================================
-// 用户进度（localStorage）
+// 使用者進度（localStorage）
 // ============================================================
 
 export interface LessonResult {
@@ -275,7 +275,7 @@ export interface UserProgress {
 }
 
 // ============================================================
-// 玩法 UI 域类型（被 Mascot / PathMap / chestLogic / mascotTriggers 共用）
+// 玩法 UI 域型別（被 Mascot / PathMap / chestLogic / mascotTriggers 共用）
 // ============================================================
 
 export type MascotMood =

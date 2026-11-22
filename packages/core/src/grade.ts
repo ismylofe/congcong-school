@@ -1,7 +1,7 @@
 /**
- * grade.ts — 答案判分逻辑
+ * grade.ts — 答案判分邏輯
  *
- * 不同题型有不同的判分规则。容忍：空格、全/半角、中英文标点、数字格式。
+ * 不同題型有不同的判分規則。容忍：空格、全/半形、中英文標點、數字格式。
  */
 
 import type { Question } from "./types";
@@ -21,10 +21,10 @@ function normalize(s: string): string {
     .replace(/：/g, ":");
 }
 
-/** 把分数 "3/4" 之类规范化 */
+/** 把分數 "3/4" 之類規範化 */
 function normalizeNumeric(s: string): string {
   return normalize(s)
-    .replace(/[^\d\-./%a-z]/g, "") // 去掉单位/汉字（保留数字、分数、百分号、字母用于"米"等）
+    .replace(/[^\d\-./%a-z]/g, "") // 去掉單位/漢字（保留數字、分數、百分號、字母用於"米"等）
     .replace(/^0+(\d)/, "$1");
 }
 
@@ -64,12 +64,12 @@ export function gradeAnswer(question: Question, userAnswer: string): boolean {
     case "fill_blank":
     case "calculation":
     case "word_problem": {
-      // 多种容错：完全相等、normalize 相等、纯数字相等
+      // 多種容錯：完全相等、normalize 相等、純數字相等
       if (normalize(userAnswer) === normalize(correct)) return true;
       const un = normalizeNumeric(userAnswer);
       const cn = normalizeNumeric(correct);
       if (un && cn && un === cn) return true;
-      // 数值容差（小数）
+      // 數值容差（小數）
       const uf = parseFloat(un);
       const cf = parseFloat(cn);
       if (!isNaN(uf) && !isNaN(cf) && Math.abs(uf - cf) < 1e-6) return true;
@@ -77,19 +77,19 @@ export function gradeAnswer(question: Question, userAnswer: string): boolean {
     }
 
     case "fill_blank_text": {
-      // 文字填空（中文 / 英文单词）— 去空格、去大小写、去标点严格对比
+      // 文字填空（中文 / 英文單詞）— 去空格、去大小寫、去標點嚴格對比
       return normalizeText(userAnswer) === normalizeText(correct);
     }
 
     case "word_order": {
-      // 用户答案应该是用逗号连接的词语序列
+      // 使用者答案應該是用逗號連線的詞語序列
       const u = normalizeWordOrder(userAnswer);
       const c = normalizeWordOrder(correct);
       return u === c;
     }
 
     case "matching": {
-      // 配对：A-1,B-2,C-3,D-4 顺序无关，集合相等即可
+      // 配對：A-1,B-2,C-3,D-4 順序無關，集合相等即可
       const userPairs = parseMatchingAnswer(userAnswer);
       const correctPairs = parseMatchingAnswer(correct);
       if (userPairs.size !== correctPairs.size) return false;
@@ -104,7 +104,7 @@ export function gradeAnswer(question: Question, userAnswer: string): boolean {
   }
 }
 
-/** 文字填空规范化：trim、小写、去空格、去标点 */
+/** 文字填空規範化：trim、小寫、去空格、去標點 */
 function normalizeText(s: string): string {
   return s
     .trim()
@@ -113,12 +113,12 @@ function normalizeText(s: string): string {
     .replace(/[，。！？：；,.!?:;()（）"'`]/g, "");
 }
 
-/** 排序题规范化：去掉空格，统一英文逗号 */
+/** 排序題規範化：去掉空格，統一英文逗號 */
 function normalizeWordOrder(s: string): string {
   return s.trim().replace(/，/g, ",").replace(/\s+/g, "");
 }
 
-/** 解析连线答案 "A-1,B-2,C-3,D-4" → Map { A: 1, B: 2, ... } */
+/** 解析連線答案 "A-1,B-2,C-3,D-4" → Map { A: 1, B: 2, ... } */
 function parseMatchingAnswer(s: string): Map<string, string> {
   const map = new Map<string, string>();
   const cleaned = s.trim().replace(/，/g, ",").replace(/\s+/g, "");

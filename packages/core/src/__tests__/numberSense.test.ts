@@ -37,13 +37,13 @@ describe("number sense: actual visual quantities and learning evidence", () => {
             ? String(v.count)
             : v.kind === "compare"
               ? v.left === v.right
-                ? "同样多"
+                ? "同樣多"
                 : (v.left > v.right ? v.leftLabel : v.rightLabel) + "多"
               : v.resources < v.learners
-                ? "不够"
+                ? "不夠"
                 : v.resources === v.learners
-                  ? "刚好够"
-                  : "够，还有剩下";
+                  ? "剛好夠"
+                  : "夠，還有剩下";
         expect(q.answer).toBe(expected);
         expect(new Set(q.options).size).toBe(q.options.length);
         expect(q.options.filter((option) => option === expected)).toHaveLength(
@@ -73,7 +73,7 @@ describe("number sense: actual visual quantities and learning evidence", () => {
   });
   it("cannot call same-day repetition delayed retention; checks need both new questions correct", () => {
     let progress = recordNumberPractice({}, "count", evidence, "2026-10-17");
-    expect(numberSkillLabel(progress.count)).toBe("能独立做");
+    expect(numberSkillLabel(progress.count)).toBe("能獨立做");
     expect(dueNumberSkills(progress, "2026-10-17")).toEqual([]);
     expect(
       recordNumberReview(
@@ -95,7 +95,7 @@ describe("number sense: actual visual quantities and learning evidence", () => {
       [{ skill: "count", correct: 2, total: 2 }],
       "2026-10-19",
     );
-    expect(numberSkillLabel(progress.count)).toBe("隔天仍会");
+    expect(numberSkillLabel(progress.count)).toBe("隔天仍會");
     expect(progress.count?.nextReviewOn).toBe("2026-10-26");
     expect(
       recordNumberReview(
@@ -112,8 +112,8 @@ describe("number sense: actual visual quantities and learning evidence", () => {
       { ...evidence, transferCorrect: 1, hintsUsed: 1 },
       "2026-10-17",
     );
-    expect(numberSkillLabel(progress.apply)).not.toBe("能独立做");
-    expect(numberSkillLabel(progress.apply)).not.toBe("隔天仍会");
+    expect(numberSkillLabel(progress.apply)).not.toBe("能獨立做");
+    expect(numberSkillLabel(progress.apply)).not.toBe("隔天仍會");
   });
   it("uses calendar days across year and DST boundaries and validates backups", () => {
     expect(nextStudyDay("2026-12-31")).toBe("2027-01-01");

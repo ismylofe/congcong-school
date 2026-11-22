@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * useRecorder — 轻量麦克风录音 hook。
+ * useRecorder — 輕量麥克風錄音 hook。
  *
- * - 用原生 MediaRecorder，不接 ASR、不上传
- * - 每次 stop() 返回一个 blob URL，交给组件去 new Audio(url) 回放
- * - 刷新页面即丢（不落磁盘），因此不涉及隐私持久化
+ * - 用原生 MediaRecorder，不接 ASR、不上傳
+ * - 每次 stop() 返回一個 blob URL，交給元件去 new Audio(url) 回放
+ * - 重新整理頁面即丟（不落磁碟），因此不涉及隱私持久化
  *
  * 用法：
  *   const rec = useRecorder();
@@ -43,7 +43,7 @@ export function useRecorder() {
     const generation = ++generationRef.current;
     if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
       setState("error");
-      setError("当前浏览器不支持录音");
+      setError("當前瀏覽器不支援錄音");
       return false;
     }
     setState("requesting");

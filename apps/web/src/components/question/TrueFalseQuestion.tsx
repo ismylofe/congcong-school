@@ -22,10 +22,10 @@ export function TrueFalseQuestion({
   onChange,
   locked = false,
 }: QuestionRendererProps) {
-  const correctIsTrue = gradeAnswer(question, "对");
+  const correctIsTrue = gradeAnswer(question, "對");
   const cancelNarrate = useAutoNarrate([question.audio?.question], question.id);
 
-  function select(label: "对" | "错") {
+  function select(label: "對" | "錯") {
     if (locked || phase !== "answering") return;
     cancelNarrate();
     playSfx("tap");
@@ -33,17 +33,17 @@ export function TrueFalseQuestion({
     onChange(label);
   }
 
-  // 键盘快捷键（web-lesson-3）：1 = 对，2 = 错
+  // 鍵盤快捷鍵（web-lesson-3）：1 = 對，2 = 錯
   useEffect(() => {
-    if (locked || phase !== "answering") return; // 遮罩打开时不接管键盘（webrunner-5）
+    if (locked || phase !== "answering") return; // 遮罩開啟時不接管鍵盤（webrunner-5）
     const onKeyDown = (e: KeyboardEvent) => {
       if (shouldIgnoreKey(e)) return;
       if (e.key === "1") {
         e.preventDefault();
-        select("对");
+        select("對");
       } else if (e.key === "2") {
         e.preventDefault();
-        select("错");
+        select("錯");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -51,9 +51,9 @@ export function TrueFalseQuestion({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, question.id, locked]);
 
-  const renderBtn = (label: "对" | "错", icon: React.ReactNode, hotkey: string) => {
+  const renderBtn = (label: "對" | "錯", icon: React.ReactNode, hotkey: string) => {
     const selected = answer === label;
-    const thisCorrect = (label === "对") === correctIsTrue;
+    const thisCorrect = (label === "對") === correctIsTrue;
     let cls = "option-card";
     if (phase === "checked") {
       if (thisCorrect) cls = "option-card option-card-correct";
@@ -75,7 +75,7 @@ export function TrueFalseQuestion({
           {icon}
         </motion.div>
         <span className="text-lg font-extrabold">{label}</span>
-        {/* 数字角标：仅桌面端（pointer:fine）显示，对应快捷键 1/2 */}
+        {/* 數字角標：僅桌面端（pointer:fine）顯示，對應快捷鍵 1/2 */}
         <span className="keyboard-hint absolute bottom-2 right-2 w-6 h-6 rounded-md border-2 border-bg-softer hidden [@media(pointer:fine)]:flex items-center justify-center font-extrabold text-ink-softer text-xs tabular-nums">
           {hotkey}
         </span>
@@ -87,8 +87,8 @@ export function TrueFalseQuestion({
     <div className="w-full">
       <QuestionPrompt text={question.question} audio={question.audio?.question} locked={locked} />
       <div className="flex gap-3">
-        {renderBtn("对", <Check className="w-10 h-10 text-primary" />, "1")}
-        {renderBtn("错", <XMark className="w-10 h-10 text-danger" />, "2")}
+        {renderBtn("對", <Check className="w-10 h-10 text-primary" />, "1")}
+        {renderBtn("錯", <XMark className="w-10 h-10 text-danger" />, "2")}
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ export interface LearnerProfile { id: string; name: string }
 const PROFILES_KEY = "csf-learners-v1";
 const ACTIVE_KEY = "csf-active-learner-v1";
 const DEFAULT_ID = "default";
-const DEFAULT_PROFILE: LearnerProfile = { id: DEFAULT_ID, name: "我的学习档案" };
+const DEFAULT_PROFILE: LearnerProfile = { id: DEFAULT_ID, name: "我的學習檔案" };
 
 export function createLearnerProfiles(storage: Pick<Storage, "getItem" | "setItem">,
   session?: Pick<Storage, "getItem" | "setItem">) {
@@ -30,7 +30,7 @@ export function createLearnerProfiles(storage: Pick<Storage, "getItem" | "setIte
   }
   function cleanName(name: string) {
     const value = name.trim();
-    if (!value || value.length > 20) throw new Error("请输入 1–20 个字的名字");
+    if (!value || value.length > 20) throw new Error("請輸入 1–20 個字的名字");
     return value;
   }
   return {
@@ -45,7 +45,7 @@ export function createLearnerProfiles(storage: Pick<Storage, "getItem" | "setIte
       storage.setItem(PROFILES_KEY, JSON.stringify(list().map(p => p.id === activeId ? { ...p, name: value } : p)));
     },
     prepareSwitch(id: string) {
-      if (!list().some(p => p.id === id)) throw new Error("找不到这个学习档案，请刷新后重试");
+      if (!list().some(p => p.id === id)) throw new Error("找不到這個學習檔案，請重新整理後重試");
       storage.setItem(ACTIVE_KEY, id);
       session?.setItem(ACTIVE_KEY, id);
       // The current page keeps its original key until a full navigation resets

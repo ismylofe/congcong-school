@@ -1,14 +1,14 @@
 "use client";
 
 /**
- * DailyQuestsPanel —— 每日任务卡（仿多邻国 Daily Quests）
+ * DailyQuestsPanel —— 每日任務卡（仿多鄰國 Daily Quests）
  *
- * 三条任务来自 @cstf/core dailyQuests（同一天双端结果一致）：
- *   - 每条任务：图标 + 中文标题 + 进度条与宝石奖励
- *   - 完成未领取 → 高亮「领取」按钮（动效 + 音效 + toast）
- *   - 头部显示「距刷新还有 N 小时」倒计时（本地午夜刷新）
+ * 三條任務來自 @cstf/core dailyQuests（同一天雙端結果一致）：
+ *   - 每條任務：圖示 + 中文標題 + 進度條與寶石獎勵
+ *   - 完成未領取 → 高亮「領取」按鈕（動效 + 音效 + toast）
+ *   - 頭部顯示「距重新整理還有 N 小時」倒計時（本地午夜重新整理）
  *
- * 桌面端挂在 RightRail，移动端挂在 ProfileClient 顶部 —— 同一组件双端复用。
+ * 桌面端掛在 RightRail，移動端掛在 ProfileClient 頂部 —— 同一元件雙端複用。
  */
 
 import { useEffect, useState } from "react";
@@ -21,7 +21,7 @@ import { useToast } from "@/components/Toast";
 import { playSfx } from "@/lib/sfx";
 import { haptic } from "@/lib/haptic";
 
-/** 各任务类型的图标与配色（feather 色板） */
+/** 各任務型別的圖示與配色（feather 色板） */
 const KIND_STYLE: Record<
   QuestKind,
   { icon: React.ComponentType<{ className?: string }>; iconBg: string; iconColor: string; bar: string }
@@ -32,21 +32,21 @@ const KIND_STYLE: Record<
   readTexts:      { icon: Book,      iconBg: "bg-secondary/15", iconColor: "text-secondary-dark", bar: "bg-secondary" },
 };
 
-/** 本地时区的今天，YYYY-MM-DD（与 store 同实现） */
+/** 本地時區的今天，YYYY-MM-DD（與 store 同實現） */
 function todayStr(): string {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-/** 到今晚午夜的剩余时间文案：≥1 小时显示「N 小时」，否则「N 分钟」 */
+/** 到今晚午夜的剩餘時間文案：≥1 小時顯示「N 小時」，否則「N 分鐘」 */
 function formatUntilMidnight(now: number): string {
   const d = new Date(now);
   const midnight = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
   const ms = Math.max(0, midnight.getTime() - now);
   const hours = Math.floor(ms / (60 * 60 * 1000));
-  if (hours >= 1) return `${hours} 小时`;
+  if (hours >= 1) return `${hours} 小時`;
   const minutes = Math.max(1, Math.ceil(ms / (60 * 1000)));
-  return `${minutes} 分钟`;
+  return `${minutes} 分鐘`;
 }
 
 export function DailyQuestsPanel() {
@@ -55,7 +55,7 @@ export function DailyQuestsPanel() {
   const questProgress = useProgressStore(s => s.questProgress);
   const claimQuest = useProgressStore(s => s.claimQuest);
   const claimedQuests = useProgressStore(s => s.claimedQuests);
-  // 订阅进度相关原始字段：埋点变化时驱动本卡重渲染
+  // 訂閱進度相關原始欄位：埋點變化時驅動本卡重渲染
   useProgressStore(s => s.todayXp);
   useProgressStore(s => s.lastXpDate);
   useProgressStore(s => s.dailyQuestDate);
@@ -66,17 +66,17 @@ export function DailyQuestsPanel() {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
-  // 分钟级 tick：驱动倒计时 + 跨午夜自动换题
+  // 分鐘級 tick：驅動倒計時 + 跨午夜自動換題
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const t = setInterval(() => setNow(Date.now()), 60 * 1000);
     return () => clearInterval(t);
   }, []);
 
-  // 领取动效：记录刚领取的任务 id，播放 +N💎 弹跳
+  // 領取動效：記錄剛領取的任務 id，播放 +N💎 彈跳
   const [justClaimed, setJustClaimed] = useState<string | null>(null);
 
-  // SSR 首帧没有可靠本地日期，hydrate 后再生成任务，避免水合不一致
+  // SSR 首幀沒有可靠本地日期，hydrate 後再生成任務，避免水合不一致
   const quests: Quest[] = hydrated ? todayQuests() : [];
   const today = todayStr();
 
@@ -88,7 +88,7 @@ export function DailyQuestsPanel() {
     playSfx("unlock");
     haptic("success");
     setJustClaimed(quest.id);
-    toast.success(`🎁 任务完成！+${quest.reward}💎`, 3000);
+    toast.success(`🎁 任務完成！+${quest.reward}💎`, 3000);
     window.setTimeout(() => setJustClaimed(c => (c === quest.id ? null : c)), 1200);
   }
 
@@ -97,16 +97,16 @@ export function DailyQuestsPanel() {
       className="min-w-0 rounded-2xl border-2 border-bg-softer bg-white p-5"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
-        <div className="text-lg font-bold text-ink">每日任务</div>
+        <div className="text-lg font-bold text-ink">每日任務</div>
         {hydrated && (
           <div className="text-xs font-medium text-ink-light">
-            {formatUntilMidnight(now)}后刷新
+            {formatUntilMidnight(now)}後重新整理
           </div>
         )}
       </div>
 
       {!hydrated ? (
-        // 骨架占位：三条灰色行，避免闪烁
+        // 骨架佔位：三條灰色行，避免閃爍
         <div className="space-y-3">
           {[0, 1, 2].map(i => (
             <div key={i} className="flex items-center gap-3">
@@ -157,7 +157,7 @@ function QuestRow({
 
   return (
     <div className="relative grid grid-cols-[40px_minmax(0,1fr)_44px] items-center gap-3">
-      {/* 任务图标 */}
+      {/* 任務圖示 */}
       <div
         className={`w-10 h-12 flex items-center justify-center shrink-0 ${claimed ? "opacity-50 grayscale" : ""}`}
       >
@@ -185,21 +185,21 @@ function QuestRow({
 
       <div className="min-w-0 flex justify-end">
         {claimed ? (
-          <span className="inline-flex items-center gap-1 text-xs text-primary-dark" aria-label="已领取">
-            <Check className="w-3.5 h-3.5" />已领
+          <span className="inline-flex items-center gap-1 text-xs text-primary-dark" aria-label="已領取">
+            <Check className="w-3.5 h-3.5" />已領
           </span>
         ) : claimable ? (
           <motion.button type="button" onClick={onClaim} whileTap={{ y: 1 }}
             className="min-h-11 rounded-xl bg-primary/10 px-2 text-xs font-bold text-primary-dark"
-            aria-label={`领取奖励 ${quest.reward} 宝石`}>领取</motion.button>
+            aria-label={`領取獎勵 ${quest.reward} 寶石`}>領取</motion.button>
         ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-bold text-gem tabular-nums whitespace-nowrap" aria-label={`奖励 ${quest.reward} 宝石`}>
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-gem tabular-nums whitespace-nowrap" aria-label={`獎勵 ${quest.reward} 寶石`}>
             <Gem className="w-3.5 h-3.5" />{quest.reward}
           </span>
         )}
       </div>
 
-      {/* +N💎 领取飘字 */}
+      {/* +N💎 領取飄字 */}
       <AnimatePresence>
         {justClaimed && (
           <motion.div

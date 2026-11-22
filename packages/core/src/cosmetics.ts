@@ -1,16 +1,16 @@
 /**
- * cosmetics.ts —— 美妆道具目录（吉祥物皮肤 + UI 主题 + 课程背景）
+ * cosmetics.ts —— 美妝道具目錄（吉祥物皮膚 + UI 主題 + 課程背景）
  *
- * 设计原则（公益项目特别约束）：
- *   - 所有皮肤都能通过游戏内 gems 解锁
- *   - 没有"premium 限定"或"充值专属"
- *   - 不影响游戏数值，**纯美学**
- *   - 每个 cosmetic 都能在前端零依赖渲染（SVG / CSS / 内置图标），不依赖外部素材
+ * 設計原則（公益專案特別約束）：
+ *   - 所有皮膚都能透過遊戲內 gems 解鎖
+ *   - 沒有"premium 限定"或"充值專屬"
+ *   - 不影響遊戲數值，**純美學**
+ *   - 每個 cosmetic 都能在前端零依賴渲染（SVG / CSS / 內建圖示），不依賴外部素材
  *
- * 三种品类：
- *   1. mascot_skin   —— 吉祥物皮肤（帽子/眼镜/披风等装扮叠加）
- *   2. ui_theme      —— UI 主题色（影响 primary 色、按钮色等 CSS 变量）
- *   3. lesson_backdrop —— 课程页背景图案（学习时的氛围）
+ * 三種品類：
+ *   1. mascot_skin   —— 吉祥物皮膚（帽子/眼鏡/披風等裝扮疊加）
+ *   2. ui_theme      —— UI 主題色（影響 primary 色、按鈕色等 CSS 變數）
+ *   3. lesson_backdrop —— 課程頁背景圖案（學習時的氛圍）
  */
 
 export type CosmeticType = "mascot_skin" | "ui_theme" | "lesson_backdrop";
@@ -22,25 +22,25 @@ export interface CosmeticItem {
   type: CosmeticType;
   /** 中文名 */
   name: string;
-  /** 一句话描述 */
+  /** 一句話描述 */
   description: string;
-  /** 价格（gems），免费物品填 0 */
+  /** 價格（gems），免費物品填 0 */
   cost: number;
   rarity: CosmeticRarity;
-  /** 是否新手默认拥有 */
+  /** 是否新手預設擁有 */
   starter?: boolean;
 }
 
 // ============================================================
-// Mascot 皮肤（叠加 SVG 装饰，由 MascotSkinOverlay 渲染）
+// Mascot 皮膚（疊加 SVG 裝飾，由 MascotSkinOverlay 渲染）
 // ============================================================
 
 export const MASCOT_SKINS: CosmeticItem[] = [
   {
     id: "skin_default",
     type: "mascot_skin",
-    name: "原版聪聪",
-    description: "我们最熟悉的熊猫聪聪",
+    name: "原版聰聰",
+    description: "我們最熟悉的熊貓聰聰",
     cost: 0,
     rarity: "common",
     starter: true,
@@ -48,24 +48,24 @@ export const MASCOT_SKINS: CosmeticItem[] = [
   {
     id: "skin_graduate",
     type: "mascot_skin",
-    name: "学士帽",
-    description: "戴上学士帽的聪聪，学者气质满分",
+    name: "學士帽",
+    description: "戴上學士帽的聰聰，學者氣質滿分",
     cost: 80,
     rarity: "common",
   },
   {
     id: "skin_glasses",
     type: "mascot_skin",
-    name: "圆框眼镜",
-    description: "复古圆框眼镜，文艺青年聪聪",
+    name: "圓框眼鏡",
+    description: "復古圓框眼鏡，文藝青年聰聰",
     cost: 100,
     rarity: "common",
   },
   {
     id: "skin_party",
     type: "mascot_skin",
-    name: "派对锥帽",
-    description: "彩虹色派对帽，每天都是节日",
+    name: "派對錐帽",
+    description: "彩虹色派對帽，每天都是節日",
     cost: 150,
     rarity: "rare",
   },
@@ -73,47 +73,47 @@ export const MASCOT_SKINS: CosmeticItem[] = [
     id: "skin_crown",
     type: "mascot_skin",
     name: "金色皇冠",
-    description: "学习路上的小国王/小女王",
+    description: "學習路上的小國王/小女王",
     cost: 250,
     rarity: "rare",
   },
   {
     id: "skin_wizard",
     type: "mascot_skin",
-    name: "法师尖帽",
-    description: "知识就是魔法",
+    name: "法師尖帽",
+    description: "知識就是魔法",
     cost: 300,
     rarity: "epic",
   },
   {
     id: "skin_astronaut",
     type: "mascot_skin",
-    name: "宇航员头盔",
-    description: "向知识的宇宙出发！",
+    name: "宇航員頭盔",
+    description: "向知識的宇宙出發！",
     cost: 500,
     rarity: "legendary",
   },
   {
     id: "skin_sunglasses",
     type: "mascot_skin",
-    name: "酷炫墨镜",
-    description: "Cool 到没朋友的墨镜聪聪",
+    name: "酷炫墨鏡",
+    description: "Cool 到沒朋友的墨鏡聰聰",
     cost: 120,
     rarity: "common",
   },
   {
     id: "skin_pirate",
     type: "mascot_skin",
-    name: "海盗船长",
-    description: "扬帆出海寻知识宝藏",
+    name: "海盜船長",
+    description: "揚帆出海尋知識寶藏",
     cost: 220,
     rarity: "rare",
   },
   {
     id: "skin_headphones",
     type: "mascot_skin",
-    name: "DJ 耳机",
-    description: "戴上耳机就能听见学习节奏",
+    name: "DJ 耳機",
+    description: "戴上耳機就能聽見學習節奏",
     cost: 180,
     rarity: "rare",
   },
@@ -121,43 +121,43 @@ export const MASCOT_SKINS: CosmeticItem[] = [
     id: "skin_laurel",
     type: "mascot_skin",
     name: "桂冠加身",
-    description: "胜利者才能戴的金色桂冠",
+    description: "勝利者才能戴的金色桂冠",
     cost: 280,
     rarity: "epic",
   },
   {
     id: "skin_bowtie",
     type: "mascot_skin",
-    name: "绅士领结",
-    description: "戴上领结就是优雅的小学者",
+    name: "紳士領結",
+    description: "戴上領結就是優雅的小學者",
     cost: 60,
     rarity: "common",
   },
 ];
 
 // ============================================================
-// UI 主题（CSS 变量）
+// UI 主題（CSS 變數）
 // ============================================================
 
 export interface UiThemeData {
-  /** 主色（按钮、强调） */
+  /** 主色（按鈕、強調） */
   primary: string;
   primaryDark: string;
-  /** 次要强调色 */
+  /** 次要強調色 */
   accent: string;
-  /** 页面背景 */
+  /** 頁面背景 */
   bg: string;
-  /** 是否暗色主题（dark mode）。开启时整套灰阶 token 反转 */
+  /** 是否暗色主題（dark mode）。開啟時整套灰階 token 反轉 */
   isDark?: boolean;
-  /** 卡片背景（暗色主题必填，亮色可缺省） */
+  /** 卡片背景（暗色主題必填，亮色可預設） */
   cardBg?: string;
-  /** 卡片边框/分隔色 */
+  /** 卡片邊框/分隔色 */
   borderSoft?: string;
-  /** 主文本色 */
+  /** 主文字色 */
   ink?: string;
-  /** 次要文本色 */
+  /** 次要文字色 */
   inkLight?: string;
-  /** 更弱的文本/icon */
+  /** 更弱的文字/icon */
   inkSofter?: string;
   /** 兜底深灰 */
   bgSoft?: string;
@@ -173,8 +173,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_default",
     type: "ui_theme",
-    name: "Duolingo 绿",
-    description: "经典清爽的草地绿",
+    name: "Duolingo 綠",
+    description: "經典清爽的草地綠",
     cost: 0,
     rarity: "common",
     starter: true,
@@ -188,8 +188,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_ocean",
     type: "ui_theme",
-    name: "海洋蓝",
-    description: "像在大海里学习",
+    name: "海洋藍",
+    description: "像在大海里學習",
     cost: 200,
     rarity: "common",
     data: {
@@ -202,8 +202,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_sakura",
     type: "ui_theme",
-    name: "樱花粉",
-    description: "粉嫩可爱的春天",
+    name: "櫻花粉",
+    description: "粉嫩可愛的春天",
     cost: 200,
     rarity: "common",
     data: {
@@ -216,8 +216,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_sunshine",
     type: "ui_theme",
-    name: "阳光黄",
-    description: "充满活力的金色",
+    name: "陽光黃",
+    description: "充滿活力的金色",
     cost: 250,
     rarity: "rare",
     data: {
@@ -245,7 +245,7 @@ export const UI_THEMES: UiTheme[] = [
     id: "theme_mint",
     type: "ui_theme",
     name: "薄荷青",
-    description: "清新提神的薄荷青绿",
+    description: "清新提神的薄荷青綠",
     cost: 220,
     rarity: "common",
     data: {
@@ -258,8 +258,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_coral",
     type: "ui_theme",
-    name: "珊瑚红",
-    description: "温暖热情的活力珊瑚",
+    name: "珊瑚紅",
+    description: "溫暖熱情的活力珊瑚",
     cost: 300,
     rarity: "rare",
     data: {
@@ -272,8 +272,8 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_aurora",
     type: "ui_theme",
-    name: "极光",
-    description: "梦幻的北极极光蓝绿",
+    name: "極光",
+    description: "夢幻的北極極光藍綠",
     cost: 500,
     rarity: "legendary",
     data: {
@@ -288,7 +288,7 @@ export const UI_THEMES: UiTheme[] = [
     id: "theme_midnight",
     type: "ui_theme",
     name: "暗夜模式",
-    description: "护眼的深色界面，傍晚学习不刺眼",
+    description: "護眼的深色介面，傍晚學習不刺眼",
     cost: 350,
     rarity: "epic",
     data: {
@@ -310,7 +310,7 @@ export const UI_THEMES: UiTheme[] = [
     id: "theme_obsidian",
     type: "ui_theme",
     name: "曜石黑",
-    description: "极简纯黑配霓虹蓝，潮酷十足",
+    description: "極簡純黑配霓虹藍，潮酷十足",
     cost: 480,
     rarity: "legendary",
     data: {
@@ -331,13 +331,13 @@ export const UI_THEMES: UiTheme[] = [
 ];
 
 // ============================================================
-// 课程背景（lesson backdrop）—— 答题时的页面氛围
+// 課程背景（lesson backdrop）—— 答題時的頁面氛圍
 // ============================================================
 
 export interface BackdropData {
-  /** 背景渐变 / 图案 CSS */
+  /** 背景漸變 / 圖案 CSS */
   background: string;
-  /** 是否需要顶层半透明白罩防止背景吃掉文字 */
+  /** 是否需要頂層半透明白罩防止背景吃掉文字 */
   needsOverlay?: boolean;
 }
 
@@ -350,8 +350,8 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_default",
     type: "lesson_backdrop",
-    name: "干净简洁",
-    description: "默认的纯净背景",
+    name: "乾淨簡潔",
+    description: "預設的純淨背景",
     cost: 0,
     rarity: "common",
     starter: true,
@@ -360,8 +360,8 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_clouds",
     type: "lesson_backdrop",
-    name: "蓝天白云",
-    description: "在云朵里学习",
+    name: "藍天白雲",
+    description: "在雲朵裡學習",
     cost: 120,
     rarity: "common",
     data: {
@@ -373,7 +373,7 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
     id: "backdrop_forest",
     type: "lesson_backdrop",
     name: "森林晨光",
-    description: "清晨的森林透着阳光",
+    description: "清晨的森林透著陽光",
     cost: 150,
     rarity: "common",
     data: {
@@ -384,7 +384,7 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_sunset",
     type: "lesson_backdrop",
-    name: "黄昏彩霞",
+    name: "黃昏彩霞",
     description: "傍晚的天空是橘粉色",
     cost: 200,
     rarity: "rare",
@@ -409,7 +409,7 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_sakura",
     type: "lesson_backdrop",
-    name: "樱花飘落",
+    name: "櫻花飄落",
     description: "粉色花瓣的春日",
     cost: 220,
     rarity: "rare",
@@ -421,8 +421,8 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_ocean",
     type: "lesson_backdrop",
-    name: "深海漫游",
-    description: "在海底世界学习",
+    name: "深海漫遊",
+    description: "在海底世界學習",
     cost: 280,
     rarity: "rare",
     data: {
@@ -433,8 +433,8 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
   {
     id: "backdrop_aurora",
     type: "lesson_backdrop",
-    name: "极光夜",
-    description: "极地夜空的彩色光带",
+    name: "極光夜",
+    description: "極地夜空的彩色光帶",
     cost: 480,
     rarity: "legendary",
     data: {
@@ -446,7 +446,7 @@ export const LESSON_BACKDROPS: LessonBackdrop[] = [
 ];
 
 // ============================================================
-// 全部目录 + 查询函数
+// 全部目錄 + 查詢函式
 // ============================================================
 
 export const ALL_COSMETICS: CosmeticItem[] = [
@@ -468,7 +468,7 @@ export function getStarterCosmetics(): CosmeticItem[] {
 }
 
 /**
- * 默认装备（首次启动 / migrate 兜底用）
+ * 預設裝備（首次啟動 / migrate 兜底用）
  */
 export const DEFAULT_EQUIPPED = {
   mascotSkin: "skin_default",
@@ -486,6 +486,6 @@ export const RARITY_COLORS: Record<CosmeticRarity, string> = {
 export const RARITY_LABELS: Record<CosmeticRarity, string> = {
   common: "普通",
   rare: "稀有",
-  epic: "史诗",
-  legendary: "传说",
+  epic: "史詩",
+  legendary: "傳說",
 };

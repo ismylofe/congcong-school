@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * RightRail —— 桌面端右侧 rail（仿 Duolingo web）
+ * RightRail —— 桌面端右側 rail（仿 Duolingo web）
  *
- * 顺序：StatsBar HUD / LeaderboardTeaserCard / DailyQuestsPanel
- * 每日目标环继续留在 profile；rail 上的目标卡已被「每日任务卡」取代。
+ * 順序：StatsBar HUD / LeaderboardTeaserCard / DailyQuestsPanel
+ * 每日目標環繼續留在 profile；rail 上的目標卡已被「每日任務卡」取代。
  */
 
 import { useEffect, useState } from "react";
@@ -52,9 +52,9 @@ function CardShell({ children }: { children: React.ReactNode }) {
 
 /**
  * 排行榜真卡（Wave E1）：
- *   - 未解锁：还差 N 课的进度引导
- *   - 已解锁：当前名次 + 段位小卡（实时按 core botXpAt 计算）
- * 点击进入 /league/。
+ *   - 未解鎖：還差 N 課的進度引導
+ *   - 已解鎖：當前名次 + 段位小卡（實時按 core botXpAt 計算）
+ * 點選進入 /league/。
  */
 function LeaderboardTeaserCard() {
   const [hydrated, setHydrated] = useState(false);
@@ -87,7 +87,7 @@ function LeaderboardTeaserCard() {
         haptic("light");
       }}
       className="block"
-      aria-label={unlocked ? `排行榜：当前第 ${rank ?? "-"} 名` : "解锁排行榜"}
+      aria-label={unlocked ? `排行榜：當前第 ${rank ?? "-"} 名` : "解鎖排行榜"}
     >
       <CardShell>
         <div className="flex items-center gap-3">
@@ -112,15 +112,15 @@ function LeaderboardTeaserCard() {
                 </div>
                 <div className="text-xs text-ink-light mt-0.5">
                   {rank != null && rank <= 5
-                    ? "保持住，晋级区里见！"
-                    : "多学几课，冲进前 5 名！"}
+                    ? "保持住，晉級區裡見！"
+                    : "多學幾課，衝進前 5 名！"}
                 </div>
               </>
             ) : (
               <>
-                <div className="text-sm font-extrabold text-ink">解锁排行榜</div>
+                <div className="text-sm font-extrabold text-ink">解鎖排行榜</div>
                 <div className="text-xs text-ink-light mt-0.5">
-                  还差 {remaining} 节课
+                  還差 {remaining} 節課
                 </div>
               </>
             )}
@@ -139,5 +139,5 @@ function LearningNextStep() {
   const grade = useProgressStore(s => s.selectedGrade) ?? 1;
   const completed = useProgressStore(s => Object.keys(s.completedLessons).length);
   if (completed >= UNLOCK_LESSONS) return <LeaderboardTeaserCard />;
-  return <CardShell><p className="font-extrabold text-ink">和聪聪读一读</p><p className="text-sm text-ink-light mt-2">听一个故事，发现课本之外的新世界。</p><Link href={`/stories/chinese-g${grade}up/`} className="inline-flex min-h-11 items-center text-secondary-dark font-bold mt-2">去听故事 →</Link></CardShell>;
+  return <CardShell><p className="font-extrabold text-ink">和聰聰讀一讀</p><p className="text-sm text-ink-light mt-2">聽一個故事，發現課本之外的新世界。</p><Link href={`/stories/chinese-g${grade}up/`} className="inline-flex min-h-11 items-center text-secondary-dark font-bold mt-2">去聽故事 →</Link></CardShell>;
 }

@@ -1,19 +1,19 @@
 "use client";
 
 /**
- * sfx.ts — 零依赖 Web Audio 高品质音效库
+ * sfx.ts — 零依賴 Web Audio 高品質音效庫
  *
- * 架构：
- *   声音源 ──┬── master gain ── lowpass ── compressor ── destination
+ * 架構：
+ *   聲音源 ──┬── master gain ── lowpass ── compressor ── destination
  *           └── reverb send (delay + lowpass + feedback) ── master gain
  *
- * 关键技术：
- *   - FM bell 合成（正弦载波 + 调制器）实现钟/铃/木琴音色，替代粗糙的 square/triangle
- *   - 主通道低通滤波 + 压缩器，去掉刺耳高频 + 统一响度
- *   - 基于延迟反馈的轻量混响"空间感"，无需 IR 文件
- *   - 指数包络（exponentialRampToValueAtTime）模拟真实乐器自然衰减
+ * 關鍵技術：
+ *   - FM bell 合成（正弦載波 + 調製器）實現鍾/鈴/木琴音色，替代粗糙的 square/triangle
+ *   - 主通道低通濾波 + 壓縮器，去掉刺耳高頻 + 統一響度
+ *   - 基於延遲反饋的輕量混響"空間感"，無需 IR 檔案
+ *   - 指數包絡（exponentialRampToValueAtTime）模擬真實樂器自然衰減
  *
- * 所有参数都精心调校以贴近多邻国的温暖、清亮、圆润的音色。
+ * 所有參數都精心調校以貼近多鄰國的溫暖、清亮、圓潤的音色。
  */
 
 export type SfxName =
@@ -32,7 +32,7 @@ let muted = false;
 let masterGain: GainNode | null = null;
 let masterFilter: BiquadFilterNode | null = null;
 let compressor: DynamicsCompressorNode | null = null;
-/** 混响"发送"输入口——任何源连接到此即获得房间混响 */
+/** 混響"傳送"輸入口——任何源連線到此即獲得房間混響 */
 let reverbIn: GainNode | null = null;
 
 function ensureCtx(): AudioContext | null {
@@ -44,13 +44,13 @@ function ensureCtx(): AudioContext | null {
     if (!AC) return null;
     ctx = new AC();
 
-    // 主通道：gain → 低通滤波 → 压缩器 → 输出
+    // 主通道：gain → 低通濾波 → 壓縮器 → 輸出
     masterGain = ctx.createGain();
     masterGain.gain.value = 0.55;
 
     masterFilter = ctx.createBiquadFilter();
     masterFilter.type = "lowpass";
-    masterFilter.frequency.value = 7000; // 去掉刺耳高频
+    masterFilter.frequency.value = 7000; // 去掉刺耳高頻
     masterFilter.Q.value = 0.7;
 
     compressor = ctx.createDynamicsCompressor();
@@ -64,8 +64,8 @@ function ensureCtx(): AudioContext | null {
     masterFilter.connect(compressor);
     compressor.connect(ctx.destination);
 
-    // 混响：反馈延迟 + 低通 → master
-    // 构造类似小房间的温暖残响
+    // 混響：反饋延遲 + 低通 → master
+    // 構造類似小房間的溫暖殘響
     const delayA = ctx.createDelay(0.5);
     delayA.delayTime.value = 0.071;
     const delayB = ctx.createDelay(0.5);
@@ -104,7 +104,7 @@ export function isMuted(): boolean {
 }
 
 // ============================================================
-// 合成原语
+// 合成原語
 // ============================================================
 
 interface BellOpts {
@@ -112,16 +112,16 @@ interface BellOpts {
   start: number;
   duration: number;
   volume?: number;
-  /** 调制比：决定谐波结构。1.5~4 出铃音，5+ 出金属音 */
+  /** 調製比：決定諧波結構。1.5~4 出鈴音，5+ 出金屬音 */
   modRatio?: number;
-  /** 调制深度：越大音色越尖利/金属 */
+  /** 調製深度：越大音色越尖利/金屬 */
   modDepth?: number;
   attack?: number;
-  /** 是否送入混响 */
+  /** 是否送入混響 */
   reverb?: number;
 }
 
-/** FM 铃音合成：正弦载波 + 正弦调制器 */
+/** FM 鈴音合成：正弦載波 + 正弦調製器 */
 function fmBell(c: AudioContext, opts: BellOpts) {
   const {
     freq,
@@ -144,14 +144,14 @@ function fmBell(c: AudioContext, opts: BellOpts) {
   modulator.type = "sine";
   modulator.frequency.setValueAtTime(freq * modRatio, start);
 
-  // 调制深度自身也有包络（钟的敲击感）：打击瞬间深，然后快速衰减
+  // 調製深度自身也有包絡（鐘的敲擊感）：打擊瞬間深，然後快速衰減
   modGain.gain.setValueAtTime(modDepth, start);
   modGain.gain.exponentialRampToValueAtTime(0.01, start + duration * 0.6);
 
   modulator.connect(modGain);
   modGain.connect(carrier.frequency);
 
-  // 响度包络
+  // 響度包絡
   env.gain.setValueAtTime(0, start);
   env.gain.linearRampToValueAtTime(volume, start + attack);
   env.gain.exponentialRampToValueAtTime(0.0001, start + duration);
@@ -159,7 +159,7 @@ function fmBell(c: AudioContext, opts: BellOpts) {
   carrier.connect(env);
   if (masterGain) env.connect(masterGain);
 
-  // 混响发送
+  // 混響傳送
   if (reverb > 0 && reverbIn) {
     const send = c.createGain();
     send.gain.value = reverb;
@@ -186,7 +186,7 @@ interface ToneOpts {
   reverb?: number;
 }
 
-/** 基本振荡器（带滤波 + 包络），用于非铃音场景 */
+/** 基本振盪器（帶濾波 + 包絡），用於非鈴音場景 */
 function tone(c: AudioContext, opts: ToneOpts) {
   const {
     freq,
@@ -239,7 +239,7 @@ function tone(c: AudioContext, opts: ToneOpts) {
   osc.stop(start + duration + 0.02);
 }
 
-/** 短促噪声爆破（用于 tap 点击、heart loss 破裂） */
+/** 短促噪聲爆破（用於 tap 點選、heart loss 破裂） */
 function noiseBurst(
   c: AudioContext,
   opts: { start: number; duration: number; volume?: number; filterFreq?: number; highpass?: number },
@@ -295,7 +295,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
 
   switch (name) {
     case "correct": {
-      // 两音铃（F#5 → A#5），FM 钟音，带轻混响
+      // 兩音鈴（F#5 → A#5），FM 鍾音，帶輕混響
       fmBell(c, {
         freq: 739.99,
         start: now,
@@ -314,7 +314,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
         modDepth: 200,
         reverb: 0.38,
       });
-      // 一层高频 shimmer 增加"光亮感"
+      // 一層高頻 shimmer 增加"光亮感"
       fmBell(c, {
         freq: 1864.66,
         start: now + 0.11,
@@ -328,7 +328,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "wrong": {
-      // 温柔下行二度"哦-哦"（E4 → D4），三角波，强烈低通，轻微颤音
+      // 溫柔下行二度"哦-哦"（E4 → D4），三角波，強烈低通，輕微顫音
       tone(c, {
         freq: 329.63,
         endFreq: 277.18,
@@ -341,7 +341,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
         filterFreq: 1400,
         reverb: 0.2,
       });
-      // 低频垫音增加"厚度"
+      // 低頻墊音增加"厚度"
       tone(c, {
         freq: 164.81,
         endFreq: 138.59,
@@ -357,7 +357,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "tap": {
-      // 柔和短促的"嗒"：滤波噪声 + 高频正弦
+      // 柔和短促的"嗒"：濾波噪聲 + 高頻正弦
       noiseBurst(c, {
         start: now,
         duration: 0.025,
@@ -378,7 +378,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "complete": {
-      // 胜利铃声：C5-E5-G5-C6 琶音，FM 铃音 + 混响 + 最后齐奏
+      // 勝利鈴聲：C5-E5-G5-C6 琶音，FM 鈴音 + 混響 + 最後齊奏
       const notes: Array<[number, number]> = [
         [523.25, 0],     // C5
         [659.25, 0.12],  // E5
@@ -396,7 +396,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
           reverb: 0.45,
         });
       }
-      // 最后叠加一个闪亮的高泛音
+      // 最後疊加一個閃亮的高泛音
       fmBell(c, {
         freq: 2093,
         start: now + 0.36,
@@ -410,7 +410,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "star": {
-      // 两连铃（A6 → E7），短促明亮
+      // 兩連鈴（A6 → E7），短促明亮
       fmBell(c, {
         freq: 1760,
         start: now,
@@ -433,7 +433,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "heartLoss": {
-      // 柔和下滑铃 + 轻微噪声"破碎"
+      // 柔和下滑鈴 + 輕微噪聲"破碎"
       fmBell(c, {
         freq: 523.25,
         start: now,
@@ -443,7 +443,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
         modDepth: 140,
         reverb: 0.35,
       });
-      // 下降一个小三度
+      // 下降一個小三度
       tone(c, {
         freq: 440,
         endFreq: 220,
@@ -467,7 +467,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "combo": {
-      // 上行三铃琶音 C5-E5-G5（大三和弦分解）+ 混响
+      // 上行三鈴琶音 C5-E5-G5（大三和絃分解）+ 混響
       const notes = [523.25, 659.25, 783.99];
       notes.forEach((f, i) => {
         fmBell(c, {
@@ -484,7 +484,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "unlock": {
-      // 多邻国解锁：明亮铃音叠加多个谐波，略带金属感 + 深混响
+      // 多鄰國解鎖：明亮鈴音疊加多個諧波，略帶金屬感 + 深混響
       const fundamental = 1046.5; // C6
       [1, 2, 3.01].forEach((mult, i) => {
         fmBell(c, {
@@ -497,7 +497,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
           reverb: 0.6,
         });
       });
-      // 柔和持续尾音
+      // 柔和持續尾音
       fmBell(c, {
         freq: 523.25,
         start: now + 0.06,
@@ -511,7 +511,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
     }
 
     case "progressTick": {
-      // 极短的"叮"，用于进度条推进
+      // 極短的"叮"，用於進度條推進
       fmBell(c, {
         freq: 1760,
         start: now,
@@ -526,7 +526,7 @@ export function playSfx(name: SfxName, opts: { volume?: number } = {}) {
   }
 }
 
-/** 挂一次性全局手势监听，确保 iOS/Safari 解锁 AudioContext */
+/** 掛一次性全域手勢監聽，確保 iOS/Safari 解鎖 AudioContext */
 export function primeAudioOnFirstGesture() {
   if (typeof window === "undefined") return;
   const prime = () => {

@@ -1,24 +1,24 @@
 "use client";
 
 /**
- * ThemeProvider —— 三态深色模式 + 美妆主题的统一应用层。
+ * ThemeProvider —— 三態深色模式 + 美妝主題的統一應用層。
  *
- * 深色的三个来源（优先级从高到低）：
- *   1. 装备了暗色美妆主题（theme_midnight / theme_obsidian，isDark）
- *      → 「强制暗色」，用主题自带的色板覆盖同一套 --app-* token
- *   2. 免费三态偏好 = dark（手动开关）
- *   3. 免费三态偏好 = system 且系统 prefers-color-scheme: dark
- *   后两种情况只挂 .theme-dark 类，night 色板（与 iOS DuoColors 同 hex：
- *   bg #131F24 / surface #202F36 / border #37464F）由 globals.css 提供缺省值。
+ * 深色的三個來源（優先順序從高到低）：
+ *   1. 裝備了暗色美妝主題（theme_midnight / theme_obsidian，isDark）
+ *      → 「強制暗色」，用主題自帶的色板覆蓋同一套 --app-* token
+ *   2. 免費三態偏好 = dark（手動開關）
+ *   3. 免費三態偏好 = system 且系統 prefers-color-scheme: dark
+ *   後兩種情況只掛 .theme-dark 類，night 色板（與 iOS DuoColors 同 hex：
+ *   bg #131F24 / surface #202F36 / border #37464F）由 globals.css 提供預設值。
  *
- * 亮色美妆主题只影响 --theme-primary / --theme-accent / --theme-bg 等
- * 强调色；处于深色时保留强调色、页面底色走 night token。
+ * 亮色美妝主題隻影響 --theme-primary / --theme-accent / --theme-bg 等
+ * 強調色；處於深色時保留強調色、頁面底色走 night token。
  *
- * .theme-dark 类挂在 <html> 上 —— layout.tsx 的首屏内联脚本会在水合前
- * 先挂好，防止白闪；这里负责水合后的响应式维护。
+ * .theme-dark 類掛在 <html> 上 —— layout.tsx 的首屏內聯腳本會在水合前
+ * 先掛好，防止白閃；這裡負責水合後的響應式維護。
  *
- * 同时挂载全局 <MotionConfig reducedMotion="user" transition={uiMotion.fade}>，让所有 framer-motion
- * 动画尊重系统「减少动态效果」设置。
+ * 同時掛載全域 <MotionConfig reducedMotion="user" transition={uiMotion.fade}>，讓所有 framer-motion
+ * 動畫尊重系統「減少動態效果」設定。
  */
 
 import { useEffect } from "react";
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const surfaceBg = themeId === "theme_default" ? "#FFFFFF" : d.bg;
     const root = document.documentElement;
 
-    // 强调色永远跟随装备的美妆主题
+    // 強調色永遠跟隨裝備的美妝主題
     root.style.setProperty("--theme-primary", d.primary);
     root.style.setProperty("--theme-primary-dark", d.primaryDark);
     root.style.setProperty("--theme-accent", d.accent);
@@ -56,7 +56,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (d.isDark) {
-      // 购买的暗色主题：同一套 token，用主题自带色板覆盖 night 缺省值
+      // 購買的暗色主題：同一套 token，用主題自帶色板覆蓋 night 預設值
       root.style.setProperty("--app-bg", d.bg);
       root.style.setProperty("--app-bg-soft", d.bgSoft ?? d.bg);
       root.style.setProperty("--app-bg-softer", d.bgSofter ?? d.cardBg ?? d.bg);
@@ -66,7 +66,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.style.setProperty("--app-ink-light", d.inkLight ?? "#CBD5E1");
       root.style.setProperty("--app-ink-softer", d.inkSofter ?? "#94A3B8");
     } else {
-      // 免费深色 / 亮色：清掉内联覆盖，让 globals.css 的 night 缺省值生效
+      // 免費深色 / 亮色：清掉內聯覆蓋，讓 globals.css 的 night 預設值生效
       for (const p of [
         "--app-bg",
         "--app-bg-soft",
@@ -83,8 +83,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     root.classList.toggle("theme-dark", isDark);
     root.style.colorScheme = isDark ? "dark" : "light";
-    // 首屏 bootScript 会在 <html> 上内联深色底色防白闪 —— 这里接管：
-    // 深色时保持同步，切回亮色时清掉，避免滚动越界处露出旧底色
+    // 首屏 bootScript 會在 <html> 上內聯深色底色防白閃 —— 這裡接管：
+    // 深色時保持同步，切回亮色時清掉，避免滾動越界處露出舊底色
     if (isDark) {
       root.style.backgroundColor = d.isDark ? d.bg : NIGHT_BG;
     } else {

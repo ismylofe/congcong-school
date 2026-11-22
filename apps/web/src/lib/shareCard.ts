@@ -1,32 +1,32 @@
 "use client";
 
 /**
- * shareCard.ts —— 分享卡纯本地渲染（E2）
+ * shareCard.ts —— 分享卡純本地渲染（E2）
  *
- * 两款版式（canvas 绘制，零网络依赖）：
- *   1. 连胜卡  renderStreakCard：品牌绿底 + 聪聪简笔 + 大火焰数字
- *      + 本周 7 格日历 + slogan
- *   2. 徽章卡  renderBadgeCard：星星/奖杯徽章 + 课程名或成就名
- *      （结算三星幕、成就领取时刻共用）
+ * 兩款版式（canvas 繪製，零網路依賴）：
+ *   1. 連勝卡  renderStreakCard：品牌綠底 + 聰聰簡筆 + 大火焰數字
+ *      + 本週 7 格日曆 + slogan
+ *   2. 徽章卡  renderBadgeCard：星星/獎盃徽章 + 課程名或成就名
+ *      （結算三星幕、成就領取時刻共用）
  *
- * 分发：shareCardBlob 优先 navigator.share（移动端系统分享面板），
- * 不支持时降级为下载 PNG。全程不上传任何服务器。
+ * 分發：shareCardBlob 優先 navigator.share（移動端系統分享面板），
+ * 不支援時降級為下載 PNG。全程不上傳任何伺服器。
  */
 
-// 品牌色（与 tailwind 设计 token 同源的 Duolingo 派生色板）
+// 品牌色（與 tailwind 設計 token 同源的 Duolingo 派生色板）
 const BRAND_GREEN = "#58CC02";
 const BRAND_GREEN_DARK = "#46A302";
 const FLAME_ORANGE = "#FF9600";
 const GOLD = "#FFC800";
 const EEL = "#4B4B4B";
 
-export const SHARE_SLOGAN = "聪聪学堂 · 和聪聪一起天天进步";
+export const SHARE_SLOGAN = "聰聰學堂 · 和聰聰一起天天進步";
 
-/** 连胜卡的一格（周一到周日） */
+/** 連勝卡的一格（週一到週日） */
 export interface ShareWeekCell {
   /** "一"…"日" */
   label: string;
-  /** 当天有学习记录 */
+  /** 當天有學習記錄 */
   active: boolean;
   isToday: boolean;
 }
@@ -37,13 +37,13 @@ export interface StreakCardInput {
 }
 
 export interface BadgeCardInput {
-  /** 顶部小标题，如「三星通关」「成就解锁」 */
+  /** 頂部小標題，如「三星通關」「成就解鎖」 */
   heading: string;
-  /** 主标题：课程名 / 成就名 */
+  /** 主標題：課程名 / 成就名 */
   title: string;
-  /** 副标题（可选）：成就描述、教材名等 */
+  /** 副標題（可選）：成就描述、教材名等 */
   subtitle?: string;
-  /** 三星卡传 3；不传则画奖杯徽章 */
+  /** 三星卡傳 3；不傳則畫獎盃徽章 */
   stars?: number;
 }
 
@@ -76,9 +76,9 @@ function roundRect(
   ctx.closePath();
 }
 
-const FONT = `-apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif`;
+const FONT = `-apple-system, "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif`;
 
-/** 品牌绿渐变底 + 顶部装饰泡泡 */
+/** 品牌綠漸變底 + 頂部裝飾泡泡 */
 function paintBrandBackground(ctx: CanvasRenderingContext2D) {
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, BRAND_GREEN);
@@ -86,7 +86,7 @@ function paintBrandBackground(ctx: CanvasRenderingContext2D) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // 半透明装饰圆
+  // 半透明裝飾圓
   ctx.fillStyle = "rgba(255,255,255,0.08)";
   for (const [cx, cy, r] of [
     [120, 140, 130],
@@ -100,9 +100,9 @@ function paintBrandBackground(ctx: CanvasRenderingContext2D) {
   }
 }
 
-/** 聪聪简笔（熊猫）：白团子 + 黑耳黑眼圈 + 小黑鼻（几何对齐 Mascot.tsx） */
+/** 聰聰簡筆（熊貓）：白團子 + 黑耳黑眼圈 + 小黑鼻（幾何對齊 Mascot.tsx） */
 function paintPanda(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number) {
-  const s = size / 100; // 以 100 为基准的比例
+  const s = size / 100; // 以 100 為基準的比例
   const black = "#2E2E2E";
   const white = "#FBFBFB";
   ctx.save();
@@ -114,7 +114,7 @@ function paintPanda(ctx: CanvasRenderingContext2D, cx: number, cy: number, size:
   ctx.arc(-24 * s, -34 * s, 13 * s, 0, Math.PI * 2);
   ctx.arc(24 * s, -34 * s, 13 * s, 0, Math.PI * 2);
   ctx.fill();
-  // 头（白团子）
+  // 頭（白團子）
   ctx.fillStyle = white;
   ctx.beginPath();
   ctx.ellipse(0, 0, 40 * s, 37 * s, 0, 0, Math.PI * 2);
@@ -127,7 +127,7 @@ function paintPanda(ctx: CanvasRenderingContext2D, cx: number, cy: number, size:
   ctx.beginPath();
   ctx.ellipse(16 * s, -2 * s, 12 * s, 15 * s, 0.15, 0, Math.PI * 2);
   ctx.fill();
-  // 白眼窝
+  // 白眼窩
   ctx.fillStyle = white;
   ctx.beginPath();
   ctx.arc(-15 * s, -4 * s, 8.5 * s, 0, Math.PI * 2);
@@ -150,7 +150,7 @@ function paintPanda(ctx: CanvasRenderingContext2D, cx: number, cy: number, size:
   ctx.beginPath();
   ctx.ellipse(0, 12 * s, 6 * s, 4.5 * s, 0, 0, Math.PI * 2);
   ctx.fill();
-  // 嘴（微笑两瓣）
+  // 嘴（微笑兩瓣）
   ctx.strokeStyle = black;
   ctx.lineWidth = 2 * s;
   ctx.lineCap = "round";
@@ -165,7 +165,7 @@ function paintPanda(ctx: CanvasRenderingContext2D, cx: number, cy: number, size:
   ctx.restore();
 }
 
-/** 大火焰（连胜卡主视觉） */
+/** 大火焰（連勝卡主視覺） */
 function paintFlame(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number) {
   const s = size / 100;
   ctx.save();
@@ -180,7 +180,7 @@ function paintFlame(ctx: CanvasRenderingContext2D, cx: number, cy: number, size:
   ctx.bezierCurveTo(-44 * s, -8 * s, -26 * s, -30 * s, 0, -58 * s);
   ctx.closePath();
   ctx.fill();
-  // 内焰
+  // 內焰
   ctx.fillStyle = GOLD;
   ctx.beginPath();
   ctx.moveTo(0, -14 * s);
@@ -215,7 +215,7 @@ function paintStar(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: num
   ctx.restore();
 }
 
-/** 奖杯（成就卡） */
+/** 獎盃（成就卡） */
 function paintTrophy(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number) {
   const s = size / 100;
   ctx.save();
@@ -229,7 +229,7 @@ function paintTrophy(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
   ctx.bezierCurveTo(-18 * s, 12 * s, -34 * s, -8 * s, -34 * s, -50 * s);
   ctx.closePath();
   ctx.fill();
-  // 双耳
+  // 雙耳
   ctx.strokeStyle = GOLD;
   ctx.lineWidth = 9 * s;
   ctx.beginPath();
@@ -242,7 +242,7 @@ function paintTrophy(ctx: CanvasRenderingContext2D, cx: number, cy: number, size
   ctx.fillRect(-6 * s, 12 * s, 12 * s, 16 * s);
   roundRect(ctx, -26 * s, 28 * s, 52 * s, 14 * s, 5 * s);
   ctx.fill();
-  // 星星点缀
+  // 星星點綴
   paintStar(ctx, 0, -26 * s, 13 * s, "#FFFFFF");
   ctx.restore();
 }
@@ -255,7 +255,7 @@ function paintFooter(ctx: CanvasRenderingContext2D) {
   ctx.fillText(SHARE_SLOGAN, W / 2, H - 72);
 }
 
-/** 文本超宽截断（加 …） */
+/** 文字超寬截斷（加 …） */
 function ellipsize(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
   if (ctx.measureText(text).width <= maxWidth) return text;
   let t = text;
@@ -272,17 +272,17 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 }
 
 // ============================================================
-// 版式 1：连胜卡
+// 版式 1：連勝卡
 // ============================================================
 
 export async function renderStreakCard(input: StreakCardInput): Promise<Blob> {
   const { canvas, ctx } = makeCanvas();
   paintBrandBackground(ctx);
 
-  // 聪聪
+  // 聰聰
   paintPanda(ctx, W / 2, 240, 200);
 
-  // 大火焰 + 连胜数字
+  // 大火焰 + 連勝數字
   paintFlame(ctx, W / 2, 560, 260);
   ctx.fillStyle = "#FFFFFF";
   ctx.textAlign = "center";
@@ -290,9 +290,9 @@ export async function renderStreakCard(input: StreakCardInput): Promise<Blob> {
   ctx.fillText(String(input.streak), W / 2, 660);
 
   ctx.font = `800 56px ${FONT}`;
-  ctx.fillText("天连续学习！", W / 2, 780);
+  ctx.fillText("天連續學習！", W / 2, 780);
 
-  // 本周 7 格日历卡
+  // 本週 7 格日曆卡
   const cardX = 90;
   const cardY = 850;
   const cardW = W - 180;
@@ -304,11 +304,11 @@ export async function renderStreakCard(input: StreakCardInput): Promise<Blob> {
   const cell = cardW / 7;
   input.week.slice(0, 7).forEach((d, i) => {
     const cx = cardX + cell * i + cell / 2;
-    // 星期标签
+    // 星期標籤
     ctx.fillStyle = "rgba(255,255,255,0.85)";
     ctx.font = `800 30px ${FONT}`;
     ctx.fillText(d.label, cx, cardY + 58);
-    // 圆点
+    // 圓點
     const cy = cardY + 128;
     const r = 32;
     if (d.isToday) {
@@ -330,17 +330,17 @@ export async function renderStreakCard(input: StreakCardInput): Promise<Blob> {
 }
 
 // ============================================================
-// 版式 2：徽章卡（三星通关 / 成就）
+// 版式 2：徽章卡（三星通關 / 成就）
 // ============================================================
 
 export async function renderBadgeCard(input: BadgeCardInput): Promise<Blob> {
   const { canvas, ctx } = makeCanvas();
   paintBrandBackground(ctx);
 
-  // 聪聪
+  // 聰聰
   paintPanda(ctx, W / 2, 230, 190);
 
-  // 顶部小标题胶囊
+  // 頂部小標題膠囊
   ctx.font = `800 40px ${FONT}`;
   ctx.textAlign = "center";
   const headingW = ctx.measureText(input.heading).width + 96;
@@ -350,9 +350,9 @@ export async function renderBadgeCard(input: BadgeCardInput): Promise<Blob> {
   ctx.fillStyle = "#FFFFFF";
   ctx.fillText(input.heading, W / 2, 437);
 
-  // 徽章主体
+  // 徽章主體
   if (input.stars && input.stars > 0) {
-    // 三星排布：中间高两侧低
+    // 三星排布：中間高兩側低
     const n = Math.min(3, input.stars);
     const positions =
       n === 3
@@ -382,12 +382,12 @@ export async function renderBadgeCard(input: BadgeCardInput): Promise<Blob> {
     ctx.restore();
   }
 
-  // 主标题（课程名 / 成就名）
+  // 主標題（課程名 / 成就名）
   ctx.fillStyle = "#FFFFFF";
   ctx.font = `900 64px ${FONT}`;
   ctx.fillText(ellipsize(ctx, input.title, W - 160), W / 2, 880);
 
-  // 副标题
+  // 副標題
   if (input.subtitle) {
     ctx.fillStyle = "rgba(255,255,255,0.88)";
     ctx.font = `700 40px ${FONT}`;
@@ -399,7 +399,7 @@ export async function renderBadgeCard(input: BadgeCardInput): Promise<Blob> {
 }
 
 // ============================================================
-// 分发：navigator.share → 降级下载 PNG
+// 分發：navigator.share → 降級下載 PNG
 // ============================================================
 
 export type ShareOutcome = "shared" | "downloaded" | "cancelled";
@@ -421,9 +421,9 @@ export async function shareCardBlob(
       return "shared";
     }
   } catch (err) {
-    // 用户取消系统分享面板：静默返回
+    // 使用者取消系統分享面板：靜默返回
     if (err instanceof DOMException && err.name === "AbortError") return "cancelled";
-    // 其他失败走下载降级
+    // 其他失敗走下載降級
   }
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -436,11 +436,11 @@ export async function shareCardBlob(
   return "downloaded";
 }
 
-/** 本周 7 格（周一为首）——连胜卡挂点共用的取数小工具 */
+/** 本週 7 格（週一為首）——連勝卡掛點共用的取數小工具 */
 export function buildShareWeek(xpHistory: Record<string, number>): ShareWeekCell[] {
   const labels = ["一", "二", "三", "四", "五", "六", "日"];
   const now = new Date();
-  const mondayOffset = (now.getDay() + 6) % 7; // 0 = 周一
+  const mondayOffset = (now.getDay() + 6) % 7; // 0 = 週一
   return labels.map((label, i) => {
     const d = new Date();
     d.setDate(d.getDate() + (i - mondayOffset));

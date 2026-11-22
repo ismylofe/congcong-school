@@ -21,14 +21,14 @@ export function StoryEvidencePanel({
   onPlay: (index: number) => void;
 }) {
   return (
-    <section aria-label="故事原文与证据">
+    <section aria-label="故事原文與證據">
       <h2 className="text-xl font-extrabold text-ink">原文 · {story.title}</h2>
       <p className="text-sm text-ink-light mt-2 mb-4">
         {checked
           ? reference.length
-            ? "标出的句子是参考依据。看看它们怎样支持答案。"
-            : "这道题没有标注参考句子，可以结合全文和解析再想一想。"
-          : "可以点选一句或几句有帮助的话，再回到题目作答。"}
+            ? "標出的句子是參考依據。看看它們怎樣支持答案。"
+            : "這道題沒有標註參考句子，可以結合全文和解析再想一想。"
+          : "可以點選一句或幾句有幫助的話，再回到題目作答。"}
       </p>
       <ol className="space-y-3">
         {story.sentences.map((sentence, i) => {
@@ -65,7 +65,7 @@ export function StoryEvidencePanel({
                 {sentence.audio && (
                   <button
                     type="button"
-                    aria-label={`朗读原文第${number}句`}
+                    aria-label={`朗讀原文第${number}句`}
                     onClick={() => onPlay(i)}
                     className="w-11 h-11 shrink-0 rounded-full bg-bg-soft text-secondary inline-flex items-center justify-center"
                   >
@@ -75,7 +75,7 @@ export function StoryEvidencePanel({
               </div>
               {(marked || chosen) && (
                 <p className="mt-2 text-sm font-bold text-ink-light">
-                  {marked ? "参考证据" : "我找到的句子"}
+                  {marked ? "參考證據" : "我找到的句子"}
                 </p>
               )}
             </li>
@@ -83,7 +83,7 @@ export function StoryEvidencePanel({
         })}
       </ol>
       <p className="mt-4 text-sm text-ink-light">
-        找证据帮助理解，选句子本身不计分。
+        找證據幫助理解，選句子本身不計分。
       </p>
     </section>
   );

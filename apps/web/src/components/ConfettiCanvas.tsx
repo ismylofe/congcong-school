@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * ConfettiCanvas — 零依赖手写撒花特效
+ * ConfettiCanvas — 零依賴手寫撒花特效
  *
- * 在关卡完成时激活，rAF 驱动 ~140 颗粒子：
- * 矩形 / 圆形 / 细长丝带，随机颜色，受重力和阻力影响，
- * 最后淡出。卸载时释放 rAF。
+ * 在關卡完成時啟用，rAF 驅動 ~140 顆粒子：
+ * 矩形 / 圓形 / 細長絲帶，隨機顏色，受重力和阻力影響，
+ * 最後淡出。卸載時釋放 rAF。
  */
 
 import { useEffect, useRef } from "react";
@@ -23,7 +23,7 @@ interface Particle {
   life: number;
 }
 
-// 全部取自 Duolingo 动物色板：Feather / Macaw / Bee / Cardinal / Canary / Mask / Fox / Beetle
+// 全部取自 Duolingo 動物色板：Feather / Macaw / Bee / Cardinal / Canary / Mask / Fox / Beetle
 const COLORS = [
   "#58CC02", // Feather
   "#1CB0F6", // Macaw
@@ -38,7 +38,7 @@ const COLORS = [
 interface ConfettiCanvasProps {
   active: boolean;
   particleCount?: number;
-  duration?: number; // ms，粒子总生存时间
+  duration?: number; // ms，粒子總生存時間
 }
 
 export function ConfettiCanvas({ active, particleCount = 140, duration = 3200 }: ConfettiCanvasProps) {
@@ -64,7 +64,7 @@ export function ConfettiCanvas({ active, particleCount = 140, duration = 3200 }:
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // 初始化粒子：从屏幕中上部两个"喷泉"喷发
+    // 初始化粒子：從螢幕中上部兩個"噴泉"噴發
     const particles: Particle[] = [];
     const cx1 = window.innerWidth * 0.3;
     const cx2 = window.innerWidth * 0.7;
@@ -109,7 +109,7 @@ export function ConfettiCanvas({ active, particleCount = 140, duration = 3200 }:
         p.y += p.vy;
         p.rot += p.vrot;
 
-        // 淡出最后 30%
+        // 淡出最後 30%
         p.life = t < 0.7 ? 1 : Math.max(0, 1 - (t - 0.7) / 0.3);
         if (p.life <= 0 || p.y > window.innerHeight + 40) continue;
         alive++;

@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * ThemeModeToggle —— 免费深色模式的三态开关（跟随系统 / 亮 / 暗）。
+ * ThemeModeToggle —— 免費深色模式的三態開關（跟隨系統 / 亮 / 暗）。
  *
- * 出现在 SideNav 底部（桌面）和 我的 页外观设置（移动端可达）。
- * 装备了暗色美妆主题时强制暗色，这里的选择暂不生效 —— 给出提示。
+ * 出現在 SideNav 底部（桌面）和 我的 頁外觀設定（移動端可達）。
+ * 裝備了暗色美妝主題時強制暗色，這裡的選擇暫不生效 —— 給出提示。
  */
 
 import { useEffect, useState } from "react";
@@ -21,7 +21,7 @@ const OPTIONS: Array<{
   label: string;
   Icon: React.ComponentType<{ className?: string }>;
 }> = [
-  { mode: "system", label: "自动", Icon: MonitorIcon },
+  { mode: "system", label: "自動", Icon: MonitorIcon },
   { mode: "light", label: "亮", Icon: Sun },
   { mode: "dark", label: "暗", Icon: Moon },
 ];
@@ -42,7 +42,7 @@ export function ThemeModeToggle({ compact = false }: { compact?: boolean }) {
         className="grid grid-cols-3 gap-1 p-1 rounded-2xl border-2 border-bg-softer bg-bg-soft"
         data-theme-compact={compact ? "true" : undefined}
         role="radiogroup"
-        aria-label="外观模式"
+        aria-label="外觀模式"
       >
         {OPTIONS.map((opt, index) => {
           const selected = active === opt.mode;
@@ -53,7 +53,7 @@ export function ThemeModeToggle({ compact = false }: { compact?: boolean }) {
               type="button"
               role="radio"
               aria-checked={selected}
-              aria-label={opt.mode === "system" ? "跟随系统" : opt.mode === "light" ? "浅色模式" : "深色模式"}
+              aria-label={opt.mode === "system" ? "跟隨系統" : opt.mode === "light" ? "淺色模式" : "深色模式"}
               disabled={forcedDark}
               tabIndex={selected ? 0 : -1}
               onKeyDown={event => {
@@ -77,7 +77,7 @@ export function ThemeModeToggle({ compact = false }: { compact?: boolean }) {
                   : "text-ink-softer hover:text-ink-light",
                 forcedDark && "opacity-50 cursor-not-allowed",
               )}
-              title={forcedDark ? "当前装备了暗色主题，界面保持暗色" : opt.label}
+              title={forcedDark ? "當前裝備了暗色主題，介面保持暗色" : opt.label}
             >
               <Icon className="w-4 h-4" />
               {!compact && <span>{opt.label}</span>}
@@ -87,7 +87,7 @@ export function ThemeModeToggle({ compact = false }: { compact?: boolean }) {
       </div>
       {forcedDark && !compact && (
         <p className="mt-1.5 text-[10px] text-ink-softer leading-snug">
-          装备了暗色主题，界面保持暗色；想切回来可以在商店换个主题
+          裝備了暗色主題，介面保持暗色；想切回來可以在商店換個主題
         </p>
       )}
     </div>

@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * WeeklyReportCard —— 本周学习报告卡片
+ * WeeklyReportCard —— 本週學習報告卡片
  *
- * 数据来源：useProgressStore.xpHistory + lessonHistory（最近 60 天滚动）
- * 显示：
- *   - 本周（周一→周日）每日 XP 柱状图
- *   - 总 XP / 完成课时 / 学习天数
- *   - 与上周对比的小变化
+ * 資料來源：useProgressStore.xpHistory + lessonHistory（最近 60 天滾動）
+ * 顯示：
+ *   - 本週（週一→週日）每日 XP 柱狀圖
+ *   - 總 XP / 完成課時 / 學習天數
+ *   - 與上週對比的小變化
  */
 
 import { useMemo } from "react";
@@ -34,12 +34,12 @@ export function WeeklyReportView({ data }: { data: ReturnType<typeof weeklyStudy
     <section
       className="bg-white rounded-3xl border-2 border-bg-softer p-5"
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
-      aria-label="本周学习报告"
+      aria-label="本週學習報告"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-secondary" />
-          <div className="text-base font-extrabold text-ink">本周报告</div>
+          <div className="text-base font-extrabold text-ink">本週報告</div>
         </div>
         {data.xpDelta !== 0 && (
           <div
@@ -54,14 +54,14 @@ export function WeeklyReportView({ data }: { data: ReturnType<typeof weeklyStudy
         )}
       </div>
 
-      {/* Stats 三连 */}
+      {/* Stats 三連 */}
       <div className="grid grid-cols-3 gap-2 mb-4">
-        <MiniStat label="本周 XP" value={data.totalXp} />
-        <MiniStat label="完成课时" value={data.totalLessons} />
-        <MiniStat label="学习天数" value={`${data.activeDays}/7`} />
+        <MiniStat label="本週 XP" value={data.totalXp} />
+        <MiniStat label="完成課時" value={data.totalLessons} />
+        <MiniStat label="學習天數" value={`${data.activeDays}/7`} />
       </div>
 
-      {/* 柱状图 */}
+      {/* 柱狀圖 */}
       <div className="flex items-end justify-between gap-1.5 h-24 mb-1">
         {data.thisWeek.map((d, idx) => {
           const pct = (d.xp / data.maxXp) * 100;
@@ -82,8 +82,8 @@ export function WeeklyReportView({ data }: { data: ReturnType<typeof weeklyStudy
                   minHeight: d.studied ? "12px" : "4px",
                 }}
                 role="img"
-                aria-label={`${d.label}：${d.xp} XP · ${d.studied ? "已学习" : "没有学习记录"}`}
-                title={`${d.label}：${d.xp} XP · ${d.studied ? "已学习" : "没有学习记录"}`}
+                aria-label={`${d.label}：${d.xp} XP · ${d.studied ? "已學習" : "沒有學習記錄"}`}
+                title={`${d.label}：${d.xp} XP · ${d.studied ? "已學習" : "沒有學習記錄"}`}
               />
             </motion.div>
           );
@@ -102,11 +102,11 @@ export function WeeklyReportView({ data }: { data: ReturnType<typeof weeklyStudy
         ))}
       </div>
 
-      {data.activeDays > 0 && data.totalXp === 0 && <p className="mt-4 text-center text-xs text-ink-light">认真练习、改错都算学习，经验值不代表全部进步。</p>}
+      {data.activeDays > 0 && data.totalXp === 0 && <p className="mt-4 text-center text-xs text-ink-light">認真練習、改錯都算學習，經驗值不代表全部進步。</p>}
       {data.activeDays === 0 && (
         <p className="mt-4 text-center text-xs text-ink-softer inline-flex items-center justify-center gap-1 w-full">
           <Lightning className="w-3 h-3" />
-          本周还没有学习记录，去开始一节课吧
+          本週還沒有學習記錄，去開始一節課吧
         </p>
       )}
     </section>

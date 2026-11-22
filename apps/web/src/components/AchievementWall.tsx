@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * AchievementWall —— 个人中心的成就墙
+ * AchievementWall —— 個人中心的成就牆
  *
- * 网格展示所有成就，已解锁高亮 + 渐变边框；未解锁灰色 + 进度条。
- * 进入即调用 markAllSeen，清掉底部导航的红点。
+ * 網格展示所有成就，已解鎖高亮 + 漸變邊框；未解鎖灰色 + 進度條。
+ * 進入即呼叫 markAllSeen，清掉底部導航的紅點。
  */
 
 import { useEffect, useMemo, useState } from "react";
@@ -47,8 +47,8 @@ const ICON_MAP = {
 export function AchievementWall() {
   const state = useProgressStore();
   const [expanded, setExpanded] = useState(false);
-  // 账本 ∪ 实时集：已解锁（进账本）的成就永不"回灰"，
-  // 实时集兜底账本尚未写入的瞬间（Watcher 稍后补账）
+  // 賬本 ∪ 實時集：已解鎖（進賬本）的成就永不"回灰"，
+  // 實時集兜底賬本尚未寫入的瞬間（Watcher 稍後補賬）
   const unlockedIds = useMemo(
     () => [
       ...new Set([
@@ -71,7 +71,7 @@ export function AchievementWall() {
     <section
       className="bg-white rounded-3xl border-2 border-bg-softer p-5"
       style={{ boxShadow: "0 4px 0 0 var(--shadow-card-color)" }}
-      aria-label="成就墙"
+      aria-label="成就牆"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="text-base font-extrabold text-ink">成就</div>
@@ -95,7 +95,7 @@ export function AchievementWall() {
       <button type="button" aria-expanded={expanded} aria-controls="achievement-grid"
         onClick={() => setExpanded(value => !value)}
         className="mt-4 min-h-11 w-full rounded-xl border border-bg-softer text-sm font-bold text-ink-light hover:bg-bg-soft">
-        {expanded ? "收起成就" : `查看全部 ${totalCount} 项成就`}
+        {expanded ? "收起成就" : `查看全部 ${totalCount} 項成就`}
       </button>
     </section>
   );
@@ -156,17 +156,17 @@ function AchievementBadge({
           />
         </div>
       ) : (
-        // 📤 成就分享卡（E2）：本地渲染徽章卡 → 系统分享 / 降级下载
+        // 📤 成就分享卡（E2）：本地渲染徽章卡 → 系統分享 / 降級下載
         <ShareCardButton
           makeBlob={() =>
             renderBadgeCard({
-              heading: "成就解锁",
+              heading: "成就解鎖",
               title: ach.name,
               subtitle: ach.description,
             })
           }
           filename={`chengjiu-${ach.id}.png`}
-          shareText={`我在聪聪学堂解锁了成就「${ach.name}」！`}
+          shareText={`我在聰聰學堂解鎖了成就「${ach.name}」！`}
           className="mt-2 min-h-11 w-full inline-flex items-center justify-center text-xs font-bold text-ink-light rounded-xl border border-bg-softer transition-colors hover:bg-bg-soft"
         >
           <span>分享成就</span>

@@ -19,8 +19,8 @@ export interface MascotProps {
 
 const CHARCOAL = "#292e2c";
 const MOOD_LABELS: Record<MascotMood, string> = {
-  happy: "开心", cheer: "欢呼", sad: "难过", think: "思考",
-  wave: "招手", surprise: "惊喜", proud: "自豪", embarrassed: "害羞",
+  happy: "開心", cheer: "歡呼", sad: "難過", think: "思考",
+  wave: "招手", surprise: "驚喜", proud: "自豪", embarrassed: "害羞",
 };
 const IDLE = {
   breathe: {
@@ -113,7 +113,7 @@ export function Mascot({
       <svg width={size} height={size} viewBox="0 0 120 120"
         xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby={id + "-title"}
         style={{ display: "block", overflow: "visible" }}>
-        <title id={id + "-title"}>{"聪聪，" + MOOD_LABELS[mood]}</title>
+        <title id={id + "-title"}>{"聰聰，" + MOOD_LABELS[mood]}</title>
         <PandaPaint id={id} />
         <ellipse cx="60" cy="118.5" rx="28" ry="2.2" fill={paint("ground")} />
         {/* Initial transforms let SVG groups measure before Framer animates them.

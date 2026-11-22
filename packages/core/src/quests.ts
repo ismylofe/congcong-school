@@ -1,13 +1,13 @@
 /**
- * quests.ts —— 每日任务（Daily Quests）单一事实源
+ * quests.ts —— 每日任務（Daily Quests）單一事實源
  *
- * 与 iOS `Domain/Quests.swift` 逐行对齐：同一天双端必须给出完全相同的
- * 三条任务（同 kind / 同 target / 同 reward / 同顺序）。
+ * 與 iOS `Domain/Quests.swift` 逐行對齊：同一天雙端必須給出完全相同的
+ * 三條任務（同 kind / 同 target / 同 reward / 同順序）。
  *
- * 确定性来源：日期字符串（YYYY-MM-DD）→ djb2 滚动哈希 → SplitMix64
- * finalizer 雪崩 → 对候选池取模。哈希原语抽在 rng.ts（quests / league 共用），
- * TS 端用 BigInt 模拟 Swift 的 UInt64 环绕运算（&+ / &*），位运算逐位一致；
- * spec/golden-vectors.json 的 `quests` 组是双端对照的黄金向量。
+ * 確定性來源：日期字串（YYYY-MM-DD）→ djb2 滾動雜湊 → SplitMix64
+ * finalizer 雪崩 → 對候選池取模。雜湊原語抽在 rng.ts（quests / league 共用），
+ * TS 端用 BigInt 模擬 Swift 的 UInt64 環繞運算（&+ / &*），位運算逐位一致；
+ * spec/golden-vectors.json 的 `quests` 組是雙端對照的黃金向量。
  */
 
 import { U64_MASK, djb2Hash, mix64 as mix } from "./rng";
@@ -16,13 +16,13 @@ export type QuestKind = "earnXP" | "finishLessons" | "reviewMistakes" | "readTex
 
 export interface Quest {
   kind: QuestKind;
-  /** 目标计数（earnXP 为 XP 数，其余为次数） */
+  /** 目標計數（earnXP 為 XP 數，其餘為次數） */
   target: number;
-  /** 完成奖励（宝石） */
+  /** 完成獎勵（寶石） */
   reward: number;
-  /** 当日内稳定的 id —— 领取账本以 `"${date}:${id}"` 记账 */
+  /** 當日內穩定的 id —— 領取賬本以 `"${date}:${id}"` 記賬 */
   id: string;
-  /** 儿童友好中文标题（与 iOS 文案一致） */
+  /** 兒童友好中文標題（與 iOS 文案一致） */
   title: string;
 }
 
@@ -30,19 +30,19 @@ function makeQuest(kind: QuestKind, target: number, reward: number): Quest {
   return { kind, target, reward, id: `${kind}-${target}`, title: questTitle(kind, target) };
 }
 
-/** 与 iOS `Quest.title` 完全一致的中文文案。 */
+/** 與 iOS `Quest.title` 完全一致的中文文案。 */
 export function questTitle(kind: QuestKind, target: number): string {
   switch (kind) {
-    case "earnXP":         return `获得 ${target} 点经验`;
-    case "finishLessons":  return `完成 ${target} 节小课`;
-    case "reviewMistakes": return `复习 ${target} 道错题`;
-    case "readTexts":      return `读完 ${target} 篇课文或故事`;
+    case "earnXP":         return `獲得 ${target} 點經驗`;
+    case "finishLessons":  return `完成 ${target} 節小課`;
+    case "reviewMistakes": return `複習 ${target} 道錯題`;
+    case "readTexts":      return `讀完 ${target} 篇課文或故事`;
   }
 }
 
 /**
- * 候选池 —— 与 iOS `Quests.pool` 逐项一致（顺序也一致，
- * 因为 pick 是「按 kind 过滤后取模」，顺序参与结果）。
+ * 候選池 —— 與 iOS `Quests.pool` 逐項一致（順序也一致，
+ * 因為 pick 是「按 kind 過濾後取模」，順序參與結果）。
  */
 export const QUEST_POOL: readonly Quest[] = [
   makeQuest("earnXP", 30, 10),
@@ -58,11 +58,11 @@ export const QUEST_POOL: readonly Quest[] = [
 ];
 
 /**
- * 给定日期（YYYY-MM-DD）的三条每日任务，确定性生成：
- *   - 第一条必为 earnXP；
- *   - 后两条从 finishLessons / reviewMistakes / readTexts 中不放回抽取，
- *     因此一天内三条任务 kind 两两不同；
- *   - 同一天任何时刻、任何端调用结果完全一致。
+ * 給定日期（YYYY-MM-DD）的三條每日任務，確定性生成：
+ *   - 第一條必為 earnXP；
+ *   - 後兩條從 finishLessons / reviewMistakes / readTexts 中不放回抽取，
+ *     因此一天內三條任務 kind 兩兩不同；
+ *   - 同一天任何時刻、任何端呼叫結果完全一致。
  */
 export function dailyQuests(dateString: string): Quest[] {
   const hash = mix(djb2Hash(dateString));
@@ -76,7 +76,7 @@ export function dailyQuests(dateString: string): Quest[] {
     return options[index(options.length, salt)];
   };
 
-  // 与 iOS 一致：先抽走 firstKind（不放回），再在剩余里抽 secondKind
+  // 與 iOS 一致：先抽走 firstKind（不放回），再在剩餘裡抽 secondKind
   const rest: QuestKind[] = ["finishLessons", "reviewMistakes", "readTexts"];
   const [firstKind] = rest.splice(index(rest.length, 0x11n), 1);
   const secondKind = rest[index(rest.length, 0x22n)];

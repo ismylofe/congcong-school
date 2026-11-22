@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * SideNav —— 桌面端左侧导航
+ * SideNav —— 桌面端左側導航
  *
- * 5 个真实页面：学习 / 排行榜 / 错题本 / 商店 / 我的
+ * 5 個真實頁面：學習 / 排行榜 / 錯題本 / 商店 / 我的
  *
- * 响应式（web-shell-14）：
- *   - md (768-1023)：icon-only 窄栏（AppShell 给 72px），文字隐藏
- *   - lg+：完整 200px，图标 + 文字
+ * 響應式（web-shell-14）：
+ *   - md (768-1023)：icon-only 窄欄（AppShell 給 72px），文字隱藏
+ *   - lg+：完整 200px，圖示 + 文字
  * Filled learning illustrations; blue border and surface mark the current page.
- * 底部：免费深色模式三态开关。
+ * 底部：免費深色模式三態開關。
  */
 
 import Link from "next/link";
@@ -36,9 +36,9 @@ interface NavItem {
 }
 
 const ITEMS: NavItem[] = [
-  { href: "/", label: "学习", Icon: HomeIcon, matchPrefix: "/learn-root" },
+  { href: "/", label: "學習", Icon: HomeIcon, matchPrefix: "/learn-root" },
   { href: "/league/", label: "排行榜", Icon: Trophy, matchPrefix: "/league" },
-  { href: "/review/", label: "错题本", Icon: Bookmark, matchPrefix: "/review" },
+  { href: "/review/", label: "錯題本", Icon: Bookmark, matchPrefix: "/review" },
   { href: "/shop/", label: "商店", Icon: ShoppingBag, matchPrefix: "/shop" },
   { href: "/profile/", label: "我的", Icon: User, matchPrefix: "/profile" },
 ];
@@ -55,7 +55,7 @@ function isActiveLearn(pathname: string): boolean {
 }
 
 function isActive(pathname: string, item: NavItem): boolean {
-  if (item.label === "学习") return isActiveLearn(pathname);
+  if (item.label === "學習") return isActiveLearn(pathname);
   return pathname.startsWith(item.matchPrefix);
 }
 
@@ -65,8 +65,8 @@ export function SideNav() {
   const items = ITEMS;
 
   return (
-    <nav className="flex flex-col gap-2 w-full h-full" aria-label="主导航">
-      {/* Logo —— 文字 wordmark（lg+）；md 窄栏显示熊猫图标 */}
+    <nav className="flex flex-col gap-2 w-full h-full" aria-label="主導航">
+      {/* Logo —— 文字 wordmark（lg+）；md 窄欄顯示熊貓圖示 */}
       <Link
         href="/"
         onClick={() => {
@@ -74,13 +74,13 @@ export function SideNav() {
           haptic("light");
         }}
         className="block px-3 py-3 mb-2"
-        aria-label="聪聪学堂 · 回到首页"
+        aria-label="聰聰學堂 · 回到首頁"
       >
         <span className="hidden lg:inline brand-wordmark text-2xl tracking-tightest">
-          聪聪学堂
+          聰聰學堂
         </span>
         <span className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-primary/10 text-primary font-extrabold text-lg">
-          聪
+          聰
         </span>
       </Link>
 
@@ -123,7 +123,7 @@ export function SideNav() {
         );
       })}
 
-      {/* 底部：深色模式三态开关（md 窄栏收成纯图标） */}
+      {/* 底部：深色模式三態開關（md 窄欄收成純圖示） */}
       <div className="mt-auto pt-4 pb-2 px-1">
         <ThemeModeToggle compact />
       </div>

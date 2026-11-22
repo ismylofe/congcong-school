@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * GemBadge —— 顶栏宝石计数胶囊。
+ * GemBadge —— 頂欄寶石計數膠囊。
  *
- * 和 StatsBar 上的 红心 / 连胜 / XP 保持一致的视觉风格（带边框的胶囊 + 图标 + 数字）。
- * 数字变化时轻微弹入，不使用会撑宽右栏的外扩光圈。
+ * 和 StatsBar 上的 紅心 / 連勝 / XP 保持一致的視覺風格（帶邊框的膠囊 + 圖示 + 數字）。
+ * 數字變化時輕微彈入，不使用會撐寬右欄的外擴光圈。
  */
 
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import { Gem } from "@/components/LearningIcon";
 
 interface GemBadgeProps {
   className?: string;
-  /** 是否包成链接（默认 true，点击进商店） */
+  /** 是否包成連結（預設 true，點選進商店） */
   asLink?: boolean;
 }
 
@@ -33,7 +33,7 @@ export function GemBadge({ className = "", asLink = true }: GemBadgeProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 }}
       className={`status-counter relative min-h-11 px-2 inline-flex items-center gap-2 rounded-xl font-extrabold text-base select-none tabular-nums text-gem ${asLink ? "hover:bg-bg-soft transition-colors cursor-pointer" : ""} ${className}`}
-      aria-label={asLink ? `宝石 ${display}，进入商店` : `可用宝石 ${display}`}
+      aria-label={asLink ? `寶石 ${display}，進入商店` : `可用寶石 ${display}`}
     >
       <Gem className="w-6 h-6" />
       <motion.span

@@ -19,11 +19,11 @@ import {
 } from "@/store/progress";
 import type { Question } from "@/types";
 
-/** 🚩 报错挂点上下文：提供了才显示小旗子按钮 */
+/** 🚩 報錯掛點上下文：提供了才顯示小旗子按鈕 */
 export interface ReportContext {
   lessonId: string;
   question: Question;
-  /** 当次作答（可选） */
+  /** 當次作答（可選） */
   userAnswer?: string;
 }
 
@@ -32,14 +32,14 @@ interface FeedbackPanelProps {
   explanation: string;
   explanationAudio?: string | null;
   onContinue: () => void;
-  /** 题目报错（E2 小旗子）：不传则不渲染旗子按钮 */
+  /** 題目報錯（E2 小旗子）：不傳則不渲染旗子按鈕 */
   reportContext?: ReportContext | null;
 }
 
-const PRAISE_POOL = ["答对了！", "做得好！", "继续保持！", "太棒了！"];
-const COMFORT_POOL = ["再想想", "差一点", "加油", "没关系", "下次就对！"];
+const PRAISE_POOL = ["答對了！", "做得好！", "繼續保持！", "太棒了！"];
+const COMFORT_POOL = ["再想想", "差一點", "加油", "沒關係", "下次就對！"];
 
-/** 小旗子图标（仅报错入口用，不动 icons.tsx） */
+/** 小旗子圖示（僅報錯入口用，不動 icons.tsx） */
 function FlagIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -76,9 +76,9 @@ export function FeedbackPanel({
 
   const addReport = useProgressStore(s => s.addReport);
   const [sheetOpen, setSheetOpen] = useState(false);
-  // 已提交：旗子变成「已收到」态，防止同题重复报
+  // 已提交：旗子變成「已收到」態，防止同題重複報
   const [reported, setReported] = useState(false);
-  // 弹层用 portal 挂到 body：面板自身带 transform，fixed 子元素会被它捕获
+  // 彈層用 portal 掛到 body：面板自身帶 transform，fixed 子元素會被它捕獲
   const [portalReady, setPortalReady] = useState(false);
   useEffect(() => setPortalReady(true), []);
 
@@ -87,7 +87,7 @@ export function FeedbackPanel({
     return pool[Math.floor(Math.random() * pool.length)];
   }, [isCorrect]);
 
-  // 面板出现：只播标题语音（"太棒了！" / "再想想"），讲解保留手动喇叭
+  // 面板出現：只播標題語音（"太棒了！" / "再想想"），講解保留手動喇叭
   useAutoNarrate([uiAudio(title)], explanation);
 
   function submitReport(kind: ReportKind) {
@@ -132,7 +132,7 @@ export function FeedbackPanel({
           >
             {title}
           </motion.span>
-          {/* 🚩 报错小旗子（有上下文才显示） */}
+          {/* 🚩 報錯小旗子（有上下文才顯示） */}
           {reportContext && (
             <button
               type="button"
@@ -147,8 +147,8 @@ export function FeedbackPanel({
                   ? "border-primary/40 bg-primary/10 text-primary cursor-default"
                   : "border-bg-softer bg-white text-ink-softer hover:text-ink hover:border-ink-softer"
               }`}
-              aria-label={reported ? "已报告本题问题" : "报告本题问题"}
-              title={reported ? "已收到你的反馈" : "这道题有问题？"}
+              aria-label={reported ? "已報告本題問題" : "報告本題問題"}
+              title={reported ? "已收到你的反饋" : "這道題有問題？"}
             >
               {reported ? <CheckCircle className="w-5 h-5" /> : <FlagIcon className="w-4 h-4" />}
             </button>
@@ -164,10 +164,10 @@ export function FeedbackPanel({
             <MathText text={explanation} />
           </div>
           {explanationAudio && (
-            <TTSButton src={explanationAudio} size="sm" label="重听讲解" className="mt-0.5" />
+            <TTSButton src={explanationAudio} size="sm" label="重聽講解" className="mt-0.5" />
           )}
         </motion.div>
-        {/* autoFocus：让桌面端直接按 Enter/空格 继续（键盘快捷键 web-lesson-3） */}
+        {/* autoFocus：讓桌面端直接按 Enter/空格 繼續（鍵盤快捷鍵 web-lesson-3） */}
         <button
           autoFocus
           onClick={() => {
@@ -177,21 +177,21 @@ export function FeedbackPanel({
           }}
           className={`w-full ${btnCls}`}
         >
-          继续
+          繼續
         </button>
       </div>
 
-      {/* 🚩 报错对话框：三选一（portal 到 body，避开面板自身的 transform） */}
+      {/* 🚩 報錯對話框：三選一（portal 到 body，避開面板自身的 transform） */}
       {portalReady &&
         createPortal(
-      <Modal open={sheetOpen} onClose={() => setSheetOpen(false)} ariaLabel="报告题目问题">
+      <Modal open={sheetOpen} onClose={() => setSheetOpen(false)} ariaLabel="報告題目問題">
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <FlagIcon className="w-5 h-5 text-danger" />
-                  <h3 className="text-lg font-extrabold text-ink">这道题怎么了？</h3>
+                  <h3 className="text-lg font-extrabold text-ink">這道題怎麼了？</h3>
                 </div>
                 <p className="text-xs text-ink-light mb-4">
-                  你的反馈只保存在本机，可以在「我的」页面查看和导出
+                  你的反饋只儲存在本機，可以在「我的」頁面查看和匯出
                 </p>
                 <div className="flex flex-col gap-2.5">
                   {REPORT_OPTIONS.map(opt => (
