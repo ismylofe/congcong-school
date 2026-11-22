@@ -62,6 +62,84 @@
           "question_types": ["choice"]
         }
       ]
+    },
+    {
+      "unit_number": 3,
+      "title": "毫米",
+      "knowledge_points": [
+        {
+          "name": "認識毫米",
+          "description": "認識毫米，知道1公分＝10毫米，能用尺實測長度，並做公分與毫米的化聚。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "長度的計算",
+          "description": "做毫米、公分毫米複名數的長度加減計算。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 4,
+      "title": "乘法",
+      "knowledge_points": [
+        {
+          "name": "二位數乘以一位數",
+          "description": "用直式計算二位數乘以一位數，包含進位。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "三位數乘以一位數",
+          "description": "用直式計算三位數乘以一位數，包含進位與十位是0的情形。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "連乘的兩步驟問題",
+          "description": "解決需要連續相乘的兩步驟問題。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "乘法估算",
+          "description": "把數估成整十或整百，估算乘法的結果並解決問題。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 5,
+      "title": "角",
+      "knowledge_points": [
+        {
+          "name": "認識角",
+          "description": "認識角的頂點和邊，能在圖形中找出角並數出角的個數。",
+          "difficulty": 1,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "角的大小比較",
+          "description": "知道角的大小是兩邊張開的程度，與邊的長短無關，並能比較角的大小。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "認識直角、銳角和鈍角",
+          "description": "認識直角，用直角當標準判斷銳角和鈍角。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "正方形和長方形",
+          "description": "用邊長和直角認識正方形和長方形的特性。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        }
+      ]
     }
   ]
 }
