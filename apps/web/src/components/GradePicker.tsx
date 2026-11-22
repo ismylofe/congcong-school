@@ -34,7 +34,8 @@ const OPTIONS: Option[] = [
   { grade: 6, label: "我讀六年級", hint: "準備升國中", Icon: Trophy },
 ];
 
-export function GradePicker() {
+/** availableGrades：有台灣版教材的年級；其他年級標示「即將推出」（仍可進入年級頁查看）。 */
+export function GradePicker({ availableGrades }: { availableGrades?: number[] } = {}) {
   const setSelectedGrade = useProgressStore(s => s.setSelectedGrade);
   const [picked, setPicked] = useState<number | null>(null);
 
@@ -114,6 +115,9 @@ export function GradePicker() {
                     )}
                   >
                     {opt.label}
+                    {availableGrades && !availableGrades.includes(opt.grade) && (
+                      <span className="ml-2 align-middle rounded-full bg-bg-softer px-2 py-0.5 text-xs font-bold text-ink-light">即將推出</span>
+                    )}
                   </div>
                   <div className="text-sm font-medium text-ink-light mt-0.5">{opt.hint}</div>
                 </div>

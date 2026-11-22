@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { NumberSenseProgress } from "@/components/NumberSenseProgress";
-export default function NumberSensePage() {
+import { ComingSoonPage } from "@/components/ComingSoonPage";
+import { isNumberSensePublished, NUMBER_SENSE_BOOK_ID } from "@/lib/numberSensePublished";
+export default async function NumberSensePage() {
+  // 預設只上架台灣版教材時，示範單元依附的 g1up 不存在 → 顯示「即將推出」
+  if (!(await isNumberSensePublished())) return <ComingSoonPage title="數一數、比一比" />;
   return (
     <AppShell right={null} centerMaxWidth={760}>
       <main className="px-4 py-4 sm:py-6">
         <Link
           className="min-h-11 inline-flex items-center font-bold text-secondary-dark mb-2"
-          href="/book/g1up/"
+          href={`/book/${NUMBER_SENSE_BOOK_ID}/`}
         >
           ← 回到一年級數學
         </Link>

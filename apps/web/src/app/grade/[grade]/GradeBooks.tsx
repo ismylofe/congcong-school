@@ -33,8 +33,17 @@ export default function GradeBooks({ books }: { books: Book[] }) {
     {ORDER.map(subjectId => {
       const subjectBooks = visible.filter(b => (b.subject ?? "math") === subjectId)
         .sort((a, b) => Number(a.semester === "down") - Number(b.semester === "down"));
-      if (!subjectBooks.length) return null;
       const subject = SUBJECTS[subjectId];
+      if (!subjectBooks.length) return <section key={subjectId}>
+        <div className="mb-3 px-1">
+          <div className="text-base lg:text-xl font-extrabold text-ink">{subject.label}</div>
+          <div className="text-sm text-ink-light mt-0.5">{TAGLINES[subjectId]}</div>
+        </div>
+        <div aria-label={`${subject.label}：即將推出`} className="flex items-center gap-3 lg:gap-4 rounded-2xl border-2 border-dashed border-bg-softer px-4 py-4 lg:px-5 lg:py-5 text-ink-light">
+          <SubjectBookIcon subject={subjectId} className="w-14 h-16 shrink-0 opacity-50" />
+          <div className="text-base lg:text-xl font-extrabold">即將推出</div>
+        </div>
+      </section>;
       return <section key={subjectId}>
         <div className="mb-3 px-1">
           <div className="text-base lg:text-xl font-extrabold text-ink">{subject.label}</div>

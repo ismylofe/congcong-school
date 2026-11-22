@@ -39,7 +39,8 @@ import {
 } from "@/lib/reviewSession";
 import { dateKey } from "@cstf/core/week";
 import { useProgressTicker, formatMsCountdown } from "@/lib/useProgressTicker";
-import { loadReviewLessons, reconcileMistakes } from "@/lib/reviewContent";
+import { loadReviewLessons, reconcileMistakes, reviewLessonBookId } from "@/lib/reviewContent";
+import { loadPublishedBookIds, usePublishedBookIds, lessonBookId } from "@/lib/publishedBooks";
 import { answerReady } from "@/lib/questionDraft";
 import {
   useProgressStore,
@@ -116,11 +117,18 @@ export function ReviewRunnerClient() {
     setLoadFailed(false);
     void (async () => {
       const bank = useProgressStore.getState().mistakesBank;
+      // 已下架教材（例如原專案教材）的錯題：不拿來出題，但保留在 localStorage。
+      // 它們不會進 lessons，reconcileMistakes 遇到不在 lessons 的錯題會原樣保留。
+      const published = await loadPublishedBookIds();
+      const isPublished = (lessonId: string) => {
+        const book = reviewLessonBookId(lessonId);
+        return !!book && published.has(book);
+      };
       const saved = readReviewSession(context);
       let lessons = new Map<string, import("@/types").Lesson | null>();
       let restored: ReviewSession | null = null;
       if (saved) {
-        lessons = await loadReviewLessons(saved.items);
+        lessons = await loadReviewLessons(saved.items.filter((item) => isPublished(item.lessonId)));
         const fresh = saved.items.flatMap((item) => {
           const lesson = lessons.get(item.lessonId);
           const question = lesson?.questions.find(
@@ -135,9 +143,9 @@ export function ReviewRunnerClient() {
       let items = restored?.items;
       if (!items) {
         const prepared = await prepareReview(
-          reconcileMistakes(bank, lessons),
+          reconcileMistakes(bank, lessons).filter((entry) => isPublished(entry.lessonId)),
           fromHearts,
-          fallbackLessonId,
+          fallbackLessonId && isPublished(fallbackLessonId) ? fallbackLessonId : undefined,
         );
         for (const [id, lesson] of prepared.lessons) lessons.set(id, lesson);
         items = prepared.items;
@@ -634,9 +642,13 @@ function ReviewCompletionScreen({
     claimed === dateKey(new Date(now)),
     stats.total,
   );
-  const resumeId = activeLesson?.lessonId ?? returnLessonId;
+  const publishedIds = usePublishedBookIds();
+  const candidateId = activeLesson?.lessonId ?? returnLessonId;
+  const candidateBook = candidateId ? lessonBookId(candidateId) : null;
+  // 要回去的課程屬於已下架教材時，改成回首頁，不連到不存在的頁面
+  const resumeId = candidateBook && publishedIds?.has(candidateBook) ? candidateId : undefined;
   const resumeHref = resumeId
-    ? `/lesson/${resumeId.split("-u")[0]}/${resumeId}/`
+    ? `/lesson/${candidateBook}/${resumeId}/`
     : "/";
   useEffect(() => {
     playSfx("complete");
@@ -744,9 +756,9 @@ function ReviewCompletionScreen({
             >
               {fromHearts && action === "wait"
                 ? "返回課程查看紅心恢復"
-                : activeLesson
+                : resumeId && activeLesson
                   ? "繼續上次課程"
-                  : returnLessonId
+                  : resumeId
                     ? "返回這節課程"
                     : "繼續學習"}
             </SoundLink>

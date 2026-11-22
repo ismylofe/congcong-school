@@ -26,6 +26,7 @@ export default async function HomePage() {
     <HomeClient
       grades={grades}
       byGrade={Object.fromEntries(grades.map(g => [g, byGrade[g].length]))}
+      bookIds={index.books.map(b => b.id)}
       totalBooks={index.books.filter(b => !b.supersededBy).length}
       totalLessons={index.totalLessons}
       totalQuestions={index.totalQuestions}

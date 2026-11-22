@@ -21,6 +21,8 @@ import { Modal } from "@/components/Modal";
 import { SoundLink } from "@/components/SoundLink";
 import { useProgressStore } from "@/store/progress";
 import { cn } from "@/lib/cn";
+import { SUBJECTS } from "@/lib/subjects";
+import { usePublishedBookIds } from "@/lib/publishedBooks";
 import { playSfx } from "@/lib/sfx";
 import { haptic } from "@/lib/haptic";
 import type { Book, SubjectId } from "@/types";
@@ -33,6 +35,7 @@ function parseBookId(lessonId: string): string | null {
 
 export function ContinueLearningCard({ compact = false, placement = "page" }: { compact?: boolean; placement?: "page" | "rail" } = {}) {
   const activeLesson = useProgressStore(s => s.activeLesson);
+  const publishedIds = usePublishedBookIds();
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => setHydrated(true), []);
@@ -41,6 +44,8 @@ export function ContinueLearningCard({ compact = false, placement = "page" }: { 
 
   const bookId = parseBookId(activeLesson.lessonId);
   if (!bookId) return null;
+  // 進行中的課程屬於已下架教材（或清單還沒載入）→ 不顯示，避免連到不存在的頁面
+  if (!publishedIds?.has(bookId)) return null;
 
   const href = `/lesson/${bookId}/${activeLesson.lessonId}/`;
 
@@ -243,6 +248,19 @@ export function CurrentBookBadge({
               </button>
             );
           })}
+          {SUBJECT_ORDER.filter(s => !sorted.some(b => subjectOf(b) === s)).map(s => (
+            <div
+              key={`soon-${s}`}
+              aria-label={`${SUBJECTS[s].label}：即將推出`}
+              className="flex items-center gap-3 px-3 py-3 rounded-2xl border-2 border-dashed border-bg-softer text-left select-none"
+            >
+              <SubjectBookIcon subject={s} className="w-9 h-10 shrink-0 opacity-50" />
+              <span className="flex-1 min-w-0">
+                <span className="block text-sm font-extrabold text-ink-light">{SUBJECTS[s].label}</span>
+                <span className="block text-[11px] text-ink-light mt-0.5">即將推出</span>
+              </span>
+            </div>
+          ))}
         </div>
 
         <div className="mt-4 pt-3 border-t-2 border-bg-softer flex items-center justify-between">

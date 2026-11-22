@@ -173,7 +173,7 @@ export const UI_THEMES: UiTheme[] = [
   {
     id: "theme_default",
     type: "ui_theme",
-    name: "Duolingo 綠",
+    name: "草綠",
     description: "經典清爽的草地綠",
     cost: 0,
     rarity: "common",

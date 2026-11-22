@@ -49,6 +49,26 @@ const PAGES_ROOT = path.resolve(ROOT, "public", "textbook-pages");
 const STORY_IMAGES_ROOT = path.resolve(ROOT, "public", "story-images");
 
 // ============================================================
+// 只上架台灣版教材：outline.edition 在白名單內才會進網站。
+// 原專案教材（人教、統編、青島、PEP…）保留在 output/，預設不建置；
+// 設定環境變數 CSF_INCLUDE_LEGACY=1 可暫時一併納入。
+// ============================================================
+const TAIWAN_EDITIONS: Record<string, string> = {
+  kangxuan: "康軒版",
+  hanlin: "翰林版",
+  nani: "南一版",
+};
+const INCLUDE_LEGACY = process.env.CSF_INCLUDE_LEGACY === "1";
+
+function taiwanEditionLabel(edition: string | undefined): string | undefined {
+  return edition && Object.hasOwn(TAIWAN_EDITIONS, edition) ? TAIWAN_EDITIONS[edition] : undefined;
+}
+
+function isPublishedEdition(edition: string | undefined): boolean {
+  return INCLUDE_LEGACY || taiwanEditionLabel(edition) !== undefined;
+}
+
+// ============================================================
 // TTS 音频映射：与 scripts/tts/collect_texts.py 的 hash 规则保持一致
 //   - normalize: 数学公式转朗读文本 + trim + 折叠空白
 //   - hash:      sha1(text)
@@ -281,7 +301,7 @@ async function buildPassages(): Promise<Set<string>> {
         try {
           doc = JSON.parse(await fs.readFile(srcPath, "utf-8"));
         } catch (e) {
-          console.warn(`  ⚠️  解析失败 ${f}: ${(e as Error).message}`);
+          console.warn(`  ⚠️  解析失敗 ${f}: ${(e as Error).message}`);
           continue;
         }
 
@@ -343,11 +363,11 @@ async function buildPassages(): Promise<Set<string>> {
   }
 
   console.log(
-    `📖 课文听读: ${totalBooks} 本 / ${totalPassages} 篇 / ${totalSentences} 句 ` +
+    `📖 課文聽讀: ${totalBooks} 本 / ${totalPassages} 篇 / ${totalSentences} 句 ` +
       `(${audioHit} 句已生成 TTS, ${totalSentences - audioHit} 句待合成)`,
   );
   console.log(
-    `📕 课本原页: ${passageWithImage}/${totalPassages} 篇挂上了 pageImages`,
+    `📕 課本原頁: ${passageWithImage}/${totalPassages} 篇掛上了 pageImages`,
   );
   return withPassages;
 }
@@ -376,7 +396,7 @@ function decorateStoryQuestion(q: StoryQuestion, pinyin = false): StoryQuestion 
 async function buildStories(): Promise<Set<string>> {
   const withStories = new Set<string>();
   if (!existsSync(STORIES_SRC)) {
-    console.log("  [跳过] data/stories/ 不存在，无故事数据");
+    console.log("  [跳過] data/stories/ 不存在，無故事資料");
     return withStories;
   }
   const subjectDirs = await fs.readdir(STORIES_SRC);
@@ -422,7 +442,7 @@ async function buildStories(): Promise<Set<string>> {
       try {
         doc = JSON.parse(await fs.readFile(srcPath, "utf-8"));
       } catch (e) {
-        console.warn(`  ⚠️  解析失败 ${f}: ${(e as Error).message}`);
+        console.warn(`  ⚠️  解析失敗 ${f}: ${(e as Error).message}`);
         continue;
       }
 
@@ -479,7 +499,7 @@ async function buildStories(): Promise<Set<string>> {
   }
 
   console.log(
-    `📚 故事阅读: ${totalBooks} 本 / ${totalStories} 篇 / ${totalSentences} 句 ` +
+    `📚 故事閱讀: ${totalBooks} 本 / ${totalStories} 篇 / ${totalSentences} 句 ` +
       `(${audioHit} 句已生成 TTS, ${totalSentences - audioHit} 句待合成)`,
   );
   return withStories;
@@ -544,7 +564,7 @@ async function processTextbook(
   const stem = outlineFile.replace(/\.json$/, "");
   const parsed = parseStem(stem, subject.id);
   if (!parsed) {
-    console.warn(`  ⚠️  跳过无法识别的教材: ${stem}`);
+    console.warn(`  ⚠️  跳過無法識別的教材: ${stem}`);
     return null;
   }
 
@@ -564,7 +584,9 @@ async function processTextbook(
     throw new Error(`Five-four primary books require an independent edition, publisher and grade 1–5: ${outlineFile}`);
   }
   const bookId = outline.edition ? `${parsed.bookId}-${outline.edition}` : parsed.bookId;
-  const editionSuffix = outline.editionLabel ? `（${outline.editionLabel}）` : "";
+  const twEditionLabel = taiwanEditionLabel(outline.edition);
+  const editionLabel = twEditionLabel ?? outline.editionLabel;
+  const editionSuffix = editionLabel ? `（${editionLabel}）` : "";
   if (outline.requiredPassageTitles?.length) {
     const sourcePath = [PASSAGES_SRC, BUNDLED_PASSAGES_SRC]
       .map(root => path.join(root, subject.id, `${bookId}.json`)).find(file => existsSync(file));
@@ -598,7 +620,7 @@ async function processTextbook(
       quiz = JSON.parse(await fs.readFile(quizPath, "utf-8"));
     } catch {
       if (outline.edition) throw new Error(`Missing edition quiz: ${quizPath}`);
-      console.warn(`    ⚠️  缺失题库: ${stem}_unit${unit.unit_number}.json`);
+      console.warn(`    ⚠️  缺失題庫: ${stem}_unit${unit.unit_number}.json`);
       continue;
     }
 
@@ -757,12 +779,15 @@ async function processTextbook(
     semesterName,
     subjectName: subject.name,
     textbookName: `${gradeName}${semesterName}${editionSuffix}`,
-    fullName: `${outline.publisherLabel ?? subject.publisherLabel}小學${subject.name}${gradeName}${semesterName}${editionSuffix}`,
+    // 台灣版：「康軒版國小數學三年級上冊」；原專案教材維持原本格式（僅 CSF_INCLUDE_LEGACY=1 時出現）
+    fullName: twEditionLabel
+      ? `${twEditionLabel}國小${subject.name}${gradeName}${semesterName}`
+      : `${outline.publisherLabel ?? subject.publisherLabel}小學${subject.name}${gradeName}${semesterName}${editionSuffix}`,
     ...(outline.schoolSystem ? { schoolSystem: outline.schoolSystem } : {}),
     ...(outline.publisherLabel ? { publisherLabel: outline.publisherLabel } : {}),
     ...(outline.sourceEdition ? { sourceEdition: outline.sourceEdition } : {}),
     ...(outline.sourcePrinting ? { sourcePrinting: outline.sourcePrinting } : {}),
-    editionLabel: outline.editionLabel,
+    editionLabel,
     supersedes: outline.supersedes,
     unitsCount: outline.units.filter(u => !u.label).length,
     activitiesCount: outline.units.filter(u => !!u.label &&
@@ -779,9 +804,9 @@ async function processTextbook(
 // ============================================================
 
 async function main() {
-  console.log("🚀 build-data: 开始处理 output/ → public/data/");
+  console.log("🚀 build-data: 開始處理 output/ → public/data/");
   console.log(`   源: ${OUTPUT_SRC}`);
-  console.log(`   目标: ${DATA_DST}`);
+  console.log(`   目標: ${DATA_DST}`);
 
   // 清空目标目录
   await fs.rm(DATA_DST, { recursive: true, force: true });
@@ -790,7 +815,7 @@ async function main() {
 
   // 索引已生成的 TTS 音频文件
   const audio = await buildAudioIndex();
-  console.log(`🔊 已索引 ${audio.size} 个 TTS 音频文件`);
+  console.log(`🔊 已索引 ${audio.size} 個 TTS 音訊檔案`);
 
   // 构建课文听读 + 故事阅读（在教材处理之前跑一次，得到 bookId → 有无课文/故事 的映射）
   const booksWithPassages = await buildPassages();
@@ -799,31 +824,46 @@ async function main() {
   const books: Book[] = [];
   let totalLessons = 0;
   let totalQuestions = 0;
+  let legacySkipped = 0;
+  console.log(INCLUDE_LEGACY
+    ? "⚠️  CSF_INCLUDE_LEGACY=1：原專案教材也會一併建置"
+    : `🇹🇼 只建置台灣版教材：${Object.values(TAIWAN_EDITIONS).join("、")}`);
 
   // 遍历每个学科目录
   for (const subject of SUBJECTS) {
     const subjectDir = path.join(OUTPUT_SRC, subject.id);
     if (!existsSync(subjectDir)) {
-      console.log(`  [跳过] 学科 ${subject.id} 没有数据目录`);
+      console.log(`  [跳過] 學科 ${subject.id} 沒有資料目錄`);
       continue;
     }
 
     const outlineDir = path.join(subjectDir, "outlines");
     const quizDir = path.join(subjectDir, "quizzes");
     if (!existsSync(outlineDir)) {
-      console.log(`  [跳过] 学科 ${subject.id} 没有 outlines/`);
+      console.log(`  [跳過] 學科 ${subject.id} 沒有 outlines/`);
       continue;
     }
 
     const outlineFiles = (await fs.readdir(outlineDir)).filter(f => f.endsWith(".json"));
     if (outlineFiles.length === 0) {
-      console.log(`  [跳过] 学科 ${subject.id} outlines 为空`);
+      console.log(`  [跳過] 學科 ${subject.id} outlines 為空`);
       continue;
     }
 
-    console.log(`\n📘 处理学科: ${subject.name} (${subject.id}) — ${outlineFiles.length} 本教材`);
+    console.log(`\n📘 處理學科: ${subject.name} (${subject.id}) — ${outlineFiles.length} 本教材`);
 
     for (const outlineFile of outlineFiles) {
+      let edition: string | undefined;
+      try {
+        edition = (JSON.parse(await fs.readFile(path.join(outlineDir, outlineFile), "utf-8")) as Outline).edition;
+      } catch (err) {
+        console.warn(`  ⚠️ 略過 ${outlineFile}：${(err as Error).message}`);
+        continue;
+      }
+      if (!isPublishedEdition(edition)) {
+        legacySkipped++;
+        continue;
+      }
       let result;
       try {
         result = await processTextbook(subject, outlineFile, outlineDir, quizDir);
@@ -842,9 +882,22 @@ async function main() {
       totalLessons += result.lessonCount;
       totalQuestions += result.questionCount;
       console.log(
-        `  ✓ ${result.book.textbookName.padEnd(8)} ${result.book.unitsCount} 单元 → ${result.lessonCount.toString().padStart(2)} 节课`,
+        `  ✓ ${result.book.textbookName.padEnd(8)} ${result.book.unitsCount} 單元 → ${result.lessonCount.toString().padStart(2)} 節課`,
       );
     }
+  }
+
+  // 課文／故事在教材之前就已輸出；沒有上架的教材，把它們的資料夾一併移除，
+  // 確保 public/data 只留下台灣版教材。
+  const publishedIds = new Set(books.map(b => b.id));
+  let removedDirs = 0;
+  for (const dir of await fs.readdir(path.join(DATA_DST, "books"))) {
+    if (publishedIds.has(dir)) continue;
+    await fs.rm(path.join(DATA_DST, "books", dir), { recursive: true, force: true });
+    removedDirs++;
+  }
+  if (legacySkipped || removedDirs) {
+    console.log(`\n🚫 未上架的原專案教材：${legacySkipped} 本（另移除 ${removedDirs} 個未上架教材的課文／故事資料夾）`);
   }
 
   // Keep legacy routes available, while grade/home lists prefer the replacement.
@@ -882,15 +935,15 @@ async function main() {
   };
   await fs.writeFile(path.join(DATA_DST, "index.json"), JSON.stringify(index, null, 2), "utf-8");
 
-  console.log("\n📊 汇总:");
+  console.log("\n📊 彙總:");
   console.log(`   教材: ${books.length} 本`);
-  console.log(`   课程: ${totalLessons} 节`);
-  console.log(`   题目: ${totalQuestions} 道`);
+  console.log(`   課程: ${totalLessons} 節`);
+  console.log(`   題目: ${totalQuestions} 道`);
   console.log(
-    `   题型改派: ${retypedQuestionCount} 道（fill_blank/calculation 答案含非数字字符 → fill_blank_text）`,
+    `   題型改派: ${retypedQuestionCount} 道（fill_blank/calculation 答案含非數字字元 → fill_blank_text）`,
   );
   console.log(
-    `   ⚔️ 单元挑战: ${examLessonCount} 节（共 ${examQuestionTotal} 道 exam 题，单元 exam ≥${EXAM_MIN_QUESTIONS} 题成课，上限 ${EXAM_MAX_QUESTIONS} 道均匀抽样）`,
+    `   ⚔️ 單元挑戰: ${examLessonCount} 節（共 ${examQuestionTotal} 道 exam 題，單元 exam ≥${EXAM_MIN_QUESTIONS} 題成課，上限 ${EXAM_MAX_QUESTIONS} 道均勻抽樣）`,
   );
   // 按学科分组打印
   const bySubject = new Map<SubjectId, number>();
@@ -905,6 +958,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error("❌ build-data 失败:", err);
+  console.error("❌ build-data 失敗:", err);
   process.exit(1);
 });
