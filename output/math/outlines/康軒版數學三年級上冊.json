@@ -140,6 +140,114 @@
           "question_types": ["choice"]
         }
       ]
+    },
+    {
+      "unit_number": 6,
+      "title": "面積",
+      "knowledge_points": [
+        {
+          "name": "認識平方公分",
+          "description": "認識面積單位平方公分，用邊長1公分的方瓦或方格數出面積。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "切割拼湊算面積",
+          "description": "把圖形切割、拼湊或剪掉一部分，算出面積。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "估估看面積有多大",
+          "description": "用方格估計不規則圖形的面積，並認識生活中物品面積的大小。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 7,
+      "title": "除法",
+      "knowledge_points": [
+        {
+          "name": "除法算式(整除)",
+          "description": "認識平分與包含除，用除法算式記錄沒有餘數的情形。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "認識餘數",
+          "description": "認識有餘數的除法，知道餘數要比除數小。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "除法直式計算",
+          "description": "用直式計算二位數除以一位數，商是一位數。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "除法應用",
+          "description": "解決除法應用問題，依情境判斷餘數要不要加1。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 8,
+      "title": "公升和毫升",
+      "knowledge_points": [
+        {
+          "name": "認識毫升",
+          "description": "認識容量單位毫升，能報讀量杯上的刻度。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "公升與毫升",
+          "description": "知道1公升＝1000毫升，做公升與毫升的化聚與比較。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "容量的加減計算",
+          "description": "做公升、毫升（含複名數）的容量加減計算。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
+    },
+    {
+      "unit_number": 9,
+      "title": "分數",
+      "knowledge_points": [
+        {
+          "name": "幾分之幾(一)",
+          "description": "把一個整體（例如披薩、緞帶、色紙）平分後取其中幾份，認識幾分之一和幾分之幾，知道分母、分子的意思。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "幾分之幾(二)",
+          "description": "把一堆東西（例如12顆糖、8個陀螺）平分成幾份，知道其中1份是全部的幾分之一、幾份是全部的幾分之幾，能用分數說出整體與部分的關係，並知道沒有平分就不能用分數表示。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "分數數詞序列",
+          "description": "用單位分數一個一個往上數，認識分數的數詞序列，並在數線上報讀分數。",
+          "difficulty": 2,
+          "question_types": ["choice"]
+        },
+        {
+          "name": "分數的大小比較",
+          "description": "比較同分母分數的大小。",
+          "difficulty": 3,
+          "question_types": ["choice"]
+        }
+      ]
     }
   ]
 }
